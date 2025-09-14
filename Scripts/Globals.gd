@@ -260,7 +260,7 @@ func wind(object):
 		# Calcular la velocidad del viento y la fricción
 		var wind_vel = Wind_Direction * local_wind 
 		# Verificar si está al aire libre y no hay obstáculos que bloqueen el viento
-		if is_outdoor(object) and not is_something_blocking_wind(object):
+		if is_outdoor(object) and not is_something_blocking_wind(object) and local_wind >= 30:
 			var delta_velocity = wind_vel - object.velocity
 			object.velocity += delta_velocity * 0.3
 
@@ -276,7 +276,7 @@ func wind(object):
 		if is_instance_valid(object):
 			if object.is_in_group("Destrollable") or object.is_in_group("Hause"):
 				if Wind_speed > 100:
-					object.destruction.destroy()
+					object.destroy()
 			
 			
 

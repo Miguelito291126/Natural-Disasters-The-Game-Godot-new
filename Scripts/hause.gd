@@ -2,12 +2,13 @@ extends StaticBody3D
 
 @onready var door = $hause/Room/Pivot
 @onready var door_collision_shape = $DoorCollision
-@onready var destruction = $Destruction
 @onready var door_frame_collision_shape = $DoorFrameCollision
 @export var door_open_sound: AudioStreamPlayer3D
 @export var door_close_sound: AudioStreamPlayer3D
 
 var door_open = false
+
+var bokenhause = preload("res://Scenes/Breakable hause.tscn")
 
 @rpc("any_peer", "call_local")
 func open_door():
@@ -40,14 +41,19 @@ func Interact():
 		if not door_open:
 			open_door()
 		else:
-			close_door()	
+			close_door()
 
+func destroy():
+	var Broken_Hause = bokenhause.instantiate()
+	Broken_Hause.global_position = self.global_position
+	get_parent().add_child(Broken_Hause)
+	self.queue_free()
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Meteor"):
-		destruction.destroy()
+		destroy()
 
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	if area.is_in_group("Tornado") or area.is_in_group("Tsunami") or area.is_in_group("Explosion"):
-		destruction.destroy()
+		destroy()

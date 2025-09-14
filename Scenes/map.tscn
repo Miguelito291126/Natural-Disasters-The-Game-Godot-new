@@ -133,6 +133,10 @@ spawn_path = NodePath("..")
 _spawnable_scenes = PackedStringArray("uid://w8budjn2m22a", "uid://doi73cvnxims6", "uid://c6xgmy3mkckea", "uid://tjhhsh3ck07n", "uid://dni5hbhwlxmdi", "uid://d3gkmhq5kjhrj", "uid://qf81iinh5hke")
 spawn_path = NodePath("..")
 
+[node name="ObjectSpawn" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://hiq4h8n7r78k", "uid://bkfobjkkd58w0", "uid://cv8xwubw2paof", "uid://bxi02esjkbgma")
+spawn_path = NodePath("..")
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfhfe")
 script = ExtResource("3_575xv")

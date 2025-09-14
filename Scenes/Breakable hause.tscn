@@ -1,7 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://bxi02esjkbgma"]
+[gd_scene load_steps=4 format=3 uid="uid://bxi02esjkbgma"]
 
 [ext_resource type="PackedScene" uid="uid://b410wmhh5ywm6" path="res://Models/Blend Format/Breakable hause.blend" id="1_mcvrf"]
+[ext_resource type="Script" uid="uid://cyhpepnhku0um" path="res://Scripts/breakable_hause.gd" id="2_kh5db"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_exnc4"]
+properties/0/path = NodePath("..:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("..:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("..:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="Breakable hause" groups=["movable_objects"] instance=ExtResource("1_mcvrf")]
-collision_layer = 13
-collision_mask = 13
+script = ExtResource("2_kh5db")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="431"]
+root_path = NodePath("../Techo_cell_098-rigid")
+replication_config = SubResource("SceneReplicationConfig_exnc4")

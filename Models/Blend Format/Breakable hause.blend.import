@@ -13,7 +13,7 @@ dest_files=["res://.godot/imported/Breakable hause.blend-08599cb14dd3d1b0d027cd7
 
 [params]
 
-nodes/root_type="RigidBody3D"
+nodes/root_type="Node3D"
 nodes/root_name=""
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
@@ -34,11 +34,344 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "nodes": {
-"PATH:Door_cell_001": {
-"import/skip_import": true
+"PATH:Room_cell": {
+"physics/body_type": 1
 },
-"PATH:Door_cell_056": {
-"import/skip_import": true
+"PATH:Room_cell_001": {
+"physics/body_type": 1
+},
+"PATH:Room_cell_002": {
+"physics/body_type": 1
+},
+"PATH:Room_cell_003": {
+"physics/body_type": 1
+},
+"PATH:Room_cell_004": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_005": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_006": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_007": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_008": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_009": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_010": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_011": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_012": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_013": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_014": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_015": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_016": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_017": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_018": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_019": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_020": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_021": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_022": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_023": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_024": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_025": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_026": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_027": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_028": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_029": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_030": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_031": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_032": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_033": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_034": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_035": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_036": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_037": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_038": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_039": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_040": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_041": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_042": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_043": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_045": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_046": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_047": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_048": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_049": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_050": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_051": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_052": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_053": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_054": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_055": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_056": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_057": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_058": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_059": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_060": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_061": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_062": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_063": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_064": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_065": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_067": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_068": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_070": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_071": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_072": {
+"generate/physics": true
+},
+"PATH:Room_cell_073": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_074": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_075": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_076": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_077": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_078": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_079": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_080": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_081": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_083": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_084": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_085": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_086": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_087": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_088": {
+"generate/physics": true,
+"physics/body_type": 1
+},
+"PATH:Room_cell_089": {
+"generate/physics": true,
+"physics/body_type": 1
 }
 }
 }

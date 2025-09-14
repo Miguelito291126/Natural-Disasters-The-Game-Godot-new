@@ -1,9 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://hiq4h8n7r78k"]
+[gd_scene load_steps=9 format=3 uid="uid://hiq4h8n7r78k"]
 
 [ext_resource type="PackedScene" uid="uid://diidokaf1g16d" path="res://Models/Blend Format/hause.blend" id="1_ygqqv"]
-[ext_resource type="Script" uid="uid://d4hwq40gtjxbl" path="res://addons/destruction/destruction.gd" id="2_bem26"]
 [ext_resource type="Script" uid="uid://dyv5tm53gs2fg" path="res://Scripts/hause.gd" id="3_0ons7"]
-[ext_resource type="PackedScene" uid="uid://bxi02esjkbgma" path="res://Scenes/Breakable hause.tscn" id="3_8npjq"]
 [ext_resource type="AudioStream" uid="uid://c4r72cwbqtbdx" path="res://Sounds/Door Open.mp3" id="4_0ons7"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_3lu2r"]
@@ -44,14 +42,6 @@ collision_mask = 13
 script = ExtResource("3_0ons7")
 door_open_sound = NodePath("Open_door_sound")
 door_close_sound = NodePath("Close_door_sound")
-
-[node name="Destruction" type="Node" parent="." node_paths=PackedStringArray("shard_container")]
-script = ExtResource("2_bem26")
-fragmented = ExtResource("3_8npjq")
-shard_container = NodePath("")
-collision_layer = 13
-collision_mask = 13
-metadata/_custom_type_script = "uid://d4hwq40gtjxbl"
 
 [node name="hause" parent="." instance=ExtResource("1_ygqqv")]
 
