@@ -55,7 +55,8 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @export var bounding_radius_areas = {}
 
-
+@export var node_group = "Destrollable"
+@export var destrolled_node: Array
 
 @export var started = false
 @export var GlobalsData: DataResource = DataResource.load_file()
@@ -276,7 +277,10 @@ func wind(object):
 		if is_instance_valid(object):
 			if object.is_in_group("Destrollable") or object.is_in_group("Hause"):
 				if Wind_speed > 100:
-					object.destroy()
+					if Globals.is_networking:
+						object.destroy.rpc()
+					else:
+						object.destroy()
 			
 			
 
@@ -467,7 +471,7 @@ func player_join(peer_id):
 		map.add_child(player, true)
 
 		sync_player_list.rpc()
-
+		sync_destrolled_nodes.rpc_id(peer_id, destrolled_node)
 		set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
 
 		print_role("finish :D")
@@ -686,3 +690,16 @@ func _on_timer_timeout():
 	else:
 		if Globals.is_networking:
 			multiplayer.multiplayer_peer.close()
+
+@rpc("authority", "call_local")
+func sync_destrolled_nodes(Hauses: Array):
+	for house_name in Hauses:
+		var house = get_tree().get_current_scene().get_node_or_null(house_name)
+		if house and not house.destrolled:
+			house.destroy()
+
+
+
+	
+
+	

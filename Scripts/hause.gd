@@ -6,7 +6,8 @@ extends StaticBody3D
 @export var door_open_sound: AudioStreamPlayer3D
 @export var door_close_sound: AudioStreamPlayer3D
 
-var door_open = false
+@export var door_open = false
+@export var destrolled = false
 
 var bokenhause = preload("res://Scenes/Breakable hause.tscn")
 
@@ -43,17 +44,34 @@ func Interact():
 		else:
 			close_door()
 
+@rpc("any_peer", "call_local")
 func destroy():
+	if destrolled:
+		return
+
 	var Broken_Hause = bokenhause.instantiate()
 	Broken_Hause.global_position = self.global_position
 	get_parent().add_child(Broken_Hause)
+	destrolled = true
+    # Guardar path en Globals
+	if Globals.is_networking and multiplayer.is_server():
+		Globals.destrolled_node.append(self.get_path())
+
 	self.queue_free()
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Meteor"):
-		destroy()
+		if Globals.is_networking:
+			destroy.rpc()
+		else:
+			destroy()
 
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	if area.is_in_group("Tornado") or area.is_in_group("Tsunami") or area.is_in_group("Explosion"):
-		destroy()
+		if Globals.is_networking:
+			destroy.rpc()
+		else:
+			destroy()
+
+

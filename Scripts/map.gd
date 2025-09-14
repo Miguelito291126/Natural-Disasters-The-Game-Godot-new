@@ -633,4 +633,3 @@ func is_storm():
 		Globals.points += 1
 		
 		break
-

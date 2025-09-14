@@ -36,7 +36,7 @@ properties/5/path = NodePath("hause:scale")
 properties/5/spawn = true
 properties/5/replication_mode = 1
 
-[node name="hause" type="StaticBody3D" node_paths=PackedStringArray("door_open_sound", "door_close_sound") groups=["Destrollable", "Hause"]]
+[node name="hause" type="StaticBody3D" node_paths=PackedStringArray("door_open_sound", "door_close_sound") groups=["Destrollable", "Hause", "Persistent"]]
 collision_layer = 13
 collision_mask = 13
 script = ExtResource("3_0ons7")
