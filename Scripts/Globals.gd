@@ -558,7 +558,8 @@ func set_weather_and_disaster(weather_and_disaster_index):
 		9:
 			current_weather_and_disaster = "Acid rain"
 			current_weather_and_disaster_int = 9
-			map.is_acid_rain()
+			if is_instance_valid(map):
+				map.is_acid_rain()
 		10:
 			current_weather_and_disaster = "Earthquake"
 			current_weather_and_disaster_int = 10
@@ -610,6 +611,8 @@ func set_weather_and_disaster(weather_and_disaster_index):
 		"Meteor shower":
 			current_weather_and_disaster = "Meteor shower"
 			current_weather_and_disaster_int = 6
+			if is_instance_valid(map):
+				map.is_meteor_shower()
 		"Volcano":
 			current_weather_and_disaster = "Volcano"
 			current_weather_and_disaster_int = 7

@@ -12,26 +12,23 @@ var entity_scene = preload("res://Scenes/entity.tscn")
 const RAY_LENGTH = 10000
 
 func _ready():
-
 	self.visible = false
 	load_spawnlist_entities()
 	load_buttons()
 
 
 func load_spawnlist_entities():
-	var directory = DirAccess.open("res://Scenes/")
-	if directory:
-		var files = directory.get_files()
-		for f in files:
-			if f.ends_with(".tscn"):
-				var node = load(directory.get_current_dir() + "/" + f).instantiate()
-				if node is RigidBody3D or node is StaticBody3D or node is Area3D or node is GPUParticles3D:
-					spawnlist.append(node)
+	var directory = "res://Scenes/"
+	var resources = ResourceLoader.list_directory(directory)
+	for resource in resources:
+		if resource.ends_with(".tscn"):
+			var node = load(directory + "/" + resource).instantiate()
+			if node is RigidBody3D or node is StaticBody3D or node is Area3D or node is GPUParticles3D:
+				spawnlist.append(node)
 
 
 func load_buttons():
 	for i in spawnlist:
-		var icon_path = "res://icons/" + i.name + "_icon.png"
 		var entity = entity_scene.instantiate()
 		var label = entity.get_node("Label")
 		label.text = i.name
@@ -39,7 +36,7 @@ func load_buttons():
 		label.custom_minimum_size = Vector2(150, 150) # cada celda fija
 		var icon = entity.get_node("Icon")
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.texture_normal = load(icon_path)	
+		icon.texture_normal = load("res://Icons/" + i.name + "_icon.png")	
 		icon.custom_minimum_size = Vector2(64, 64) # icono fijo
 		container.add_child(entity)
 
