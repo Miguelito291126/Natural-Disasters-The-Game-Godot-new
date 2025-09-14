@@ -1,12 +1,11 @@
-[gd_scene load_steps=19 format=3 uid="uid://c6xgmy3mkckea"]
+[gd_scene load_steps=18 format=3 uid="uid://c6xgmy3mkckea"]
 
 [ext_resource type="Script" uid="uid://by5atj83em8rl" path="res://Scripts/meteors.gd" id="1_hdxcr"]
 [ext_resource type="PackedScene" uid="uid://ditwsydq4i21k" path="res://Models/Blend Format/Meteorite.blend" id="2_cp0ko"]
 [ext_resource type="Material" uid="uid://dgt85ocipcy31" path="res://Resources/Meteor.tres" id="3_eshik"]
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ph7js"]
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_nfk2t"]
+radius = 1.17684
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wipg6"]
 transparency = 1
@@ -99,7 +98,8 @@ properties/3/replication_mode = 1
 [node name="Meteor" type="RigidBody3D" groups=["Meteor", "movable_objects"]]
 collision_layer = 255
 collision_mask = 255
-physics_material_override = SubResource("PhysicsMaterial_ph7js")
+can_sleep = false
+continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 50
 script = ExtResource("1_hdxcr")

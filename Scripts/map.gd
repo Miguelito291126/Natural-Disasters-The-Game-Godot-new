@@ -174,7 +174,7 @@ func is_meteor_shower():
 
 
 		var meteor = Globals.meteor_scene.instantiate()
-		meteor.position = Vector3(randf_range(0,4097),1000,randf_range(0,4097))
+		meteor.global_position = Vector3(randf_range(0,4097),0,randf_range(0,4097))
 		add_child(meteor, true)
 
 		await get_tree().create_timer(0.5).timeout
