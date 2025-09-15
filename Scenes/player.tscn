@@ -1,7 +1,6 @@
-[gd_scene load_steps=92 format=4 uid="uid://b2g31vrdy6c1x"]
+[gd_scene load_steps=90 format=4 uid="uid://b2g31vrdy6c1x"]
 
 [ext_resource type="Script" uid="uid://q156qsvgvd8n" path="res://Scripts/player.gd" id="1_btpoi"]
-[ext_resource type="Script" uid="uid://c5cwvkmqc6da8" path="res://Scripts/Pause_menu.gd" id="2_vj7s0"]
 [ext_resource type="Texture2D" uid="uid://bevx5iyc2q82h" path="res://Sprites/kenney_particle_pack/smoke_01.png" id="3_kstye"]
 [ext_resource type="Script" uid="uid://c38icpun2kxgh" path="res://Scripts/camera_3d.gd" id="3_n87wl"]
 [ext_resource type="Script" uid="uid://buu0yjd04a5st" path="res://Scripts/Hud.gd" id="3_pgssk"]
@@ -12,9 +11,8 @@
 [ext_resource type="Shader" uid="uid://cg0xv5ihu8ybt" path="res://Shaders/UnderWater.gdshader" id="7_787g2"]
 [ext_resource type="Shader" uid="uid://nit4j25w5xly" path="res://Shaders/UnderLava.gdshader" id="8_txqea"]
 [ext_resource type="Script" uid="uid://cjvdvncmdurd8" path="res://Scripts/Players List Menu.gd" id="8_u7k75"]
-[ext_resource type="Theme" uid="uid://cb8utilpq2brs" path="res://Resources/pause_and_menu_theme.tres" id="9_6lvyl"]
-[ext_resource type="Script" uid="uid://bpb7kal7xb8sg" path="res://Scripts/Death Menu.gd" id="9_jd7ok"]
-[ext_resource type="Theme" uid="uid://ctfcvmj6op0i5" path="res://Resources/Death_Screen_theme.tres" id="11_twqia"]
+[ext_resource type="PackedScene" uid="uid://gvw74rw7le3t" path="res://Scenes/pause_menu.tscn" id="9_fd4e3"]
+[ext_resource type="PackedScene" uid="uid://dg75ymjinjgeu" path="res://Scenes/death_menu.tscn" id="10_qqcod"]
 [ext_resource type="Shader" uid="uid://c2acdrrskxmye" path="res://Shaders/temp.gdshader" id="12_w8j6f"]
 [ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="16_igrcy"]
 [ext_resource type="Script" uid="uid://in8kmfyee40h" path="res://Scripts/spawn_menu.gd" id="19_hx71c"]
@@ -1239,7 +1237,7 @@ bones/4/parent = 3
 bones/4/rest = Transform3D(1, -0.000138256, 1.37828e-07, 0.000138199, 0.999618, 0.027635, -3.95847e-06, -0.027635, 0.999618, -6.4719e-17, 0.766354, -4.28408e-08)
 bones/4/enabled = true
 bones/4/position = Vector3(-6.4719e-17, 0.766354, -4.28408e-08)
-bones/4/rotation = Quaternion(0.650229, -0.0219526, 0.0201911, 0.759152)
+bones/4/rotation = Quaternion(0.648642, -0.0558786, 0.0513769, 0.757299)
 bones/4/scale = Vector3(1, 1, 1)
 bones/5/name = "brazo_inferior.d"
 bones/5/parent = 4
@@ -1260,7 +1258,7 @@ bones/7/parent = 6
 bones/7/rest = Transform3D(1, -2.40698e-19, 5.55226e-17, 1.22943e-18, 0.999841, -0.0178084, -5.55095e-17, 0.0178084, 0.999841, -3.88342e-17, 0.721442, 5.58794e-08)
 bones/7/enabled = true
 bones/7/position = Vector3(-3.88342e-17, 0.721442, 5.58794e-08)
-bones/7/rotation = Quaternion(-0.639512, -0.047697, -0.0423945, 0.766128)
+bones/7/rotation = Quaternion(-0.636778, -0.0837964, -0.0744807, 0.762853)
 bones/7/scale = Vector3(1, 1, 1)
 bones/8/name = "brazo_inferior.i"
 bones/8/parent = 7
@@ -1288,14 +1286,14 @@ bones/11/parent = 10
 bones/11/rest = Transform3D(-0.999974, -0.00436537, 0.00581706, -0.00592073, 0.0241228, -0.999691, 0.0042237, -0.999699, -0.024148, 1.27966e-10, 0.384886, 4.17949e-08)
 bones/11/enabled = true
 bones/11/position = Vector3(1.27966e-10, 0.384886, 4.17949e-08)
-bones/11/rotation = Quaternion(-0.0262503, 0.712404, -0.698431, -0.0631334)
+bones/11/rotation = Quaternion(-0.0722202, 0.707088, -0.694232, -0.113366)
 bones/11/scale = Vector3(1, 1, 1)
 bones/12/name = "pierna_inferior.d"
 bones/12/parent = 11
 bones/12/rest = Transform3D(0.999643, -0.0189994, -0.01878, 0.0187942, 0.999762, -0.0110474, 0.0189855, 0.0106905, 0.999763, -1.04774e-09, 2.12904, -1.33368e-08)
 bones/12/enabled = true
 bones/12/position = Vector3(-1.04774e-09, 2.12904, -1.33368e-08)
-bones/12/rotation = Quaternion(0.00486982, -0.0118836, -0.132938, 0.991041)
+bones/12/rotation = Quaternion(0.00492122, -0.0120992, -0.131168, 0.991274)
 bones/12/scale = Vector3(1, 1, 1)
 bones/13/name = "cadera.i"
 bones/13/parent = 0
@@ -1309,14 +1307,14 @@ bones/14/parent = 13
 bones/14/rest = Transform3D(0.998807, -0.0246589, -0.0421602, 0.0422196, 0.00189155, 0.999107, -0.0245572, -0.999694, 0.0029304, 5.90433e-10, 0.327296, 4.71613e-08)
 bones/14/enabled = true
 bones/14/position = Vector3(5.90433e-10, 0.327296, 4.71613e-08)
-bones/14/rotation = Quaternion(-0.705705, 0.0622333, 0.119395, 0.695595)
+bones/14/rotation = Quaternion(-0.699499, 0.0970184, 0.163471, 0.688888)
 bones/14/scale = Vector3(1, 1, 1)
 bones/15/name = "pierna_inferior.i"
 bones/15/parent = 14
 bones/15/rest = Transform3D(0.998071, 0.0449051, 0.0428617, -0.0432015, 0.99827, -0.0398786, -0.0445783, 0.03795, 0.998285, -4.19095e-09, 2.16872, -9.31323e-09)
 bones/15/enabled = true
 bones/15/position = Vector3(-4.19095e-09, 2.16872, -9.31323e-09)
-bones/15/rotation = Quaternion(0.0182205, 0.00293127, -0.129938, 0.99135)
+bones/15/rotation = Quaternion(0.0175489, 0.00175509, -0.131493, 0.99116)
 bones/15/scale = Vector3(1, 1, 1)
 
 [node name="Brazos" type="MeshInstance3D" parent="Esqueleto/Skeleton3D"]
@@ -1478,212 +1476,11 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Pause menu" type="CanvasLayer" parent="."]
-process_mode = 3
+[node name="Pause menu" parent="." instance=ExtResource("9_fd4e3")]
 visible = false
-script = ExtResource("2_vj7s0")
 
-[node name="Panel" type="Panel" parent="Pause menu"]
-process_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("9_6lvyl")
-
-[node name="Menu" type="VBoxContainer" parent="Pause menu"]
-process_mode = 3
-offset_left = 508.0
-offset_top = 305.0
-offset_right = 815.0
-offset_bottom = 596.0
-scale = Vector2(3, 1.5)
-theme = ExtResource("9_6lvyl")
-
-[node name="Return" type="Button" parent="Pause menu/Menu"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 50
-text = "Return"
-
-[node name="Settings" type="Button" parent="Pause menu/Menu"]
-process_mode = 3
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 50
-text = "Settings"
-
-[node name="Reset Player" type="Button" parent="Pause menu/Menu"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 50
-text = "Reset Player"
-
-[node name="Exit" type="Button" parent="Pause menu/Menu"]
-process_mode = 3
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 50
-text = "Exit"
-
-[node name="Settings" type="VBoxContainer" parent="Pause menu"]
-process_mode = 3
+[node name="Death Menu" parent="." instance=ExtResource("10_qqcod")]
 visible = false
-offset_left = 476.0
-offset_top = 116.0
-offset_right = 811.0
-offset_bottom = 713.0
-scale = Vector2(3, 1.5)
-theme = ExtResource("9_6lvyl")
-
-[node name="fps" type="CheckButton" parent="Pause menu/Settings"]
-process_mode = 3
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "FPS:"
-
-[node name="vsync" type="CheckButton" parent="Pause menu/Settings"]
-process_mode = 3
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "Vsync:"
-
-[node name="antialiasing" type="CheckButton" parent="Pause menu/Settings"]
-process_mode = 3
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "Antialiasing:"
-
-[node name="Fullscreen" type="CheckButton" parent="Pause menu/Settings"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "Fullscreen:"
-
-[node name="Resolutions Label" type="Label" parent="Pause menu/Settings"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "Resolution:"
-
-[node name="resolutions" type="OptionButton" parent="Pause menu/Settings"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-
-[node name="quality Label" type="Label" parent="Pause menu/Settings"]
-process_mode = 3
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "quality:"
-
-[node name="quality" type="OptionButton" parent="Pause menu/Settings"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-selected = 2
-item_count = 3
-popup/item_0/text = "Low"
-popup/item_0/id = 0
-popup/item_1/text = "Medium"
-popup/item_1/id = 1
-popup/item_2/text = "High"
-popup/item_2/id = 2
-
-[node name="Volumen Label" type="Label" parent="Pause menu/Settings"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "Volumen:"
-
-[node name="Volumen" type="HSlider" parent="Pause menu/Settings"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-max_value = 1.0
-step = 0.001
-
-[node name="Volumen Music Label2" type="Label" parent="Pause menu/Settings"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "Music Volumen:"
-
-[node name="Volumen Music" type="HSlider" parent="Pause menu/Settings"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-max_value = 1.0
-step = 0.001
-
-[node name="TIme label" type="Label" parent="Pause menu/Settings"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "Time disaster/weather:"
-
-[node name="Time" type="HSlider" parent="Pause menu/Settings"]
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-max_value = 3600.0
-value = 100.0
-
-[node name="Back" type="Button" parent="Pause menu/Settings"]
-process_mode = 3
-layout_mode = 2
-theme = ExtResource("9_6lvyl")
-theme_override_font_sizes/font_size = 30
-text = "Back"
-
-[node name="Death Menu" type="CanvasLayer" parent="."]
-process_mode = 3
-layer = 2
-visible = false
-script = ExtResource("9_jd7ok")
-
-[node name="Panel" type="Panel" parent="Death Menu"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("11_twqia")
-
-[node name="Label" type="Label" parent="Death Menu"]
-offset_left = 376.0
-offset_top = 27.0
-offset_right = 907.0
-offset_bottom = 168.0
-scale = Vector2(2.20665, 2.55236)
-theme = ExtResource("11_twqia")
-theme_override_font_sizes/font_size = 40
-text = "You Death
-you want to continue?"
-horizontal_alignment = 1
-
-[node name="Buttons" type="VBoxContainer" parent="Death Menu"]
-offset_left = 510.0
-offset_top = 391.0
-offset_right = 817.0
-offset_bottom = 479.0
-scale = Vector2(3, 3)
-theme = ExtResource("11_twqia")
-
-[node name="Return" type="Button" parent="Death Menu/Buttons"]
-layout_mode = 2
-theme = ExtResource("11_twqia")
-theme_override_font_sizes/font_size = 30
-text = "Return
-"
-
-[node name="Exit" type="Button" parent="Death Menu/Buttons"]
-layout_mode = 2
-theme = ExtResource("11_twqia")
-theme_override_font_sizes/font_size = 30
-text = "Exit
-"
 
 [node name="Players List Menu" type="CanvasLayer" parent="."]
 process_mode = 3
@@ -1800,20 +1597,3 @@ texture = ExtResource("4_ni53t")
 [node name="Heartbeat" type="AudioStreamPlayer" parent="Hud"]
 process_mode = 3
 stream = ExtResource("6_vn0ni")
-
-[connection signal="pressed" from="Pause menu/Menu/Return" to="Pause menu" method="_on_return_pressed"]
-[connection signal="pressed" from="Pause menu/Menu/Settings" to="Pause menu" method="_on_settings_pressed"]
-[connection signal="pressed" from="Pause menu/Menu/Reset Player" to="Pause menu" method="_on_reset_player_pressed"]
-[connection signal="pressed" from="Pause menu/Menu/Exit" to="Pause menu" method="_on_exit_pressed"]
-[connection signal="toggled" from="Pause menu/Settings/fps" to="Pause menu" method="_on_fps_toggled"]
-[connection signal="toggled" from="Pause menu/Settings/vsync" to="Pause menu" method="_on_vsync_toggled"]
-[connection signal="toggled" from="Pause menu/Settings/antialiasing" to="Pause menu" method="_on_antialiasing_toggled"]
-[connection signal="toggled" from="Pause menu/Settings/Fullscreen" to="Pause menu" method="_on_fullscreen_toggled"]
-[connection signal="item_selected" from="Pause menu/Settings/resolutions" to="Pause menu" method="_on_resolutions_item_selected"]
-[connection signal="item_selected" from="Pause menu/Settings/quality" to="Pause menu" method="_on_option_button_item_selected"]
-[connection signal="value_changed" from="Pause menu/Settings/Volumen" to="Pause menu" method="_on_volumen_value_changed"]
-[connection signal="value_changed" from="Pause menu/Settings/Volumen Music" to="Pause menu" method="_on_volumen_music_value_changed"]
-[connection signal="value_changed" from="Pause menu/Settings/Time" to="Pause menu" method="_on_time_value_changed"]
-[connection signal="pressed" from="Pause menu/Settings/Back" to="Pause menu" method="_on_back_pressed"]
-[connection signal="pressed" from="Death Menu/Buttons/Return" to="Death Menu" method="_on_return_pressed"]
-[connection signal="pressed" from="Death Menu/Buttons/Exit" to="Death Menu" method="_on_exit_pressed"]

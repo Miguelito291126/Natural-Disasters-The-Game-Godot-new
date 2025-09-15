@@ -1,5 +1,24 @@
 extends Control
 
+@onready var main_menu = $Panel/Menu
+@onready var tittle = $Panel/HBoxContainer/Title
+@onready var Multiplayer = $Panel/Multiplayer
+@onready var Settings = $Panel/Settings
+@onready var username = $Panel/Multiplayer/username
+@onready var ip_text = $Panel/Multiplayer/ip
+@onready var port_text = $Panel/Multiplayer/port
+@onready var fullscreen = $Panel/Settings/Fullscreen
+@onready var vsync = $Panel/Settings/vsync
+@onready var fps = $Panel/Settings/fps
+@onready var anti_aliasing = $Panel/Settings/antialiasing
+@onready var volumen = $Panel/Settings/Volumen
+@onready var volumen_music = $"Panel/Settings/Volumen Music"
+@onready var time = $Panel/Settings/Time
+@onready var quality = $Panel/Settings/quality
+@onready var music = $Music
+@onready var error_text = $Panel/Multiplayer/Label
+@onready var resolutions = $Panel/Settings/resolutions
+
 var resolution: Dictionary = {
 	"2400x1080 ": Vector2i(2400, 1080 ),
 	"1920x1080": Vector2i(1920, 1080),
@@ -26,10 +45,10 @@ func addresolutions():
 	var index = 0
 	
 	for r in resolution:
-		$Settings/resolutions.add_item(r,index)
+		resolutions.add_item(r,index)
 		
 		if resolution[r] == current_resolution:
-			$Settings/resolutions._select_int(index)
+			resolutions._select_int(index)
 		index += 1
 
 
@@ -37,30 +56,12 @@ func addresolutions():
 func _ready():
 	Globals.main_menu = self
 
-	$Menu.show()
-	$Title.show()
-	$Multiplayer.hide()
-	$Settings.hide()
+	main_menu.show()
+	tittle.show()
+	Multiplayer.hide()
+	Settings.hide()
 
-   
-	$Multiplayer/username.text = Globals.username
-	$Multiplayer/ip.text = Globals.ip
-	$Multiplayer/port.text = str(Globals.port)
-	
-	addresolutions()
-	DisplayServer.window_set_size(Globals.GlobalsData.resolution)
-	get_viewport().set_size(Globals.GlobalsData.resolution)
-
-	$Settings/Fullscreen.button_pressed = Globals.GlobalsData.fullscreen
-	$Settings/fps.button_pressed = Globals.GlobalsData.FPS
-	$Settings/vsync.button_pressed = Globals.GlobalsData.vsync
-	$Settings/antialiasing.button_pressed = Globals.GlobalsData.antialiasing
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(Globals.GlobalsData.volumen))
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(Globals.GlobalsData.volumen_music))
-	$Settings/Volumen.value = Globals.GlobalsData.volumen
-	$"Settings/Volumen Music".value = Globals.GlobalsData.volumen_music
-	$Settings/Time.value = Globals.GlobalsData.timer_disasters
-	$Settings/quality.selected = Globals.GlobalsData.quality
+	LoadGameScene()
 
 	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
 		Globals.print_role("Iniciando servidor...")
@@ -80,15 +81,38 @@ func _ready():
 		Globals.hostwithport(Globals.port)
 	else: 
 		Globals.print_role("No se puede jugar en modo de servidor")
+   
+
+func LoadGameScene():
+	username.text = Globals.username
+	ip_text.text = Globals.ip
+	port_text.text = str(Globals.port)
+	
+	addresolutions()
+	DisplayServer.window_set_size(Globals.GlobalsData.resolution)
+	get_viewport().set_size(Globals.GlobalsData.resolution)
+
+	fullscreen.button_pressed = Globals.GlobalsData.fullscreen
+	fps.button_pressed = Globals.GlobalsData.FPS
+	vsync.button_pressed = Globals.GlobalsData.vsync
+	anti_aliasing.button_pressed = Globals.GlobalsData.antialiasing
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(Globals.GlobalsData.volumen))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(Globals.GlobalsData.volumen_music))
+	volumen.value = Globals.GlobalsData.volumen
+	volumen_music.value = Globals.GlobalsData.volumen_music
+	time.value = Globals.GlobalsData.timer_disasters
+	quality.selected = Globals.GlobalsData.quality
+
+
 
 
 
 func _process(_delta):
 	if self.visible:
-		await $Music.finished
-		$Music.play()
+		await music.finished
+		music.play()
 	else:
-		$Music.stop()
+		music.stop()
 
 
 func _on_ip_text_changed(new_text:String):
@@ -103,32 +127,30 @@ func _on_join_pressed():
 	if Globals.username.length() < 10 and Globals.username.length() >= 1:
 		Globals.joinwithip(Globals.ip, Globals.port)
 	else:
-		$Multiplayer/Label.visible = true
+		error_text.visible = true
 		await get_tree().create_timer(2).timeout
-		$Multiplayer/Label.visible = false
+		error_text.visible = false
 
 
 func _on_host_pressed():
 	if Globals.username.length() < 10 and Globals.username.length() >= 1:
 		Globals.hostwithport(Globals.port)
 	else:
-		$Multiplayer/Label.visible = true
+		error_text.visible = true
 		await get_tree().create_timer(2).timeout
-		$Multiplayer/Label.visible = false
+		error_text.visible = false
 
 
 func _on_play_pressed():
-	$Menu.hide()
-	$Multiplayer.show()
-	$Title.hide()
-	$Settings.hide()
+	main_menu.hide()
+	Multiplayer.show()
+	Settings.hide()
 
 
 func _on_settings_pressed():
-	$Menu.hide()
-	$Multiplayer.hide()
-	$Title.hide()
-	$Settings.show()
+	main_menu.hide()
+	Multiplayer.hide()
+	Settings.show()
 
 
 func _on_exit_pressed():
@@ -154,10 +176,9 @@ func _on_antialiasing_toggled(toggled_on:bool):
 
 
 func _on_back_pressed():
-	$Menu.show()
-	$Title.show()
-	$Multiplayer.hide()
-	$Settings.hide()
+	main_menu.show()
+	Multiplayer.hide()
+	Settings.hide()
 
 
 func _on_username_text_changed(new_text:String):
@@ -176,7 +197,7 @@ func _on_volumen_value_changed(value:float):
 	Globals.GlobalsData.save_file()
 
 func _on_resolutions_item_selected(index:int):
-	var size = resolution.get($Settings/resolutions.get_item_text(index))
+	var size = resolution.get(resolutions.get_item_text(index))
 	DisplayServer.window_set_size(size)
 	get_viewport().set_size(size)
 	Globals.GlobalsData.resolution = size

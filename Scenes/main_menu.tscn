@@ -25,211 +25,260 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_8ye2w")
 
-[node name="Title" type="Label" parent="."]
-process_mode = 3
-layout_mode = 0
-offset_left = 287.0
-offset_top = 10.0
-offset_right = 941.0
-offset_bottom = 81.0
-scale = Vector2(2, 2)
-theme = ExtResource("2_8ye2w")
-theme_override_font_sizes/font_size = 50
-text = "Natural Disaster The Game"
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 137.0
+grow_horizontal = 2
+alignment = 1
 
-[node name="Disasters" type="Sprite2D" parent="Title"]
-process_mode = 3
-position = Vector2(698.5, 39.5)
-scale = Vector2(4.00438, 4.34087)
-texture = ExtResource("3_wgml2")
-
-[node name="Menu" type="VBoxContainer" parent="."]
-process_mode = 3
-layout_mode = 0
-offset_left = 511.0
-offset_top = 312.0
-offset_right = 815.0
-offset_bottom = 632.0
-scale = Vector2(3, 1.5)
-theme = ExtResource("2_8ye2w")
-
-[node name="singleplayer" type="Button" parent="Menu"]
+[node name="Title" type="Label" parent="Panel/HBoxContainer"]
 process_mode = 3
 layout_mode = 2
+theme = ExtResource("2_8ye2w")
+theme_override_font_sizes/font_size = 100
+text = "Natural Disaster The Game"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Disasters" type="TextureRect" parent="Panel/HBoxContainer"]
+process_mode = 3
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("3_wgml2")
+expand_mode = 2
+
+[node name="Menu" type="VBoxContainer" parent="Panel"]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -274.0
+offset_right = 400.0
+offset_bottom = 274.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_8ye2w")
+
+[node name="singleplayer" type="Button" parent="Panel/Menu"]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 50
 text = "Singleplayer"
 
-[node name="multiplayer" type="Button" parent="Menu"]
+[node name="multiplayer" type="Button" parent="Panel/Menu"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 50
 text = "Multiplayer"
 
-[node name="Settings" type="Button" parent="Menu"]
+[node name="Settings" type="Button" parent="Panel/Menu"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 50
 text = "Settings"
 
-[node name="Exit" type="Button" parent="Menu"]
+[node name="Exit" type="Button" parent="Panel/Menu"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 50
 text = "Exit"
 
-[node name="Multiplayer" type="VBoxContainer" parent="."]
+[node name="Multiplayer" type="VBoxContainer" parent="Panel"]
 process_mode = 3
 visible = false
-layout_mode = 0
-offset_left = 651.0
-offset_top = 194.0
-offset_right = 843.0
-offset_bottom = 606.0
-scale = Vector2(3, 1.5)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -456.0
+offset_top = -332.0
+offset_right = 456.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("2_8ye2w")
+alignment = 1
 
-[node name="username label" type="Label" parent="Multiplayer"]
+[node name="username label" type="Label" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Username:"
 
-[node name="Label" type="Label" parent="Multiplayer"]
+[node name="Label" type="Label" parent="Panel/Multiplayer"]
 visible = false
 layout_mode = 2
+size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Your Username is Invalid"
 
-[node name="username" type="LineEdit" parent="Multiplayer"]
+[node name="username" type="LineEdit" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 placeholder_text = "Michael2911"
 
-[node name="Ip label" type="Label" parent="Multiplayer"]
+[node name="Ip label" type="Label" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "IP:"
 
-[node name="ip" type="LineEdit" parent="Multiplayer"]
+[node name="ip" type="LineEdit" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 placeholder_text = "127.0.0.1"
 
-[node name="port label" type="Label" parent="Multiplayer"]
+[node name="port label" type="Label" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Port:"
 
-[node name="port" type="LineEdit" parent="Multiplayer"]
+[node name="port" type="LineEdit" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 placeholder_text = "25565"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Multiplayer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 alignment = 1
 
-[node name="join" type="Button" parent="Multiplayer/HBoxContainer"]
+[node name="join" type="Button" parent="Panel/Multiplayer/HBoxContainer"]
 process_mode = 3
 layout_mode = 2
+size_flags_horizontal = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Join"
 
-[node name="host" type="Button" parent="Multiplayer/HBoxContainer"]
+[node name="host" type="Button" parent="Panel/Multiplayer/HBoxContainer"]
 process_mode = 3
 layout_mode = 2
+size_flags_horizontal = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "host
 "
 
-[node name="Back" type="Button" parent="Multiplayer"]
+[node name="Back" type="Button" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Back"
 
-[node name="Settings" type="VBoxContainer" parent="."]
+[node name="Settings" type="VBoxContainer" parent="Panel"]
 process_mode = 3
 visible = false
-layout_mode = 0
-offset_left = 507.0
-offset_top = 58.0
-offset_right = 842.0
-offset_bottom = 703.0
-scale = Vector2(3, 1.5)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -456.0
+offset_top = -284.0
+offset_right = 457.0
+offset_bottom = 532.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("2_8ye2w")
+alignment = 1
 
-[node name="fps" type="CheckButton" parent="Settings"]
+[node name="fps" type="CheckButton" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "FPS:"
 
-[node name="vsync" type="CheckButton" parent="Settings"]
+[node name="vsync" type="CheckButton" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Vsync:"
 
-[node name="antialiasing" type="CheckButton" parent="Settings"]
+[node name="antialiasing" type="CheckButton" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Antialiasing:"
 
-[node name="Fullscreen" type="CheckButton" parent="Settings"]
+[node name="Fullscreen" type="CheckButton" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Fullscreen:"
 
-[node name="Resolutions Label" type="Label" parent="Settings"]
+[node name="Resolutions Label" type="Label" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Resolution:"
 
-[node name="resolutions" type="OptionButton" parent="Settings"]
+[node name="resolutions" type="OptionButton" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 
-[node name="quality Label" type="Label" parent="Settings"]
+[node name="quality Label" type="Label" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "quality:"
 
-[node name="quality" type="OptionButton" parent="Settings"]
+[node name="quality" type="OptionButton" parent="Panel/Settings"]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 selected = 2
 item_count = 3
@@ -240,53 +289,60 @@ popup/item_1/id = 1
 popup/item_2/text = "High"
 popup/item_2/id = 2
 
-[node name="Volumen Label" type="Label" parent="Settings"]
+[node name="Volumen Label" type="Label" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Volumen:"
 
-[node name="Volumen" type="HSlider" parent="Settings"]
+[node name="Volumen" type="HSlider" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 2
 theme = ExtResource("2_8ye2w")
 max_value = 1.0
 step = 0.001
 value = 1.0
 
-[node name="Volumen Music Label2" type="Label" parent="Settings"]
+[node name="Volumen Music Label2" type="Label" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Music Volumen:"
 
-[node name="Volumen Music" type="HSlider" parent="Settings"]
+[node name="Volumen Music" type="HSlider" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 2
 theme = ExtResource("2_8ye2w")
 max_value = 1.0
 step = 0.001
 value = 0.5
 
-[node name="Time Label" type="Label" parent="Settings"]
+[node name="Time Label" type="Label" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Time disaster/weather:"
 
-[node name="Time" type="HSlider" parent="Settings"]
+[node name="Time" type="HSlider" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 2
 theme = ExtResource("2_8ye2w")
 max_value = 3600.0
 value = 100.0
 
-[node name="Back" type="Button" parent="Settings"]
+[node name="Back" type="Button" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 text = "Back"
@@ -297,23 +353,23 @@ stream = ExtResource("2_0u7u3")
 autoplay = true
 bus = &"Music"
 
-[connection signal="pressed" from="Menu/singleplayer" to="." method="_on_singleplayer_pressed"]
-[connection signal="pressed" from="Menu/multiplayer" to="." method="_on_play_pressed"]
-[connection signal="pressed" from="Menu/Settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="Menu/Exit" to="." method="_on_exit_pressed"]
-[connection signal="text_changed" from="Multiplayer/username" to="." method="_on_username_text_changed"]
-[connection signal="text_changed" from="Multiplayer/ip" to="." method="_on_ip_text_changed"]
-[connection signal="text_changed" from="Multiplayer/port" to="." method="_on_port_text_changed"]
-[connection signal="pressed" from="Multiplayer/HBoxContainer/join" to="." method="_on_join_pressed"]
-[connection signal="pressed" from="Multiplayer/HBoxContainer/host" to="." method="_on_host_pressed"]
-[connection signal="pressed" from="Multiplayer/Back" to="." method="_on_back_pressed"]
-[connection signal="toggled" from="Settings/fps" to="." method="_on_fps_toggled"]
-[connection signal="toggled" from="Settings/vsync" to="." method="_on_vsycn_toggled"]
-[connection signal="toggled" from="Settings/antialiasing" to="." method="_on_antialiasing_toggled"]
-[connection signal="toggled" from="Settings/Fullscreen" to="." method="_on_fullscreen_toggled"]
-[connection signal="item_selected" from="Settings/resolutions" to="." method="_on_resolutions_item_selected"]
-[connection signal="item_selected" from="Settings/quality" to="." method="_on_option_button_item_selected"]
-[connection signal="value_changed" from="Settings/Volumen" to="." method="_on_volumen_value_changed"]
-[connection signal="value_changed" from="Settings/Volumen Music" to="." method="_on_volumen_music_value_changed"]
-[connection signal="value_changed" from="Settings/Time" to="." method="_on_h_slider_2_value_changed"]
-[connection signal="pressed" from="Settings/Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Panel/Menu/singleplayer" to="." method="_on_singleplayer_pressed"]
+[connection signal="pressed" from="Panel/Menu/multiplayer" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Panel/Menu/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Panel/Menu/Exit" to="." method="_on_exit_pressed"]
+[connection signal="text_changed" from="Panel/Multiplayer/username" to="." method="_on_username_text_changed"]
+[connection signal="text_changed" from="Panel/Multiplayer/ip" to="." method="_on_ip_text_changed"]
+[connection signal="text_changed" from="Panel/Multiplayer/port" to="." method="_on_port_text_changed"]
+[connection signal="pressed" from="Panel/Multiplayer/HBoxContainer/join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="Panel/Multiplayer/HBoxContainer/host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Panel/Multiplayer/Back" to="." method="_on_back_pressed"]
+[connection signal="toggled" from="Panel/Settings/fps" to="." method="_on_fps_toggled"]
+[connection signal="toggled" from="Panel/Settings/vsync" to="." method="_on_vsycn_toggled"]
+[connection signal="toggled" from="Panel/Settings/antialiasing" to="." method="_on_antialiasing_toggled"]
+[connection signal="toggled" from="Panel/Settings/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="item_selected" from="Panel/Settings/resolutions" to="." method="_on_resolutions_item_selected"]
+[connection signal="item_selected" from="Panel/Settings/quality" to="." method="_on_option_button_item_selected"]
+[connection signal="value_changed" from="Panel/Settings/Volumen" to="." method="_on_volumen_value_changed"]
+[connection signal="value_changed" from="Panel/Settings/Volumen Music" to="." method="_on_volumen_music_value_changed"]
+[connection signal="value_changed" from="Panel/Settings/Time" to="." method="_on_h_slider_2_value_changed"]
+[connection signal="pressed" from="Panel/Settings/Back" to="." method="_on_back_pressed"]

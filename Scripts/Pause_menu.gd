@@ -7,6 +7,19 @@ var mouse_action_state = false
 @onready var light = worldenvironment.get_node("Sun")
 @onready var light2 = worldenvironment.get_node("Moon")
 
+@onready var main_menu = $Panel/Menu
+@onready var Settings = $Panel/Settings
+@onready var fullscreen = $Panel/Settings/Fullscreen
+@onready var vsync = $Panel/Settings/vsync
+@onready var fps = $Panel/Settings/fps
+@onready var anti_aliasing = $Panel/Settings/antialiasing
+@onready var volumen = $Panel/Settings/Volumen
+@onready var volumen_music = $"Panel/Settings/Volumen Music"
+@onready var time = $Panel/Settings/Time
+@onready var quality = $Panel/Settings/quality
+@onready var music = $Music
+@onready var resolutions = $Panel/Settings/resolutions
+
 var resolution = {
 	"2400x1080 ": Vector2i(2400, 1080 ),
 	"1920x1080": Vector2i(1920, 1080),
@@ -35,10 +48,10 @@ func addresolutions():
 	var index = 0
 	
 	for r in resolution:
-		$Settings/resolutions.add_item(r,index)
+		resolutions.add_item(r,index)
 		
 		if resolution[r] == current_resolution:
-			$Settings/resolutions._select_int(index)
+			resolutions._select_int(index)
 		index += 1
 
 # Called when the node enters the scene tree for the first time.
@@ -51,21 +64,46 @@ func _ready():
 
 
 	self.hide()
-	$Menu.show()
-	$Settings.hide()
+	main_menu.show()
+	Settings.hide()
 
+	LoadGameScene()
+
+
+func LoadGameScene():
 	addresolutions()
 	DisplayServer.window_set_size(Globals.GlobalsData.resolution)
 	get_viewport().set_size(Globals.GlobalsData.resolution)
 
-	$Settings/fps.button_pressed = Globals.GlobalsData.FPS
-	$Settings/vsync.button_pressed = Globals.GlobalsData.vsync
-	$Settings/Fullscreen.button_pressed = Globals.GlobalsData.fullscreen
-	$Settings/antialiasing.button_pressed = Globals.GlobalsData.antialiasing
-	$Settings/Volumen.value = Globals.GlobalsData.volumen
-	$"Settings/Volumen Music".value = Globals.GlobalsData.volumen_music
-	$Settings/Time.value = Globals.GlobalsData.timer_disasters
-	$Settings/quality.selected = Globals.GlobalsData.quality
+	fullscreen.button_pressed = Globals.GlobalsData.fullscreen
+	fps.button_pressed = Globals.GlobalsData.FPS
+	vsync.button_pressed = Globals.GlobalsData.vsync
+	anti_aliasing.button_pressed = Globals.GlobalsData.antialiasing
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(Globals.GlobalsData.volumen))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(Globals.GlobalsData.volumen_music))
+	volumen.value = Globals.GlobalsData.volumen
+	volumen_music.value = Globals.GlobalsData.volumen_music
+	time.value = Globals.GlobalsData.timer_disasters
+	quality.selected = Globals.GlobalsData.quality
+
+	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
+		Globals.print_role("Iniciando servidor...")
+
+		var args = OS.get_cmdline_user_args()
+		for arg in args:
+			var key_value = arg.rsplit("=")
+			match key_value[0]:
+				"port":
+					Globals.port = key_value[1].to_int()
+
+		Globals.print_role("port: " + str(Globals.port))
+		Globals.print_role("ip: " + IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4))
+		
+		await get_tree().create_timer(2).timeout
+
+		Globals.hostwithport(Globals.port)
+	else: 
+		Globals.print_role("No se puede jugar en modo de servidor")
 
 	match Globals.GlobalsData.quality:
 		0:
@@ -90,9 +128,6 @@ func _ready():
 
 
 
-
-
-
 func _on_ip_text_changed(new_text:String):
 	Globals.ip = new_text
 
@@ -102,13 +137,13 @@ func _on_port_text_changed(new_text:String):
 
 
 func _on_play_pressed():
-	$Menu.hide()
-	$Settings.hide()
+	main_menu.hide()
+	Settings.hide()
 
 
 func _on_settings_pressed():
-	$Menu.hide()
-	$Settings.show()
+	main_menu.hide()
+	Settings.show()
 
 
 func _on_exit_pressed():
@@ -144,8 +179,8 @@ func _on_antialiasing_toggled(toggled_on:bool):
 
 
 func _on_back_pressed():
-	$Menu.show()
-	$Settings.hide()
+	main_menu.show()
+	Settings.hide()
 
 
 
@@ -208,7 +243,7 @@ func _on_volumen_value_changed(value:float):
 
 
 func _on_resolutions_item_selected(index:int):
-	var size = resolution.get($Settings/resolutions.get_item_text(index))
+	var size = resolution.get(resolutions.get_item_text(index))
 	DisplayServer.window_set_size(size)
 	get_viewport().set_size(size)
 	Globals.GlobalsData.resolution = size

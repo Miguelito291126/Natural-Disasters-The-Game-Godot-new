@@ -1,0 +1,60 @@
+[gd_scene load_steps=3 format=3 uid="uid://dg75ymjinjgeu"]
+
+[ext_resource type="Script" uid="uid://bpb7kal7xb8sg" path="res://Scripts/Death Menu.gd" id="1_ipdme"]
+[ext_resource type="Theme" uid="uid://ctfcvmj6op0i5" path="res://Resources/Death_Screen_theme.tres" id="2_bsx7a"]
+
+[node name="Death Menu" type="CanvasLayer"]
+process_mode = 3
+layer = 2
+script = ExtResource("1_ipdme")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_bsx7a")
+
+[node name="Buttons" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -478.0
+offset_top = -211.5
+offset_right = 478.0
+offset_bottom = 211.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_bsx7a")
+
+[node name="Label" type="Label" parent="Panel/Buttons"]
+layout_mode = 2
+theme = ExtResource("2_bsx7a")
+theme_override_font_sizes/font_size = 100
+text = "You Death
+you want to continue?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Continue" type="Button" parent="Panel/Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("2_bsx7a")
+theme_override_font_sizes/font_size = 100
+text = "Continue
+"
+
+[node name="Exit" type="Button" parent="Panel/Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("2_bsx7a")
+theme_override_font_sizes/font_size = 100
+text = "Exit
+"
+
+[connection signal="pressed" from="Panel/Buttons/Continue" to="." method="_on_return_pressed"]
+[connection signal="pressed" from="Panel/Buttons/Exit" to="." method="_on_exit_pressed"]
