@@ -380,6 +380,7 @@ func server_fail():
 	get_tree().paused = false
 	is_networking = false
 	sync_player_list()
+	remove_all_destrolled_nodes()
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 	
 func server_disconect():
@@ -387,6 +388,7 @@ func server_disconect():
 	get_tree().paused = false
 	is_networking = false
 	sync_player_list()
+	remove_all_destrolled_nodes()
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 
 
@@ -698,8 +700,30 @@ func sync_destrolled_nodes(Hauses: Array):
 		if house and not house.destrolled:
 			house.destroy()
 
+func add_destrolled_nodes(Name: String):
+	if is_networking:
+		if not get_tree().get_multiplayer().is_server():
+			return
+
+	if not destrolled_node.has(Name):
+		destrolled_node.append(Name)
 
 
-	
+func remove_destrolled_nodes(Name: String):
+	if is_networking:
+		if not get_tree().get_multiplayer().is_server():
+			return
+
+	if destrolled_node.has(Name):
+		destrolled_node.erase(Name)
+
+func remove_all_destrolled_nodes():
+	if is_networking:
+		if not get_tree().get_multiplayer().is_server():
+			return
+
+	for i in destrolled_node:
+		remove_destrolled_nodes(i)
+
 
 	

@@ -54,9 +54,7 @@ func destroy():
 	get_parent().add_child(Broken_Hause)
 	destrolled = true
     # Guardar path en Globals
-	if Globals.is_networking and multiplayer.is_server():
-		Globals.destrolled_node.append(self.get_path())
-
+	Globals.add_destrolled_nodes(self.get_path())
 	self.queue_free()
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
