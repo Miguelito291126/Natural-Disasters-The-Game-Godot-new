@@ -177,6 +177,7 @@ text = "Time disaster/weather:"
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
+min_value = 1.0
 max_value = 1000.0
 value = 100.0
 

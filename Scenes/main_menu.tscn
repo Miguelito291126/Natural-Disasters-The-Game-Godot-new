@@ -306,7 +306,8 @@ process_mode = 3
 layout_mode = 2
 size_flags_vertical = 2
 theme = ExtResource("2_8ye2w")
-max_value = 3600.0
+min_value = 1.0
+max_value = 1000.0
 value = 100.0
 
 [node name="Back" type="Button" parent="Panel/Settings"]

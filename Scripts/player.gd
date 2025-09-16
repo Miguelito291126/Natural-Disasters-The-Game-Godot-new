@@ -318,11 +318,14 @@ func _physics_process(delta):
 		velocity.x = lerp(velocity.x, direction.x * SPEED, delta * 3.0)
 		velocity.z = lerp(velocity.z, direction.z * SPEED, delta * 3.0)
 
-	animation_tree_node.set("parameters/conditions/is_falling", !is_on_floor())
+
+	var horizontal_velocity = Vector2(velocity.x, velocity.z)
+
+	animation_tree_node.set("parameters/conditions/is_falling", !is_on_floor() and velocity.y < 0)
 	animation_tree_node.set("parameters/conditions/is_jumping", velocity.y > 0 )
 	animation_tree_node.set("parameters/conditions/is_swiming", IsInWater or IsInLava)
-	animation_tree_node.set("parameters/conditions/is_idle", is_on_floor() and input_dir.x == 0 and input_dir.y == 0)
-	animation_tree_node.set("parameters/conditions/is_walking", is_on_floor() and input_dir.x != 0 or input_dir.y != 0)
+	animation_tree_node.set("parameters/conditions/is_idle", is_on_floor() and horizontal_velocity.length() < 0.1)
+	animation_tree_node.set("parameters/conditions/is_walking", is_on_floor() and horizontal_velocity.length() > 0.1)
 
 	if interactor.is_colliding():
 		var target = interactor.get_collider()
