@@ -230,9 +230,7 @@ func _on_time_value_changed(value):
 		
 	Globals.GlobalsData.timer_disasters = value
 	Globals.GlobalsData.save_file()
-	Globals.timer.stop()
 	Globals.timer.wait_time = value
-	Globals.timer.start()
 	
 		
 func _on_volumen_value_changed(value:float):

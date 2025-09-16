@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://csivk4bmioako"]
+[gd_scene load_steps=26 format=3 uid="uid://csivk4bmioako"]
 
 [ext_resource type="Script" uid="uid://qrldb3mvolox" path="res://Scripts/map.gd" id="1_xn4hm"]
 [ext_resource type="Shader" uid="uid://4lxdfdreyjat" path="res://clouds.gdshader" id="2_sc6k1"]
@@ -13,10 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://b8j13f56alvd7" path="res://Sprites/clipart974730.png" id="10_ux663"]
 [ext_resource type="AudioStream" uid="uid://dm8qudq1y2lbp" path="res://Sounds/music/survival-metal-with-solo-109315.mp3" id="10_w1fny"]
 [ext_resource type="PackedScene" uid="uid://hiq4h8n7r78k" path="res://Scenes/Hause.tscn" id="11_8ni8s"]
-[ext_resource type="Script" uid="uid://v57w2n30luys" path="res://Scripts/Chat.gd" id="12_osvto"]
-[ext_resource type="Script" uid="uid://5ehetmrvktdi" path="res://Scripts/Warning Hud.gd" id="14_p61f1"]
-[ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="15_4wjke"]
-[ext_resource type="Texture2D" uid="uid://66hhd27hjdj8" path="res://Icons/disasters.png" id="15_32db0"]
+[ext_resource type="PackedScene" uid="uid://yrq2iuii7a14" path="res://Scenes/chat.tscn" id="14_x5dfk"]
+[ext_resource type="PackedScene" uid="uid://cb10f2tpfo0qj" path="res://Scenes/warning_hud.tscn" id="15_fls3e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ihtyg"]
 shader = ExtResource("2_sc6k1")
@@ -197,94 +195,9 @@ gizmo_extents = 2.9
 [node name="Hause" parent="." instance=ExtResource("11_8ni8s")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, 1.44768, 1012.02)
 
-[node name="Chat" type="CanvasLayer" parent="."]
-process_mode = 3
-script = ExtResource("12_osvto")
+[node name="Chat" parent="." instance=ExtResource("14_x5dfk")]
 
-[node name="TextEdit" type="TextEdit" parent="Chat"]
-process_mode = 3
-auto_translate_mode = 1
-offset_top = 606.0
-offset_right = 284.0
-offset_bottom = 770.0
-mouse_filter = 2
-theme = ExtResource("15_4wjke")
-editable = false
-metadata/_edit_use_anchors_ = true
-
-[node name="LineEdit" type="LineEdit" parent="Chat"]
-process_mode = 3
-auto_translate_mode = 1
-offset_left = 2.0
-offset_top = 770.0
-offset_right = 230.0
-offset_bottom = 801.0
-theme = ExtResource("15_4wjke")
-metadata/_edit_use_anchors_ = true
-
-[node name="Button" type="Button" parent="Chat"]
-process_mode = 3
-auto_translate_mode = 1
-anchors_preset = -1
-anchor_right = 0.0046875
-anchor_bottom = 0.000925926
-offset_left = 231.0
-offset_top = 769.0
-offset_right = 281.0
-offset_bottom = 800.0
-theme = ExtResource("15_4wjke")
-text = "Enter"
-metadata/_edit_use_anchors_ = true
-
-[node name="Warning Hud" type="CanvasLayer" parent="."]
-process_mode = 3
-script = ExtResource("14_p61f1")
-
-[node name="Panel" type="Panel" parent="Warning Hud"]
-process_mode = 3
-auto_translate_mode = 1
-offset_left = 711.0
-offset_top = 1.0
-offset_right = 754.0
-offset_bottom = 41.0
-scale = Vector2(9.91709, 5.28957)
-mouse_filter = 2
-theme = ExtResource("15_4wjke")
-metadata/_edit_use_anchors_ = true
-
-[node name="Label" type="Label" parent="Warning Hud"]
-process_mode = 3
-auto_translate_mode = 1
-anchors_preset = -1
-anchor_top = -0.012037
-anchor_right = 0.0401042
-anchor_bottom = -0.012037
-offset_left = 726.0
-offset_top = 11.0
-offset_right = 878.0
-offset_bottom = 216.0
-theme = ExtResource("15_4wjke")
-text = "Current Disasters/Weather is:
-Tornado"
-metadata/_edit_use_anchors_ = true
-
-[node name="Panel2" type="Panel" parent="Warning Hud"]
-process_mode = 3
-auto_translate_mode = 1
-offset_left = 972.0
-offset_top = 27.0
-offset_right = 1021.0
-offset_bottom = 67.0
-scale = Vector2(2.92153, 3.89434)
-mouse_filter = 2
-theme = ExtResource("15_4wjke")
-metadata/_edit_use_anchors_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="Warning Hud"]
-texture_filter = 1
-position = Vector2(1042, 102)
-scale = Vector2(7.58173, 7.86641)
-texture = ExtResource("15_32db0")
+[node name="Warning Hud" parent="." instance=ExtResource("15_fls3e")]
 
 [node name="MapSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_8u7l0")
@@ -321,5 +234,3 @@ shape = SubResource("BoxShape3D_b68bb")
 [node name="CollisionShape3D8" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4095.09)
 shape = SubResource("BoxShape3D_t040d")
-
-[connection signal="pressed" from="Chat/Button" to="Chat" method="_on_button_pressed"]

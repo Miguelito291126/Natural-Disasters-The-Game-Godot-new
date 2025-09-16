@@ -33,12 +33,19 @@ corner_radius_bottom_left = 10
 
 [resource]
 Button/constants/outline_size = 10
+Button/font_sizes/font_size = 100
 Button/styles/normal = SubResource("StyleBoxFlat_bl0a7")
+CheckButton/font_sizes/font_size = 50
 Label/constants/outline_size = 10
+Label/font_sizes/font_size = 50
 LineEdit/constants/outline_size = 10
+LineEdit/font_sizes/font_size = 50
 LineEdit/styles/normal = SubResource("StyleBoxFlat_bfbw0")
+OptionButton/font_sizes/font_size = 50
 Panel/styles/panel = SubResource("StyleBoxFlat_uccex")
 ProgressBar/constants/outline_size = 10
+ProgressBar/font_sizes/font_size = 50
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_rpata")
 TextEdit/constants/outline_size = 10
+TextEdit/font_sizes/font_size = 20
 TextEdit/styles/normal = SubResource("StyleBoxFlat_nrbn6")

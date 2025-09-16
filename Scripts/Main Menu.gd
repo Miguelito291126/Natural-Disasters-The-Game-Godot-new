@@ -1,7 +1,7 @@
 extends Control
 
 @onready var main_menu = $Panel/Menu
-@onready var tittle = $Panel/HBoxContainer/Title
+@onready var tittle = $Panel/Menu/HBoxContainer/Title
 @onready var Multiplayer = $Panel/Multiplayer
 @onready var Settings = $Panel/Settings
 @onready var username = $Panel/Multiplayer/username

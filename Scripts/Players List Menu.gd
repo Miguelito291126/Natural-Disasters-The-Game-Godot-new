@@ -1,5 +1,6 @@
 extends CanvasLayer
 
+@onready var list = $Panel/List
 func _ready():
 	if Globals.is_networking:
 		if not is_multiplayer_authority():
@@ -16,8 +17,8 @@ func _process(_delta):
 
 
 		# Eliminar todos los hijos del VBoxContainer
-		for child in $List.get_children():
-			$List.remove_child(child)
+		for child in list.get_children():
+			list.remove_child(child)
 
 		# Iterar sobre los jugadores conectados y agregarlos a la lista
 		if not Globals.players_conected.is_empty():
@@ -25,7 +26,7 @@ func _process(_delta):
 				if is_instance_valid(player_data):
 					var label = Label.new()
 					label.text = player_data.username + " points: " + str(player_data.points)
-					$List.add_child(label, true)
+					list.add_child(label, true)
 
 		# Mostrar u ocultar la lista de jugadores según la acción del teclado
 		if Input.is_action_just_pressed("List of players"):

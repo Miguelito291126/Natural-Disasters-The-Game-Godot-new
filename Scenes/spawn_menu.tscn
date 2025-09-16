@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxx1v23lu6573"]
+
+[ext_resource type="Script" uid="uid://in8kmfyee40h" path="res://Scripts/spawn_menu.gd" id="1_l3fur"]
+[ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="2_r0m53"]
+
+[node name="SpawnMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 2
+visible = false
+script = ExtResource("1_l3fur")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 335.0
+offset_top = 183.0
+offset_right = -294.0
+offset_bottom = -162.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_r0m53")
+
+[node name="GridContainer" type="GridContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 5

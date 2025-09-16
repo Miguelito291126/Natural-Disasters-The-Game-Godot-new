@@ -19,9 +19,11 @@ bg_color = Color(0.478431, 0.141176, 0.109804, 0.32549)
 [resource]
 Button/colors/font_pressed_color = Color(0, 0, 0, 1)
 Button/constants/outline_size = 10
+Button/font_sizes/font_size = 100
 Button/styles/focus = SubResource("StyleBoxFlat_fl112")
 Button/styles/hover = SubResource("StyleBoxFlat_eh80v")
 Button/styles/normal = SubResource("StyleBoxFlat_vet6l")
 Button/styles/pressed = SubResource("StyleBoxFlat_liw50")
 Label/constants/outline_size = 10
+Label/font_sizes/font_size = 100
 Panel/styles/panel = SubResource("StyleBoxFlat_pmu5p")

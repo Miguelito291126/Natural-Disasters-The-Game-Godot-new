@@ -5,7 +5,7 @@
 
 [node name="Death Menu" type="CanvasLayer"]
 process_mode = 3
-layer = 2
+layer = 5
 script = ExtResource("1_ipdme")
 
 [node name="Panel" type="Panel" parent="."]
@@ -34,7 +34,6 @@ theme = ExtResource("2_bsx7a")
 [node name="Label" type="Label" parent="Panel/Buttons"]
 layout_mode = 2
 theme = ExtResource("2_bsx7a")
-theme_override_font_sizes/font_size = 100
 text = "You Death
 you want to continue?"
 horizontal_alignment = 1
@@ -44,7 +43,6 @@ vertical_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_bsx7a")
-theme_override_font_sizes/font_size = 100
 text = "Continue
 "
 
@@ -52,7 +50,6 @@ text = "Continue
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_bsx7a")
-theme_override_font_sizes/font_size = 100
 text = "Exit
 "
 

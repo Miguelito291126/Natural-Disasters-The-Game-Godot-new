@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+@onready var label = $Panel/Label
+
 func _enter_tree():
 	if Globals.is_networking:
 		set_multiplayer_authority(multiplayer.get_unique_id())
@@ -20,6 +22,6 @@ func _process(_delta):
 
 
 	if Globals.started:
-		$Label.text = "Current Disasters/Weather is: \n"  + Globals.current_weather_and_disaster + "\nTime Left for the next disasters: \n" + str(int(Globals.timer.time_left)) + "\nTime:\n" + str(Globals.Hour) + ":" + str(Globals.Minute)
+		label.text = "Current Disasters/Weather is: \n"  + Globals.current_weather_and_disaster + "\nTime Left for the next disasters: \n" + str(int(Globals.timer.time_left)) + "\nTime:\n" + str(Globals.Hour) + ":" + str(Globals.Minute)
 	else:
-		$Label.text = "Waiting for players... Time remain: \n" + str(int(Globals.time_left))
+		label.text = "Waiting for players... Time remain: \n" + str(int(Globals.time_left))

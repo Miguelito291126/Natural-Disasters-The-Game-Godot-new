@@ -1,21 +1,18 @@
-[gd_scene load_steps=90 format=4 uid="uid://b2g31vrdy6c1x"]
+[gd_scene load_steps=87 format=4 uid="uid://b2g31vrdy6c1x"]
 
 [ext_resource type="Script" uid="uid://q156qsvgvd8n" path="res://Scripts/player.gd" id="1_btpoi"]
 [ext_resource type="Texture2D" uid="uid://bevx5iyc2q82h" path="res://Sprites/kenney_particle_pack/smoke_01.png" id="3_kstye"]
 [ext_resource type="Script" uid="uid://c38icpun2kxgh" path="res://Scripts/camera_3d.gd" id="3_n87wl"]
-[ext_resource type="Script" uid="uid://buu0yjd04a5st" path="res://Scripts/Hud.gd" id="3_pgssk"]
 [ext_resource type="AudioStream" uid="uid://djwg2fx6tlsvk" path="res://Sounds/disasters/player/vomit.wav" id="4_13lgf"]
-[ext_resource type="Texture2D" uid="uid://gwwhay61ha7p" path="res://Sprites/heart.png" id="4_ni53t"]
 [ext_resource type="AudioStream" uid="uid://bcbahjxisvk4u" path="res://Sounds/disasters/nature/rain-light.wav" id="6_dfbmn"]
-[ext_resource type="AudioStream" uid="uid://d2vgse17u5635" path="res://Sounds/disasters/player/heartbeat.wav" id="6_vn0ni"]
 [ext_resource type="Shader" uid="uid://cg0xv5ihu8ybt" path="res://Shaders/UnderWater.gdshader" id="7_787g2"]
 [ext_resource type="Shader" uid="uid://nit4j25w5xly" path="res://Shaders/UnderLava.gdshader" id="8_txqea"]
-[ext_resource type="Script" uid="uid://cjvdvncmdurd8" path="res://Scripts/Players List Menu.gd" id="8_u7k75"]
 [ext_resource type="PackedScene" uid="uid://gvw74rw7le3t" path="res://Scenes/pause_menu.tscn" id="9_fd4e3"]
 [ext_resource type="PackedScene" uid="uid://dg75ymjinjgeu" path="res://Scenes/death_menu.tscn" id="10_qqcod"]
+[ext_resource type="PackedScene" uid="uid://caxxag3apnaje" path="res://Scenes/players_list_menu.tscn" id="11_ukyrk"]
+[ext_resource type="PackedScene" uid="uid://cxx1v23lu6573" path="res://Scenes/spawn_menu.tscn" id="12_7dp3o"]
 [ext_resource type="Shader" uid="uid://c2acdrrskxmye" path="res://Shaders/temp.gdshader" id="12_w8j6f"]
-[ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="16_igrcy"]
-[ext_resource type="Script" uid="uid://in8kmfyee40h" path="res://Scripts/spawn_menu.gd" id="19_hx71c"]
+[ext_resource type="PackedScene" uid="uid://brycay1xlwsxg" path="res://Scenes/hud.tscn" id="13_h4iuc"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1y4s5"]
 margin = 2.71
@@ -1237,7 +1234,7 @@ bones/4/parent = 3
 bones/4/rest = Transform3D(1, -0.000138256, 1.37828e-07, 0.000138199, 0.999618, 0.027635, -3.95847e-06, -0.027635, 0.999618, -6.4719e-17, 0.766354, -4.28408e-08)
 bones/4/enabled = true
 bones/4/position = Vector3(-6.4719e-17, 0.766354, -4.28408e-08)
-bones/4/rotation = Quaternion(0.648642, -0.0558786, 0.0513769, 0.757299)
+bones/4/rotation = Quaternion(0.649458, -0.0420184, 0.0386362, 0.758252)
 bones/4/scale = Vector3(1, 1, 1)
 bones/5/name = "brazo_inferior.d"
 bones/5/parent = 4
@@ -1258,7 +1255,7 @@ bones/7/parent = 6
 bones/7/rest = Transform3D(1, -2.40698e-19, 5.55226e-17, 1.22943e-18, 0.999841, -0.0178084, -5.55095e-17, 0.0178084, 0.999841, -3.88342e-17, 0.721442, 5.58794e-08)
 bones/7/enabled = true
 bones/7/position = Vector3(-3.88342e-17, 0.721442, 5.58794e-08)
-bones/7/rotation = Quaternion(-0.636778, -0.0837964, -0.0744807, 0.762853)
+bones/7/rotation = Quaternion(-0.638077, -0.0690563, -0.0613793, 0.764409)
 bones/7/scale = Vector3(1, 1, 1)
 bones/8/name = "brazo_inferior.i"
 bones/8/parent = 7
@@ -1286,14 +1283,14 @@ bones/11/parent = 10
 bones/11/rest = Transform3D(-0.999974, -0.00436537, 0.00581706, -0.00592073, 0.0241228, -0.999691, 0.0042237, -0.999699, -0.024148, 1.27966e-10, 0.384886, 4.17949e-08)
 bones/11/enabled = true
 bones/11/position = Vector3(1.27966e-10, 0.384886, 4.17949e-08)
-bones/11/rotation = Quaternion(-0.0722202, 0.707088, -0.694232, -0.113366)
+bones/11/rotation = Quaternion(-0.0534543, 0.709664, -0.696343, -0.0928793)
 bones/11/scale = Vector3(1, 1, 1)
 bones/12/name = "pierna_inferior.d"
 bones/12/parent = 11
 bones/12/rest = Transform3D(0.999643, -0.0189994, -0.01878, 0.0187942, 0.999762, -0.0110474, 0.0189855, 0.0106905, 0.999763, -1.04774e-09, 2.12904, -1.33368e-08)
 bones/12/enabled = true
 bones/12/position = Vector3(-1.04774e-09, 2.12904, -1.33368e-08)
-bones/12/rotation = Quaternion(0.00492122, -0.0120992, -0.131168, 0.991274)
+bones/12/rotation = Quaternion(0.00490021, -0.0120111, -0.131892, 0.991179)
 bones/12/scale = Vector3(1, 1, 1)
 bones/13/name = "cadera.i"
 bones/13/parent = 0
@@ -1307,14 +1304,14 @@ bones/14/parent = 13
 bones/14/rest = Transform3D(0.998807, -0.0246589, -0.0421602, 0.0422196, 0.00189155, 0.999107, -0.0245572, -0.999694, 0.0029304, 5.90433e-10, 0.327296, 4.71613e-08)
 bones/14/enabled = true
 bones/14/position = Vector3(5.90433e-10, 0.327296, 4.71613e-08)
-bones/14/rotation = Quaternion(-0.699499, 0.0970184, 0.163471, 0.688888)
+bones/14/rotation = Quaternion(-0.702311, 0.0828282, 0.145507, 0.691901)
 bones/14/scale = Vector3(1, 1, 1)
 bones/15/name = "pierna_inferior.i"
 bones/15/parent = 14
 bones/15/rest = Transform3D(0.998071, 0.0449051, 0.0428617, -0.0432015, 0.99827, -0.0398786, -0.0445783, 0.03795, 0.998285, -4.19095e-09, 2.16872, -9.31323e-09)
 bones/15/enabled = true
 bones/15/position = Vector3(-4.19095e-09, 2.16872, -9.31323e-09)
-bones/15/rotation = Quaternion(0.0175489, 0.00175509, -0.131493, 0.99116)
+bones/15/rotation = Quaternion(0.0178235, 0.00223596, -0.130857, 0.991239)
 bones/15/scale = Vector3(1, 1, 1)
 
 [node name="Brazos" type="MeshInstance3D" parent="Esqueleto/Skeleton3D"]
@@ -1482,118 +1479,8 @@ visible = false
 [node name="Death Menu" parent="." instance=ExtResource("10_qqcod")]
 visible = false
 
-[node name="Players List Menu" type="CanvasLayer" parent="."]
-process_mode = 3
-visible = false
-script = ExtResource("8_u7k75")
+[node name="Players List Menu" parent="." instance=ExtResource("11_ukyrk")]
 
-[node name="Panel" type="Panel" parent="Players List Menu"]
-offset_left = 738.0
-offset_top = 288.0
-offset_right = 778.0
-offset_bottom = 328.0
-scale = Vector2(9.75896, 11.5355)
-mouse_filter = 2
-theme = ExtResource("16_igrcy")
+[node name="SpawnMenu" parent="." instance=ExtResource("12_7dp3o")]
 
-[node name="List" type="VBoxContainer" parent="Players List Menu"]
-offset_left = 739.0
-offset_top = 290.0
-offset_right = 934.0
-offset_bottom = 519.0
-scale = Vector2(2, 2)
-mouse_filter = 2
-theme = ExtResource("16_igrcy")
-
-[node name="SpawnMenu" type="CanvasLayer" parent="."]
-process_mode = 3
-layer = 2
-visible = false
-script = ExtResource("19_hx71c")
-
-[node name="Panel" type="Panel" parent="SpawnMenu"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 335.0
-offset_top = 183.0
-offset_right = -294.0
-offset_bottom = -162.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme = ExtResource("16_igrcy")
-
-[node name="GridContainer" type="GridContainer" parent="SpawnMenu/Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-columns = 5
-
-[node name="Hud" type="CanvasLayer" parent="."]
-process_mode = 3
-script = ExtResource("3_pgssk")
-
-[node name="FPS" type="Label" parent="Hud"]
-offset_left = 15.0
-offset_top = 811.0
-offset_right = 55.0
-offset_bottom = 834.0
-theme = ExtResource("16_igrcy")
-theme_override_font_sizes/font_size = 30
-text = "FPS:"
-metadata/_edit_use_anchors_ = true
-
-[node name="Panel" type="Panel" parent="Hud"]
-process_mode = 3
-offset_left = 2.0
-offset_top = 865.0
-offset_right = 45.0
-offset_bottom = 905.0
-scale = Vector2(8.35709, 5.28957)
-mouse_filter = 2
-theme = ExtResource("16_igrcy")
-metadata/_edit_use_anchors_ = true
-
-[node name="Label" type="Label" parent="Hud"]
-process_mode = 3
-offset_left = 17.0
-offset_top = 875.0
-offset_right = 63.0
-offset_bottom = 898.0
-theme = ExtResource("16_igrcy")
-text = "Temp: 17º
-Humidity: 20%
-Wind Direction: 0º
-Wind Velocity: 0 km
-Body Temp: 37º
-Body Oxygen: 100%
-Body Health: 100
-
-"
-metadata/_edit_use_anchors_ = true
-
-[node name="Panel2" type="Panel" parent="Hud"]
-process_mode = 3
-offset_left = 199.0
-offset_top = 894.0
-offset_right = 248.0
-offset_bottom = 934.0
-scale = Vector2(2.92153, 3.89434)
-mouse_filter = 2
-theme = ExtResource("16_igrcy")
-metadata/_edit_use_anchors_ = true
-
-[node name="Heart" type="Sprite2D" parent="Hud"]
-process_mode = 3
-texture_filter = 1
-position = Vector2(272.5, 972.5)
-scale = Vector2(1.08594, 1.19531)
-texture = ExtResource("4_ni53t")
-
-[node name="Heartbeat" type="AudioStreamPlayer" parent="Hud"]
-process_mode = 3
-stream = ExtResource("6_vn0ni")
+[node name="Hud" parent="." instance=ExtResource("13_h4iuc")]
