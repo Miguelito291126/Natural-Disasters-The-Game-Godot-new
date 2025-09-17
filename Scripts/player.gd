@@ -131,12 +131,11 @@ func _ready():
 
 	if Globals.is_networking:
 		camera_node.current = is_multiplayer_authority()
-		rain_node.emitting = is_multiplayer_authority()
-		splash_node.emitting = is_multiplayer_authority()
-		sand_node.emitting = is_multiplayer_authority()
-		dust_node.emitting = is_multiplayer_authority()
-		snow_node.emitting = is_multiplayer_authority()
-		
+		rain_node.emitting = false
+		sand_node.emitting = false
+		splash_node.emitting = false
+		dust_node.emitting = false
+		snow_node.emitting = false	
 		if not is_multiplayer_authority():
 			return
 
@@ -242,9 +241,9 @@ func IsOnFire_effects():
 	if IsOnFire:
 		if randi_range(1,5) == 5:
 			if Globals.is_networking:
-				damage.rpc(10)
+				damage.rpc(5)
 			else:
-				damage(10)
+				damage(5)
 
 
 
