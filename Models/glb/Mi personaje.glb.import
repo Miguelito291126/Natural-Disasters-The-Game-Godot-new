@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cxlcx23ooclh7"
-path="res://.godot/imported/Mi personaje.fbx-9c7c614b08bab7ff08aa6a8bfe0f8c65.scn"
+uid="uid://buaa5bat7am5c"
+path="res://.godot/imported/Mi personaje.glb-549d3361e6588697621f9376b2b23719.scn"
 
 [deps]
 
-source_file="res://Models/FBX Format/Mi personaje.fbx"
-dest_files=["res://.godot/imported/Mi personaje.fbx-9c7c614b08bab7ff08aa6a8bfe0f8c65.scn"]
+source_file="res://Models/glb/Mi personaje.glb"
+dest_files=["res://.godot/imported/Mi personaje.glb-549d3361e6588697621f9376b2b23719.scn"]
 
 [params]
 
@@ -38,7 +38,5 @@ materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
 _subresources={}
-fbx/importer=0
-fbx/allow_geometry_helper_nodes=false
-fbx/embedded_image_handling=1
-fbx/naming_version=2
+gltf/naming_version=1
+gltf/embedded_image_handling=1

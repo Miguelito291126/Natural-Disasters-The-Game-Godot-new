@@ -128,7 +128,7 @@ _spawnable_scenes = PackedStringArray("uid://b2g31vrdy6c1x")
 spawn_path = NodePath("..")
 
 [node name="DisastersSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://w8budjn2m22a", "uid://doi73cvnxims6", "res://Scenes/meteors.tscn", "uid://tjhhsh3ck07n", "uid://dni5hbhwlxmdi", "uid://d3gkmhq5kjhrj", "uid://qf81iinh5hke")
+_spawnable_scenes = PackedStringArray("uid://w8budjn2m22a", "uid://doi73cvnxims6", "uid://tjhhsh3ck07n", "uid://dni5hbhwlxmdi", "uid://d3gkmhq5kjhrj", "uid://qf81iinh5hke")
 spawn_path = NodePath("..")
 
 [node name="ObjectSpawn" type="MultiplayerSpawner" parent="."]

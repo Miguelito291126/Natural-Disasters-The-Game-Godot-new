@@ -107,7 +107,7 @@ func damage(value):
 		if hearth <= 0:
 			is_alive = false
 
-			Globals.points -= 1
+			Globals.remove_points.rpc_id(id)
 			
 			if not Globals.is_networking:
 				get_tree().paused = true
@@ -310,14 +310,18 @@ func _process(delta):
 func request_ping(time_sent: int, from_id: int):
 	if multiplayer.is_server():
 		response_ping.rpc_id(from_id, time_sent)
-		print("Servidor: request_ping recibido de peer ", from_id)
+		Globals.print_role("Servidor: request_ping recibido de peer " + str(from_id))
 
 @rpc("any_peer", "call_local")
 func response_ping(time_sent: int):
 	var now = Time.get_ticks_msec()
 	var rtt = now - time_sent  # ya está en ms
 	ping = rtt
-	print("Ping: %d ms" % ping)
+
+	if multiplayer.is_server():
+		Globals.print_role("Ping (host): %d ms" % ping)
+	else:
+		Globals.print_role("Ping: %d ms" % ping)
 	
 
 
@@ -413,11 +417,11 @@ func _unhandled_input(event):
 			camera_node.rotation.x -= event.relative.y * SENSIBILITY
 			camera_node.rotation_degrees.x = clamp(camera_node.rotation_degrees.x, -90, 90)
 			head_node.rotation.y -= event.relative.x * SENSIBILITY
-			esqueleto_node.rotation_degrees.y = head_node.rotation_degrees.y - 90 
+			esqueleto_node.rotation_degrees.y = head_node.rotation_degrees.y
 		elif event is InputEventJoypadMotion:
 			if event.axis == 2:	
 				head_node.rotation.y += event.axis_value * SENSIBILITY
-				esqueleto_node.rotation_degrees.y = head_node.rotation_degrees.y - 90 
+				esqueleto_node.rotation_degrees.y = head_node.rotation_degrees.y
 			elif event.axis == 3:
 				camera_node.rotation.x += event.axis_value * SENSIBILITY
 				camera_node.rotation_degrees.x = clamp(camera_node.rotation_degrees.x, -90, 90)

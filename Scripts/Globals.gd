@@ -671,6 +671,11 @@ func set_weather_and_disaster(weather_and_disaster_index):
 func add_points():
 	points += 1
 
+
+@rpc("any_peer", "call_local")
+func remove_points():
+	points -= 1
+
 func teleport_position(pos):
 	for player in self.get_children():
 		if player.is_multiplayer_authority() and player.is_in_group("player"):
