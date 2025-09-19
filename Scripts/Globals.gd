@@ -676,6 +676,9 @@ func add_points():
 func remove_points():
 	points -= 1
 
+	if points < 0:
+		points = 0
+
 func teleport_position(pos):
 	for player in self.get_children():
 		if player.is_multiplayer_authority() and player.is_in_group("player"):
