@@ -233,6 +233,12 @@ anchor_right = 1.0
 offset_bottom = 137.0
 grow_horizontal = 2
 
+[node name="Info" type="Label" parent="Panel/Multiplayer_list/Panel/List"]
+layout_mode = 2
+text = "Name - PlayersCount"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Back_multiplayer" type="Button" parent="Panel/Multiplayer_list"]
 process_mode = 3
 layout_mode = 2

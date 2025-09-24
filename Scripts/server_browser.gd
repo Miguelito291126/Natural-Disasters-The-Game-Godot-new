@@ -6,7 +6,7 @@ var serverinfo = preload("res://Scenes/server_info.tscn")
 func _ready() -> void:
 	Globals.server_browser = self
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if Globals.lisener.get_available_packet_count() > 0:
 		var server_ip = Globals.lisener.get_packet_ip()
 		var server_port = Globals.lisener.get_packet_port()
@@ -25,13 +25,16 @@ func _process(delta: float) -> void:
 
 		# si no existía, eliminar duplicados residuales
 		for i in list.get_children():
+			if i.name == "Info":
+				continue
+				
 			if i.server_ip == server_ip and i.server_port == str(server_port):
 				i.queue_free()
 
 		var currentinfo = serverinfo.instantiate()
 		currentinfo.name = room_list.name
-		currentinfo.get_node("Name").text = room_list.name + " / "
-		currentinfo.get_node("Players").text = str(room_list.players) + " / "
+		currentinfo.get_node("Name").text = room_list.name + " - "
+		currentinfo.get_node("Players").text = str(room_list.players) + " - "
 		currentinfo.server_ip = server_ip
 		currentinfo.server_port = str(server_port)
 		list.add_child(currentinfo, true)

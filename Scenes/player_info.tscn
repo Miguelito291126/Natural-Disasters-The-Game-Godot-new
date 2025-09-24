@@ -9,11 +9,11 @@ theme = ExtResource("1_88m0k")
 
 [node name="Username" type="Label" parent="."]
 layout_mode = 2
-text = "miguel"
+text = "miguel -"
 
 [node name="Points" type="Label" parent="."]
 layout_mode = 2
-text = "points: 0"
+text = "points: 0 -"
 
 [node name="Ping" type="Label" parent="."]
 layout_mode = 2

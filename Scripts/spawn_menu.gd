@@ -9,8 +9,6 @@ var spawnmenu_state = false
 
 var entity_scene = preload("res://Scenes/entity.tscn")
 
-const RAY_LENGTH = 10000
-
 func _enter_tree() -> void:
 	if Globals.is_networking:
 		set_multiplayer_authority(get_parent().name.to_int())
@@ -78,7 +76,7 @@ func on_press(i: Node):
 		new_i.transform.origin = collision_point + collision_normal * 0.5  # 0.5 es la altura de separación
 
 		spawnedobject.append(new_i)
-		Globals.map.add_child(new_i)
+		Globals.map.add_child(new_i, true)
 
 	
 
