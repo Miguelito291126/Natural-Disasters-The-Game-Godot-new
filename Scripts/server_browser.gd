@@ -3,6 +3,9 @@ extends Panel
 @onready var list = $List
 var serverinfo = preload("res://Scenes/server_info.tscn")
 
+# tiempo máximo sin recibir broadcast antes de eliminar
+const TIMEOUT := 5.0  
+
 func _ready() -> void:
 	Globals.server_browser = self
 
@@ -14,13 +17,19 @@ func _process(_delta: float) -> void:
 		var data = bytes.get_string_from_ascii()
 		var room_list = JSON.parse_string(data)
 
+		var existing = null
 		for i in list.get_children():
 			if i.name == room_list.name:
-				i.get_node("Name").text = room_list.name + " / "
-				i.get_node("Players").text = str(room_list.players) + " / "
-				i.server_ip = server_ip
-				i.server_port = str(server_port)
-				return
+				existing = i
+				break
+
+		if existing:
+			existing.get_node("Name").text = room_list.name + " - "
+			existing.get_node("Players").text = str(room_list.players) + " - "
+			existing.server_ip = server_ip
+			existing.server_port = str(server_port)
+			existing.last_seen = Time.get_unix_time_from_system()
+			return
 
 
 		# si no existía, eliminar duplicados residuales
@@ -38,3 +47,10 @@ func _process(_delta: float) -> void:
 		currentinfo.server_ip = server_ip
 		currentinfo.server_port = str(server_port)
 		list.add_child(currentinfo, true)
+
+	# comprobar expirados
+	for i in list.get_children():
+		if i.has_method("get"): # evitar nodos raros
+			if i.has_meta("last_seen"):
+				if Time.get_unix_time_from_system() - i.last_seen > TIMEOUT:
+					i.queue_free()
