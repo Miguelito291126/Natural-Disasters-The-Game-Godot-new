@@ -389,6 +389,7 @@ func server_fail():
 	print_role("client disconected: failed to load")
 	get_tree().paused = false
 	is_networking = false
+	CloseUp()
 	sync_player_list()
 	remove_all_destrolled_nodes()
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
@@ -397,6 +398,7 @@ func server_disconect():
 	print_role("client disconected")
 	get_tree().paused = false
 	is_networking = false
+	CloseUp()
 	sync_player_list()
 	remove_all_destrolled_nodes()
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
