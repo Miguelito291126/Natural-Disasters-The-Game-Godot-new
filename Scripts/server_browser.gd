@@ -31,7 +31,6 @@ func _process(_delta: float) -> void:
 			existing.last_seen = Time.get_unix_time_from_system()
 			return
 
-
 		# si no existía, eliminar duplicados residuales
 		for i in list.get_children():
 			if i.name == "Info":
@@ -46,11 +45,13 @@ func _process(_delta: float) -> void:
 		currentinfo.get_node("Players").text = str(room_list.players) + " - "
 		currentinfo.server_ip = server_ip
 		currentinfo.server_port = str(server_port)
+		currentinfo.last_seen = Time.get_unix_time_from_system() # 👈 aquí
 		list.add_child(currentinfo, true)
+
 
 	# comprobar expirados
 	for i in list.get_children():
-		if i.has_method("get"): # evitar nodos raros
-			if i.has_meta("last_seen"):
-				if Time.get_unix_time_from_system() - i.last_seen > TIMEOUT:
-					i.queue_free()
+		if i is HBoxContainer: # te aseguras de que es un server_info
+			if Time.get_unix_time_from_system() - i.last_seen > TIMEOUT:
+				print("Eliminando servidor inactivo:", i.name)
+				i.queue_free()
