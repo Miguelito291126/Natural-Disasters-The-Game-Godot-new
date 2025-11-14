@@ -521,8 +521,6 @@ func player_join(peer_id):
 		sync_destrolled_nodes.rpc_id(peer_id, destrolled_node)
 		set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
 
-		print_role("finish :D")
-
 
 
 
@@ -543,7 +541,6 @@ func player_disconect(peer_id):
 		print_role("Disconected player id: " + str(peer_id))
 		sync_player_list.rpc()
 		player.queue_free()
-		print_role("finish :D")
 
 
 

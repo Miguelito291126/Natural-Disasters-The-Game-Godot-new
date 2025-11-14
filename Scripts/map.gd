@@ -28,7 +28,7 @@ func _ready():
 		Globals.timer.start()
 	else:
 		if multiplayer.is_server():
-			if not OS.has_feature("dedicated_server") :
+			if not OS.has_feature("dedicated_server"):
 				Globals.player_join(1)	
 
 			for i in multiplayer.get_peers():
@@ -49,10 +49,13 @@ func _process(_delta):
 	terrain.ambient_wind = Globals.Wind_speed * _delta
 
 	if Globals.is_networking:
-		if Globals.players_conected.size() > 1:
+		if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
 			Globals.started = true
 		else:
-			Globals.started = false
+			if Globals.players_conected.size() > 1:
+				Globals.started = true
+			else:
+				Globals.started = false
 
 
 
