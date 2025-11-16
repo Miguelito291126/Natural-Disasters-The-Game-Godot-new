@@ -481,29 +481,6 @@ func _ready():
 	multiplayer.connected_to_server.connect(server_connected)
 	multiplayer.connection_failed.connect(server_fail)
 
-	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
-		print_role("Iniciando servidor...")
-
-		var args = OS.get_cmdline_user_args()
-		for i in range(args.size()):
-			print_role("args: " + args[i])
-			match args[i]:
-				"--port", "port", "-p", "p":
-					if i + 1 < args.size():
-						port = args[i + 1].to_int()
-						lisener_port = port + 1
-						broadcaster_port = port - 1
-
-		print_role("port: " + str(port))
-		print_role("ip: " + IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4))
-		print_role("Iniciando servidor dedicado...")
-		
-		await get_tree().create_timer(2).timeout
-
-		hostwithport(port)
-	else: 
-		print_role("No se puede jugar en modo de servidor")
-
 		
 func player_join(peer_id):
 	if is_networking:

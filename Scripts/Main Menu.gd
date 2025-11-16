@@ -5,6 +5,7 @@ extends Control
 @onready var Multiplayer = $Panel/Multiplayer
 @onready var Multiplayer_list = $Panel/Multiplayer_list
 @onready var Settings = $Panel/Settings
+@onready var Singleplayer = $Panel/Singleplayer
 @onready var username = $Panel/Multiplayer/username
 @onready var ip_text = $Panel/Multiplayer/ip
 @onready var port_text = $Panel/Multiplayer/port
@@ -14,7 +15,8 @@ extends Control
 @onready var anti_aliasing = $Panel/Settings/antialiasing
 @onready var volumen = $Panel/Settings/Volumen
 @onready var volumen_music = $"Panel/Settings/Volumen Music"
-@onready var time = $Panel/Settings/Time
+@onready var time = $Panel/Singleplayer/Time
+@onready var time2 = $Panel/Multiplayer/Time
 @onready var quality = $Panel/Settings/quality
 @onready var music = $Music
 @onready var error_text = $Panel/Multiplayer/Label
@@ -64,6 +66,7 @@ func _ready():
 	Multiplayer.hide()
 	Settings.hide()
 	Multiplayer_list.hide()
+	Singleplayer.hide()
 
 	version.text = "V" + Globals.version
 	tittle.text = Globals.gamename
@@ -72,6 +75,29 @@ func _ready():
 
 	LoadGameScene()
 	Globals.SetUpLisener()
+
+	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
+		Globals.print_role("Iniciando servidor...")
+
+		var args = OS.get_cmdline_user_args()
+		for i in range(args.size()):
+			Globals.print_role("args: " + args[i])
+			match args[i]:
+				"--port", "port", "-p", "p":
+					if i + 1 < args.size():
+						Globals.port = args[i + 1].to_int()
+						Globals.lisener_port = Globals.port + 1
+						Globals.broadcaster_port = Globals.port - 1
+
+		Globals.print_role("port: " + str(Globals.port))
+		Globals.print_role("ip: " + IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4))
+		Globals.print_role("Iniciando servidor dedicado...")
+		
+		await get_tree().create_timer(2).timeout
+
+		Globals.hostwithport(Globals.port)
+	else: 
+		Globals.print_role("No se puede jugar en modo de servidor")
    
 
 func LoadGameScene():
@@ -92,6 +118,7 @@ func LoadGameScene():
 	volumen.value = Globals.GlobalsData.volumen
 	volumen_music.value = Globals.GlobalsData.volumen_music
 	time.value = Globals.GlobalsData.timer_disasters
+	time2.value = Globals.GlobalsData.timer_disasters
 	quality.selected = Globals.GlobalsData.quality
 
 
@@ -135,11 +162,16 @@ func _on_host_pressed():
 		error_text.visible = false
 
 
-func _on_play_pressed():
+func _on_multiplayer_pressed():
 	main_menu.hide()
 	Multiplayer.show()
 	Settings.hide()
 	Multiplayer_list.hide()
+	Singleplayer.hide()
+
+
+func _on_play_pressed():
+	LoadScene.load_scene(self, "map")
 
 
 func _on_settings_pressed():
@@ -147,6 +179,7 @@ func _on_settings_pressed():
 	Multiplayer.hide()
 	Settings.show()
 	Multiplayer_list.hide()
+	Singleplayer.hide()
 
 
 func _on_exit_pressed():
@@ -176,6 +209,7 @@ func _on_back_pressed():
 	Multiplayer.hide()
 	Settings.hide()
 	Multiplayer_list.hide()
+	Singleplayer.hide()
 
 
 func _on_username_text_changed(new_text:String):
@@ -211,7 +245,12 @@ func _on_fullscreen_toggled(toggled_on:bool):
 
 
 func _on_singleplayer_pressed():
-	LoadScene.load_scene(self, "map")
+	main_menu.hide()
+	Multiplayer.hide()
+	Settings.hide()
+	Multiplayer_list.hide()
+	Singleplayer.show()
+
 
 
 func _on_volumen_music_value_changed(value):
@@ -230,6 +269,7 @@ func _on_multiplayer_list_pressed() -> void:
 	Multiplayer.hide()
 	Settings.hide()
 	Multiplayer_list.show()
+	Singleplayer.hide()
 
 
 
@@ -238,3 +278,12 @@ func _on_back_multiplayer_pressed() -> void:
 	Multiplayer.show()
 	Settings.hide()
 	Multiplayer_list.hide()
+	Singleplayer.hide()
+
+
+func _on_back_singleplayer_pressed() -> void:
+	main_menu.show()
+	Multiplayer.hide()
+	Settings.hide()
+	Multiplayer_list.hide()
+	Singleplayer.hide()

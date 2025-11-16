@@ -163,6 +163,22 @@ theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 placeholder_text = "Example: 5555"
 
+[node name="Time Label" type="Label" parent="Panel/Multiplayer"]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 6
+theme = ExtResource("2_8ye2w")
+text = "Time disaster/weather:"
+
+[node name="Time" type="HSlider" parent="Panel/Multiplayer"]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 2
+theme = ExtResource("2_8ye2w")
+min_value = 1.0
+max_value = 1000.0
+value = 100.0
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
@@ -243,6 +259,45 @@ vertical_alignment = 1
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
+text = "Back"
+
+[node name="Singleplayer" type="VBoxContainer" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -279.0
+offset_top = -115.0
+offset_right = 279.0
+offset_bottom = 115.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Time Label" type="Label" parent="Panel/Singleplayer"]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 6
+theme = ExtResource("2_8ye2w")
+text = "Time disaster/weather:"
+
+[node name="Time" type="HSlider" parent="Panel/Singleplayer"]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 2
+theme = ExtResource("2_8ye2w")
+min_value = 1.0
+max_value = 1000.0
+value = 100.0
+
+[node name="Play" type="Button" parent="Panel/Singleplayer"]
+layout_mode = 2
+text = "Play"
+
+[node name="Back" type="Button" parent="Panel/Singleplayer"]
+layout_mode = 2
 text = "Back"
 
 [node name="Settings" type="VBoxContainer" parent="Panel"]
@@ -352,22 +407,6 @@ theme = ExtResource("2_8ye2w")
 max_value = 6.0
 step = 0.01
 
-[node name="Time Label" type="Label" parent="Panel/Settings"]
-process_mode = 3
-layout_mode = 2
-size_flags_vertical = 6
-theme = ExtResource("2_8ye2w")
-text = "Time disaster/weather:"
-
-[node name="Time" type="HSlider" parent="Panel/Settings"]
-process_mode = 3
-layout_mode = 2
-size_flags_vertical = 2
-theme = ExtResource("2_8ye2w")
-min_value = 1.0
-max_value = 1000.0
-value = 100.0
-
 [node name="Back" type="Button" parent="Panel/Settings"]
 process_mode = 3
 layout_mode = 2
@@ -407,7 +446,7 @@ autoplay = true
 bus = &"Music"
 
 [connection signal="pressed" from="Panel/Menu/singleplayer" to="." method="_on_singleplayer_pressed"]
-[connection signal="pressed" from="Panel/Menu/multiplayer" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Panel/Menu/multiplayer" to="." method="_on_multiplayer_pressed"]
 [connection signal="pressed" from="Panel/Menu/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="Panel/Menu/Exit" to="." method="_on_exit_pressed"]
 [connection signal="text_changed" from="Panel/Multiplayer/username" to="." method="_on_username_text_changed"]
@@ -418,6 +457,9 @@ bus = &"Music"
 [connection signal="pressed" from="Panel/Multiplayer/Multiplayer List" to="." method="_on_multiplayer_list_pressed"]
 [connection signal="pressed" from="Panel/Multiplayer/Back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="Panel/Multiplayer_list/Back_multiplayer" to="." method="_on_back_multiplayer_pressed"]
+[connection signal="value_changed" from="Panel/Singleplayer/Time" to="." method="_on_h_slider_2_value_changed"]
+[connection signal="pressed" from="Panel/Singleplayer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Panel/Singleplayer/Back" to="." method="_on_back_singleplayer_pressed"]
 [connection signal="toggled" from="Panel/Settings/fps" to="." method="_on_fps_toggled"]
 [connection signal="toggled" from="Panel/Settings/vsync" to="." method="_on_vsycn_toggled"]
 [connection signal="toggled" from="Panel/Settings/antialiasing" to="." method="_on_antialiasing_toggled"]
@@ -426,5 +468,4 @@ bus = &"Music"
 [connection signal="item_selected" from="Panel/Settings/quality" to="." method="_on_option_button_item_selected"]
 [connection signal="value_changed" from="Panel/Settings/Volumen" to="." method="_on_volumen_value_changed"]
 [connection signal="value_changed" from="Panel/Settings/Volumen Music" to="." method="_on_volumen_music_value_changed"]
-[connection signal="value_changed" from="Panel/Settings/Time" to="." method="_on_h_slider_2_value_changed"]
 [connection signal="pressed" from="Panel/Settings/Back" to="." method="_on_back_pressed"]
