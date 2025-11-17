@@ -282,18 +282,6 @@ func wind_sound():
 
 
 func _process(delta):
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
-
-		ping_timer += delta
-		if ping_timer >= 2.0:
-			# enviamos el tiempo actual y nuestro peer id real
-			var my_id = multiplayer.get_unique_id()
-			request_ping.rpc(Time.get_ticks_msec(), my_id)
-			ping_timer = 0.0
-
-
 	points = Globals.points
 	username = Globals.username
 	label.text = Globals.username
@@ -305,27 +293,6 @@ func _process(delta):
 	IsOnFire_effects()
 	rain_sound()
 	wind_sound()
-
-@rpc("any_peer", "call_local")
-func request_ping(time_sent: int, from_id: int):
-	if multiplayer.is_server():
-		response_ping.rpc_id(from_id, time_sent)
-		Globals.print_role("Servidor: request_ping recibido de peer " + str(from_id))
-
-@rpc("any_peer", "call_local")
-func response_ping(time_sent: int):
-	var now = Time.get_ticks_msec()
-	var rtt = now - time_sent  # ya está en ms
-	ping = rtt
-
-	if multiplayer.is_server():
-		Globals.print_role("Ping (host): %d ms" % ping)
-	else:
-		Globals.print_role("Ping: %d ms" % ping)
-	
-
-
-
 
 func _physics_process(delta):
 	if Globals.is_networking:

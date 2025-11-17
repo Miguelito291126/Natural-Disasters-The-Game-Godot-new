@@ -5,7 +5,7 @@ extends Control
 @onready var Multiplayer = $Panel/Multiplayer
 @onready var Multiplayer_list = $Panel/Multiplayer_list
 @onready var Settings = $Panel/Settings
-@onready var Singleplayer = $Panel/Singleplayer
+@onready var play_menu = $Panel/Play
 @onready var username = $Panel/Multiplayer/username
 @onready var ip_text = $Panel/Multiplayer/ip
 @onready var port_text = $Panel/Multiplayer/port
@@ -15,14 +15,15 @@ extends Control
 @onready var anti_aliasing = $Panel/Settings/antialiasing
 @onready var volumen = $Panel/Settings/Volumen
 @onready var volumen_music = $"Panel/Settings/Volumen Music"
-@onready var time = $Panel/Singleplayer/Time
-@onready var time2 = $Panel/Multiplayer/Time
+@onready var time = $Panel/Play/Time
 @onready var quality = $Panel/Settings/quality
 @onready var music = $Music
 @onready var error_text = $Panel/Multiplayer/Label
 @onready var resolutions = $Panel/Settings/resolutions
 @onready var version = $Panel/Version
 @onready var credits = $Panel/Credits
+
+var multiplayer_mode = false
 
 var resolution: Dictionary = {
 	"2400x1080 ": Vector2i(2400, 1080 ),
@@ -66,7 +67,7 @@ func _ready():
 	Multiplayer.hide()
 	Settings.hide()
 	Multiplayer_list.hide()
-	Singleplayer.hide()
+	play_menu.hide()
 
 	version.text = "V" + Globals.version
 	tittle.text = Globals.gamename
@@ -118,7 +119,6 @@ func LoadGameScene():
 	volumen.value = Globals.GlobalsData.volumen
 	volumen_music.value = Globals.GlobalsData.volumen_music
 	time.value = Globals.GlobalsData.timer_disasters
-	time2.value = Globals.GlobalsData.timer_disasters
 	quality.selected = Globals.GlobalsData.quality
 
 
@@ -154,12 +154,12 @@ func _on_join_pressed():
 
 
 func _on_host_pressed():
-	if Globals.username.length() < 10 and Globals.username.length() >= 1:
-		Globals.hostwithport(Globals.port)
-	else:
-		error_text.visible = true
-		await get_tree().create_timer(2).timeout
-		error_text.visible = false
+	multiplayer_mode = true
+	main_menu.hide()
+	Multiplayer.hide()
+	Settings.hide()
+	Multiplayer_list.hide()
+	play_menu.show()
 
 
 func _on_multiplayer_pressed():
@@ -167,11 +167,22 @@ func _on_multiplayer_pressed():
 	Multiplayer.show()
 	Settings.hide()
 	Multiplayer_list.hide()
-	Singleplayer.hide()
+	play_menu.hide()
 
+func _on_sandbox_pressed() -> void:
+	Globals.gamemode = "creative"
+	if multiplayer_mode:
+		Globals.hostwithport(Globals.port)
+	else:
+		LoadScene.load_scene(self, "map")
 
-func _on_play_pressed():
-	LoadScene.load_scene(self, "map")
+func _on_survival_pressed():
+	Globals.gamemode = "survival"
+	if multiplayer_mode:
+		Globals.hostwithport(Globals.port)
+	else:
+		LoadScene.load_scene(self, "map")
+
 
 
 func _on_settings_pressed():
@@ -179,7 +190,7 @@ func _on_settings_pressed():
 	Multiplayer.hide()
 	Settings.show()
 	Multiplayer_list.hide()
-	Singleplayer.hide()
+	play_menu.hide()
 
 
 func _on_exit_pressed():
@@ -209,7 +220,7 @@ func _on_back_pressed():
 	Multiplayer.hide()
 	Settings.hide()
 	Multiplayer_list.hide()
-	Singleplayer.hide()
+	play_menu.hide()
 
 
 func _on_username_text_changed(new_text:String):
@@ -245,11 +256,12 @@ func _on_fullscreen_toggled(toggled_on:bool):
 
 
 func _on_singleplayer_pressed():
+	multiplayer_mode = false
 	main_menu.hide()
 	Multiplayer.hide()
 	Settings.hide()
 	Multiplayer_list.hide()
-	Singleplayer.show()
+	play_menu.show()
 
 
 
@@ -269,7 +281,7 @@ func _on_multiplayer_list_pressed() -> void:
 	Multiplayer.hide()
 	Settings.hide()
 	Multiplayer_list.show()
-	Singleplayer.hide()
+	play_menu.hide()
 
 
 
@@ -278,7 +290,7 @@ func _on_back_multiplayer_pressed() -> void:
 	Multiplayer.show()
 	Settings.hide()
 	Multiplayer_list.hide()
-	Singleplayer.hide()
+	play_menu.hide()
 
 
 func _on_back_singleplayer_pressed() -> void:
@@ -286,4 +298,4 @@ func _on_back_singleplayer_pressed() -> void:
 	Multiplayer.hide()
 	Settings.hide()
 	Multiplayer_list.hide()
-	Singleplayer.hide()
+	play_menu.hide()

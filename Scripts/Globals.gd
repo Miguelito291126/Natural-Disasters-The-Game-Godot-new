@@ -65,6 +65,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var destrolled_node: Array
 
 @export var started = false
+@export var gamemode = "Survival"
 @export var GlobalsData: DataResource = DataResource.load_file()
 
 @export var current_weather_and_disaster = "Sun"
