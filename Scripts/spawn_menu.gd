@@ -83,9 +83,9 @@ func on_press(i: Node):
 
 
 func spawnmenu():
-	self.visible = spawnmenu_state
+	self.visible = Globals.is_spawn_menu_open
 	
-	if spawnmenu_state:
+	if Globals.is_spawn_menu_open:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		if not Globals.is_networking:
 			get_tree().paused = true
@@ -94,7 +94,7 @@ func spawnmenu():
 		if not Globals.is_networking:
 			get_tree().paused = false
 
-	spawnmenu_state = !spawnmenu_state
+	Globals.is_spawn_menu_open = !Globals.is_spawn_menu_open
 
 func remove():
 	if spawnedobject.size() > 0:

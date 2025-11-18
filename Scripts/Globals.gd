@@ -89,6 +89,10 @@ var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 var broadcaster: PacketPeerUDP
 var lisener: PacketPeerUDP
 
+var is_chat_open = false
+var is_pause_menu_open = false
+var	is_spawn_menu_open = false
+
 func convert_MetoSU(metres):
 	return (metres * 39.37) / 0.75
 
@@ -503,8 +507,6 @@ func player_join(peer_id):
 		set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
 
 
-
-
 func player_join_singleplayer():
 	var player = player_scene.instantiate()
 	player.id = 1
@@ -674,6 +676,12 @@ func set_weather_and_disaster(weather_and_disaster_index):
 			if is_instance_valid(map):
 				map.is_blizzard()
 
+		_:
+			current_weather_and_disaster = "Sun"
+			current_weather_and_disaster_int = 0
+			if is_instance_valid(map):
+				map.is_sun_original()
+
 
 @rpc("any_peer", "call_local")
 func add_points():
@@ -687,37 +695,7 @@ func remove_points():
 	if points < 0:
 		points = 0
 
-func teleport_position(pos):
-	for player in self.get_children():
-		if player.is_multiplayer_authority() and player.is_in_group("player"):
-			player.position = pos
 
-func teleport_player(player_name):
-	for player in self.get_children():
-		if player.is_multiplayer_authority() and player.is_in_group("player"):
-			for player2 in self.get_children():
-				if player2.is_in_group("player") and player2.username == player_name  :
-					player.position = player2.position
-
-
-func kill_player(player_name):
-	for player2 in self.get_children():
-		if player2.is_in_group("player") and player2.username == player_name  :
-			player2.damage(100)
-
-func god_mode_player(player_name):
-	for player2 in self.get_children():
-		if player2.is_in_group("player") and player2.username == player_name  :
-			player2.god_mode = true
-
-func kick_player(player_name):
-	for player2 in self.get_children():
-		if player2.is_in_group("player") and player2.username == player_name  :
-			multiplayer.multiplayer_peer.disconnect_peer(player2.id, true)
-
-func damage_player(player_name, damage):
-	for player2 in self.get_children():
-		player2.damage(damage)
 
 
 

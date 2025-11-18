@@ -6,20 +6,13 @@ var sand_texture = preload("res://Textures/sand.png")
 @onready var worldenvironment = $WorldEnvironment
 
 func _exit_tree():
-	Globals.Temperature_target = Globals.Temperature_original
-	Globals.Humidity_target = Globals.Humidity_original
-	Globals.bradiation_target = Globals.bradiation_original
-	Globals.oxygen_target = Globals.oxygen_original
-	Globals.pressure_target = Globals.pressure_original
-	Globals.Wind_Direction_target = Globals.Wind_Direction_original
-	Globals.Wind_speed_target = Globals.Wind_speed_original
-	$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-	$WorldEnvironment.environment.volumetric_fog_enabled = false
-	$WorldEnvironment.environment.volumetric_fog_albedo = Color(1, 1, 1)
+	is_sun_original()
+	Globals.timer.stop()
+	Globals.started = false
 
 func _ready():
 	Globals.map = self
-	is_sun()
+	is_sun_original()
 
 	if Globals.gamemode == "survival":
 		if not Globals.is_networking:
@@ -41,19 +34,13 @@ func _ready():
 	else:
 		if not Globals.is_networking:
 			Globals.player_join_singleplayer()
-			
-			Globals.timer.stop()
-			Globals.started = false
 		else:
 			if multiplayer.is_server():
 				if not OS.has_feature("dedicated_server"):
 					Globals.player_join(1)	
 
 				for i in multiplayer.get_peers():
-					Globals.player_join(i)
-				
-				Globals.timer.stop()
-				Globals.started = false
+					Globals.player_join(i)	
 				
 
 # Llama a la función wind para cada objeto en la escena
@@ -75,6 +62,18 @@ func _process(_delta):
 				Globals.started = false
 
 
+func is_sun_original():
+	Globals.Temperature_target = Globals.Temperature_original
+	Globals.Humidity_target = Globals.Humidity_original
+	Globals.bradiation_target = Globals.bradiation_original
+	Globals.oxygen_target = Globals.oxygen_original
+	Globals.pressure_target = Globals.pressure_original
+	Globals.Wind_Direction_target = Globals.Wind_Direction_original
+	Globals.Wind_speed_target = Globals.Wind_speed_original
+
+	$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
+	$WorldEnvironment.environment.volumetric_fog_enabled = false
+	$WorldEnvironment.environment.volumetric_fog_albedo = Color(1, 1, 1)
 
 func is_tsunami():
 	var tsunami = Globals.tsunami_scene.instantiate()

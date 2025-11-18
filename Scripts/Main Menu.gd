@@ -90,6 +90,10 @@ func _ready():
 						Globals.lisener_port = Globals.port + 1
 						Globals.broadcaster_port = Globals.port - 1
 
+				"--gamemode", "gamemode", "-g", "g":
+					if i + 1 < args.size():
+						Globals.gamemode = args[i + 1]
+
 		Globals.print_role("port: " + str(Globals.port))
 		Globals.print_role("ip: " + IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4))
 		Globals.print_role("Iniciando servidor dedicado...")

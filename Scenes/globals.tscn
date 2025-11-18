@@ -72,6 +72,9 @@ properties/21/replication_mode = 1
 properties/22/path = NodePath(".:time_left")
 properties/22/spawn = true
 properties/22/replication_mode = 1
+properties/23/path = NodePath(".:gamemode")
+properties/23/spawn = true
+properties/23/replication_mode = 1
 
 [node name="Globals" type="Node"]
 script = ExtResource("1_uq25s")

@@ -2,12 +2,13 @@ extends GPUParticles3D
 
 var explosion_force = 100
 @onready var explosion_radius = $Area3D/CollisionShape3D.shape.radius
-
+@onready var explosion2 = $Explosion2
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.one_shot = true
 	self.emitting = true
+	self.explosion2.emitting = true
 	
 	
 

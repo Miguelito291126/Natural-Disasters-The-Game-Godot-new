@@ -3,6 +3,21 @@
 [ext_resource type="Script" uid="uid://bb8hbryyl1ty0" path="res://Scripts/explosion.gd" id="1_o7s6l"]
 [ext_resource type="AudioStream" uid="uid://51sjjqi43ypi" path="res://Sounds/disasters/atmospheric/explosion_light9.mp3" id="3_i7oed"]
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v0fus"]
+emission_shape = 1
+emission_sphere_radius = 5.0
+angle_max = 360.0
+direction = Vector3(0, 0, 0)
+spread = 0.0
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 49.999996
+radial_accel_max = 49.999996
+color = Color(0, 0, 0, 1)
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 0.0
+collision_use_scale = true
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qtdo2"]
 shading_mode = 0
 vertex_color_use_as_albedo = true
@@ -13,30 +28,40 @@ particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 particles_anim_loop = false
 
-[sub_resource type="Gradient" id="Gradient_gy6ag"]
-offsets = PackedFloat32Array(0, 0.228889, 0.404444, 0.617778, 1)
-colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1, 0.922561, 0.383717, 0, 1, 0.187176, 0.187176, 0.187176, 1, 0, 0, 0, 1)
+[sub_resource type="SphereMesh" id="SphereMesh_bjxpd"]
+material = SubResource("StandardMaterial3D_qtdo2")
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_q850k"]
-gradient = SubResource("Gradient_gy6ag")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v0fus"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4okmj"]
+emission_shape_scale = Vector3(1, 0, 1)
 emission_shape = 1
-emission_sphere_radius = 5.0
-angle_max = 360.0
-direction = Vector3(0, 0, 0)
+emission_sphere_radius = 20.0
+angle_min = 1.0728835e-05
+angle_max = 360.00003
 spread = 0.0
 gravity = Vector3(0, 0, 0)
-radial_accel_min = 100.0
-radial_accel_max = 100.0
-scale_min = 0.5
-color_ramp = SubResource("GradientTexture1D_q850k")
+radial_accel_min = 49.999996
+radial_accel_max = 49.999996
+color = Color(0, 0, 0, 1)
 collision_mode = 1
 collision_friction = 0.0
 collision_bounce = 0.0
 collision_use_scale = true
 
-[sub_resource type="SphereMesh" id="SphereMesh_bjxpd"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_a801j"]
+emission_shape_scale = Vector3(1, 0, 1)
+emission_shape = 1
+emission_sphere_radius = 20.0
+angle_min = 1.0728835e-05
+angle_max = 360.00003
+spread = 0.0
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 49.999996
+radial_accel_max = 49.999996
+color = Color(1, 0.6745098, 0, 1)
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 0.0
+collision_use_scale = true
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_up542"]
 
@@ -52,9 +77,9 @@ properties/2/spawn = true
 properties/2/replication_mode = 1
 
 [node name="Explosion" type="GPUParticles3D" groups=["Explosion"]]
-material_override = SubResource("StandardMaterial3D_qtdo2")
 emitting = false
-amount = 200
+amount = 500
+lifetime = 2.0
 one_shot = true
 explosiveness = 1.0
 randomness = 1.0
@@ -62,6 +87,28 @@ visibility_aabb = AABB(-53.6682, -52.478, -52.2658, 106.726, 105.365, 102.854)
 process_material = SubResource("ParticleProcessMaterial_v0fus")
 draw_pass_1 = SubResource("SphereMesh_bjxpd")
 script = ExtResource("1_o7s6l")
+
+[node name="Explosion2" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 500
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+visibility_aabb = AABB(-53.420815, -1.0000014, -53.933605, 107.61415, 2.0000014, 107.3651)
+process_material = SubResource("ParticleProcessMaterial_4okmj")
+draw_pass_1 = SubResource("SphereMesh_bjxpd")
+
+[node name="Explosion3" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 500
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+visibility_aabb = AABB(-53.420815, -1.0000014, -53.933605, 107.61415, 2.0000014, 107.3651)
+process_material = SubResource("ParticleProcessMaterial_a801j")
+draw_pass_1 = SubResource("SphereMesh_bjxpd")
 
 [node name="Area3D" type="Area3D" parent="." groups=["Explosion"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0103197, 0.0393953, -0.0188904)

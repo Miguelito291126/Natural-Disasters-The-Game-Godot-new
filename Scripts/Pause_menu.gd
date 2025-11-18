@@ -1,6 +1,5 @@
 extends CanvasLayer
 
-var pause_state = false
 var mouse_action_state = false
 
 @onready var worldenvironment = Globals.map.get_node("WorldEnvironment")
@@ -194,23 +193,22 @@ func mouse_action():
 	mouse_action_state = !mouse_action_state
 
 func pause():
-	if !pause_state:
-		hide()
+	self.visible = Globals.is_pause_menu_open
+	
+	if !Globals.is_pause_menu_open:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		if not Globals.is_networking:
 			get_tree().paused = false
 	else:
-		show()
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		if not Globals.is_networking:
 			get_tree().paused = true
 
-	pause_state = !pause_state
+	Globals.is_pause_menu_open = !Globals.is_pause_menu_open
 
 func _process(_delta):
 	if not is_multiplayer_authority():
 		return
-
 
 	if Input.is_action_just_pressed("Mouse Action"):
 		mouse_action()

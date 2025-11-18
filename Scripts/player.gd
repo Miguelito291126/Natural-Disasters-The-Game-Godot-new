@@ -298,7 +298,13 @@ func _physics_process(delta):
 	if Globals.is_networking:
 		if not is_multiplayer_authority():
 			return
+
+	if Globals.is_pause_menu_open:
+		return
 			
+	if Globals.is_chat_open:
+		return
+
 	# Add the gravity.
 	if not is_on_floor():
 		if IsInWater or IsInLava:
