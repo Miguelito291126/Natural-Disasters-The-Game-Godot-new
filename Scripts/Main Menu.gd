@@ -170,7 +170,7 @@ func _on_multiplayer_pressed():
 	play_menu.hide()
 
 func _on_sandbox_pressed() -> void:
-	Globals.gamemode = "creative"
+	Globals.gamemode = "sandbox"
 	if multiplayer_mode:
 		Globals.hostwithport(Globals.port)
 	else:

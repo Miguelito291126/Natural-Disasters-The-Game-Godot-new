@@ -65,7 +65,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var destrolled_node: Array
 
 @export var started = false
-@export var gamemode = "Survival"
+@export var gamemode = "survival"
 @export var GlobalsData: DataResource = DataResource.load_file()
 
 @export var current_weather_and_disaster = "Sun"
@@ -475,12 +475,15 @@ func _process(_delta):
 	Wind_Direction = lerp(Wind_Direction, Wind_Direction_target, 0.005)
 	Wind_speed = lerp(Wind_speed, Wind_speed_target, 0.005)
 
+
 func _ready():
 	multiplayer.peer_connected.connect(player_join)
 	multiplayer.peer_disconnected.connect(player_disconect)
 	multiplayer.server_disconnected.connect(server_disconect)
 	multiplayer.connected_to_server.connect(server_connected)
 	multiplayer.connection_failed.connect(server_fail)
+
+
 
 		
 func player_join(peer_id):
@@ -719,11 +722,12 @@ func damage_player(player_name, damage):
 
 
 func _on_timer_timeout():
-	if started:
-		sync_weather_and_disaster()
-	else:
-		if Globals.is_networking:
-			multiplayer.multiplayer_peer.close()
+	if gamemode == "survival":
+		if started:
+			sync_weather_and_disaster()
+		else:
+			if Globals.is_networking:
+				multiplayer.multiplayer_peer.close()
 
 @rpc("authority", "call_local")
 func sync_destrolled_nodes(Hauses: Array):

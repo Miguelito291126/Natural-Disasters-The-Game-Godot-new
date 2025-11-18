@@ -7,6 +7,10 @@ func _enter_tree():
 		set_multiplayer_authority(multiplayer.get_unique_id())
 
 func _ready() -> void:
+	if Globals.gamemode != "Survival":
+		self.visible = false
+		return
+	
 	if Globals.is_networking:
 		self.visible = is_multiplayer_authority()
 		if not is_multiplayer_authority():
