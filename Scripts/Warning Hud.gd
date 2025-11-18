@@ -7,7 +7,7 @@ func _enter_tree():
 		set_multiplayer_authority(multiplayer.get_unique_id())
 
 func _ready() -> void:
-	if Globals.gamemode != "Survival":
+	if Globals.gamemode != "survival":
 		self.visible = false
 		return
 	
