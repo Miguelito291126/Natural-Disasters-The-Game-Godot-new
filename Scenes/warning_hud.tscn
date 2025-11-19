@@ -6,6 +6,7 @@
 
 [node name="Warning Hud" type="CanvasLayer"]
 process_mode = 3
+layer = 3
 script = ExtResource("1_m0gel")
 
 [node name="Panel" type="Panel" parent="."]

@@ -5,7 +5,7 @@
 
 [node name="SpawnMenu" type="CanvasLayer"]
 process_mode = 3
-layer = 2
+layer = 3
 script = ExtResource("1_l3fur")
 
 [node name="Panel" type="Panel" parent="."]

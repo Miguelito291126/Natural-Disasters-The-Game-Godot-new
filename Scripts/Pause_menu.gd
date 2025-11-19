@@ -145,11 +145,8 @@ func _on_settings_pressed():
 
 
 func _on_exit_pressed():
-	if Globals.is_networking:
-		multiplayer.multiplayer_peer.close()
-	else:
-		get_tree().paused = false
-		LoadScene.load_scene(Globals.map, "res://Scenes/main_menu.tscn")
+	pause()
+	LoadScene.load_scene(Globals.map, "res://Scenes/main_menu.tscn")
 		
 func _exit_tree() -> void:
 	Globals.Temperature_target = Globals.Temperature_original
@@ -193,18 +190,19 @@ func mouse_action():
 	mouse_action_state = !mouse_action_state
 
 func pause():
-	self.visible = Globals.is_pause_menu_open
+	Globals.is_pause_menu_open = !Globals.is_pause_menu_open
+
+	if not Globals.is_networking:
+		get_tree().paused = Globals.is_pause_menu_open
 	
 	if !Globals.is_pause_menu_open:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		if not Globals.is_networking:
-			get_tree().paused = false
 	else:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		if not Globals.is_networking:
-			get_tree().paused = true
 
-	Globals.is_pause_menu_open = !Globals.is_pause_menu_open
+	self.visible = Globals.is_pause_menu_open
+
+
 
 func _process(_delta):
 	if not is_multiplayer_authority():
@@ -258,13 +256,7 @@ func _on_reset_player_pressed():
 
 
 func _on_return_pressed():
-	if not Globals.is_networking:
-		get_tree().paused = false
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		self.hide()
-	else:
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		self.hide()	
+	pause()
 
 func _on_volumen_music_value_changed(value):
 	Globals.GlobalsData.volumen_music = value

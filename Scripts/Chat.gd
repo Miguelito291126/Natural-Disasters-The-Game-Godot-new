@@ -1,5 +1,9 @@
 extends CanvasLayer
 
+@onready var text_edit = $Panel/TextEdit
+
+@onready var line_edit = $Panel/Panel2/LineEdit
+@onready var button = $Panel/Panel2/Button
 
 
 var history: Array[String] = []
@@ -101,67 +105,67 @@ func _ready() -> void:
 
 func _input(_event: InputEvent) -> void:
 
-	if $LineEdit.text.begins_with("/"):
+	if line_edit.text.begins_with("/"):
 		if Input.is_action_just_pressed('dev_console_autocomplete'):
 			for method in autocomplete_methods:
-				if method.begins_with($LineEdit.text.erase(0,1)):
+				if method.begins_with(line_edit.text.erase(0,1)):
 					# Populate console input with match
-					$LineEdit.text = "/" + method
+					line_edit.text = "/" + method
 					# Make sure the caret goes to the end of the line
-					$LineEdit.caret_column = 100000
+					line_edit.caret_column = 100000
 
 		if Input.is_action_just_pressed('_dev_console_enter'):
-			if $LineEdit.has_focus():
-				history.push_front($LineEdit.text.erase(0, 1))
+			if line_edit.has_focus():
+				history.push_front(line_edit.text.erase(0, 1))
 				
 				if Globals.is_networking:
 					if not is_multiplayer_authority():
 						return
 						
-					if $LineEdit.text.begins_with("/"):
-						msg_rpc(Globals.username, $LineEdit.text)
+					if line_edit.text.begins_with("/"):
+						msg_rpc(Globals.username, line_edit.text)
 					else:
-						msg_rpc.rpc(Globals.username, $LineEdit.text)
+						msg_rpc.rpc(Globals.username, line_edit.text)
 				else:
-					msg_rpc(Globals.username, $LineEdit.text)
+					msg_rpc(Globals.username, line_edit.text)
 
 				history_index = -1
-				$LineEdit.text = ""
-				$LineEdit.release_focus()
-			$Button.release_focus()
+				line_edit.text = ""
+				line_edit.release_focus()
+			button.release_focus()
 		elif Input.is_action_just_released('_dev_console_prev'):
 			if history.size() == 0:
 				return
 			history_index = clamp(history_index + 1, 0, history.size() - 1)
-			$LineEdit.text = "/" + history[history_index]
+			line_edit.text = "/" + history[history_index]
 			# Hack to make the caret go to the end of the line
 			# If I ever have a line of code over 100k characters, please send help
-			$LineEdit.caret_column = 100000
+			line_edit.caret_column = 100000
 		elif Input.is_action_just_released('_dev_console_next'):
 			if history.size() == 0:
 				return
 			history_index = clamp(history_index - 1, 0, history.size() - 1)
-			$LineEdit.text = "/" + history[history_index]
-			$LineEdit.caret_column = 100000
+			line_edit.text = "/" + history[history_index]
+			line_edit.caret_column = 100000
 
 	else:
 		if Input.is_action_just_pressed('Enter'):
-			if $LineEdit.has_focus():
+			if line_edit.has_focus():
 				if Globals.is_networking:
 					if not is_multiplayer_authority():
 						return
 
-					msg_rpc.rpc(Globals.username, $LineEdit.text)
+					msg_rpc.rpc(Globals.username, line_edit.text)
 				else:
-					msg_rpc(Globals.username, $LineEdit.text)
+					msg_rpc(Globals.username, line_edit.text)
 
-				$LineEdit.text = ""
-				$LineEdit.release_focus()
-				$Button.release_focus()
+				line_edit.text = ""
+				line_edit.release_focus()
+				button.release_focus()
 	
 func _console_print(text: String):
-	$TextEdit.text += text + "\n"
-	$TextEdit.scroll_vertical = $TextEdit.get_line_height()
+	text_edit.text += text + "\n"
+	text_edit.scroll_vertical = text_edit.get_line_height()
 
 @rpc("any_peer", "call_local")
 func _run_command(cmd: String) -> void:
@@ -196,30 +200,30 @@ func msg_rpc(username, data):
 		if data.begins_with("/"):
 			if multiplayer.is_server() and is_multiplayer_authority():
 				if data != "" or data != " ":
-					$TextEdit.text += str(username, ": ", data, "\n")
-					$TextEdit.scroll_vertical =  $TextEdit.get_line_height()
+					text_edit.text += str(username, ": ", data, "\n")
+					text_edit.scroll_vertical =  text_edit.get_line_height()
 				data = data.erase(0, 1)
 				Globals.print_role(data)
 				_run_command.rpc(data)
 			else:
-				$TextEdit.text +=  "You are not a have admin... \n"	
-				$TextEdit.scroll_vertical =  $TextEdit.get_line_height()
+				text_edit.text +=  "You are not a have admin... \n"	
+				text_edit.scroll_vertical =  text_edit.get_line_height()
 		else:
 			if data != "" or data != " ":
-				$TextEdit.text += str(username, ": ", data, "\n")
-				$TextEdit.scroll_vertical =  $TextEdit.get_line_height()
+				text_edit.text += str(username, ": ", data, "\n")
+				text_edit.scroll_vertical =  text_edit.get_line_height()
 	else:
 		if data.begins_with("/"):
 			if data != "" or data != " ":
-				$TextEdit.text += str(username, ": ", data, "\n")
-				$TextEdit.scroll_vertical =  $TextEdit.get_line_height()
+				text_edit.text += str(username, ": ", data, "\n")
+				text_edit.scroll_vertical =  text_edit	.get_line_height()
 			data = data.erase(0, 1)
 			Globals.print_role(data)
 			_run_command(data)
 		else:
 			if data != "" or data != " ":
-				$TextEdit.text += str(username, ": ", data, "\n")
-				$TextEdit.scroll_vertical =  $TextEdit.get_line_height()	
+				text_edit.text += str(username, ": ", data, "\n")
+				text_edit.scroll_vertical =  text_edit.get_line_height()	
 
 	
 
@@ -228,16 +232,16 @@ func _on_button_pressed():
 		if not is_multiplayer_authority():
 			return
 
-		if $LineEdit.text.begins_with("/"):
-			msg_rpc(Globals.username, $LineEdit.text)
+		if line_edit.text.begins_with("/"):
+			msg_rpc(Globals.username, line_edit.text)
 		else:
-			msg_rpc.rpc(Globals.username, $LineEdit.text)
+			msg_rpc.rpc(Globals.username, line_edit.text)
 	else:
-		msg_rpc(Globals.username, $LineEdit.text)
+		msg_rpc(Globals.username, line_edit.text)
 	
-	$LineEdit.text = ""
-	$LineEdit.release_focus()
-	$Button.release_focus()
+	line_edit.text = ""
+	line_edit.release_focus()
+	button.release_focus()
 
 
 func _on_line_edit_focus_entered() -> void:

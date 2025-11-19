@@ -4,7 +4,6 @@ extends CanvasLayer
 @export var spawnlist: Array[Node]
 @export var buttonlist: Array[Button]
 @export var spawnedobject: Array[Node]
-var spawnmenu_state = false
 @onready var camera = get_parent().get_node("head/Camera3D")
 
 var entity_scene = preload("res://Scenes/entity.tscn")
@@ -83,18 +82,16 @@ func on_press(i: Node):
 
 
 func spawnmenu():
-	self.visible = Globals.is_spawn_menu_open
-	
+	Globals.is_spawn_menu_open = !Globals.is_spawn_menu_open
+
 	if Globals.is_spawn_menu_open:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		if not Globals.is_networking:
-			get_tree().paused = true
 	else:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		if not Globals.is_networking:
-			get_tree().paused = false
 
-	Globals.is_spawn_menu_open = !Globals.is_spawn_menu_open
+	self.visible = Globals.is_spawn_menu_open
+
+
 
 func remove():
 	if spawnedobject.size() > 0:

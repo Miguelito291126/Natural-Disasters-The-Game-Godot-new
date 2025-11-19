@@ -113,6 +113,12 @@ properties/11/replication_mode = 1
 properties/12/path = NodePath("Warning Hud/Panel/Label:text")
 properties/12/spawn = true
 properties/12/replication_mode = 1
+properties/13/path = NodePath("Chat:visible")
+properties/13/spawn = true
+properties/13/replication_mode = 1
+properties/14/path = NodePath("Warning Hud:visible")
+properties/14/spawn = true
+properties/14/replication_mode = 1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b68bb"]
 size = Vector3(0, 100, 10000)
@@ -197,25 +203,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, 1.44768, 1012.02)
 
 [node name="Chat" parent="." instance=ExtResource("14_x5dfk")]
 
-[node name="TextEdit" parent="Chat" index="0"]
-offset_top = 0.0
-offset_right = 432.0
-offset_bottom = 296.0
-
-[node name="LineEdit" parent="Chat" index="1"]
-offset_left = 0.0
-offset_top = 296.0
+[node name="Panel" parent="Chat" index="0"]
 offset_right = 384.0
-offset_bottom = 336.0
-
-[node name="Button" parent="Chat" index="2"]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 384.0
-offset_top = 296.0
-offset_right = 434.0
-offset_bottom = 336.0
+offset_bottom = 288.0
 
 [node name="Warning Hud" parent="." instance=ExtResource("15_fls3e")]
 

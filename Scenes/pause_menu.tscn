@@ -19,7 +19,6 @@ theme = ExtResource("2_1och7")
 
 [node name="Menu" type="VBoxContainer" parent="Panel"]
 process_mode = 3
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -70,6 +69,7 @@ text = "Exit"
 
 [node name="Settings" type="VBoxContainer" parent="Panel"]
 process_mode = 3
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
