@@ -59,6 +59,7 @@ func _get_local_player():
 	for p in get_tree().get_nodes_in_group("player"):
 		if p.is_multiplayer_authority():
 			return p
+
 	return null
 
 
@@ -135,11 +136,12 @@ func _cmd_teleport_player(player_name, target_name):
 	return "Teletransportado %s a %s" % [player_name, target_name]
 
 func _cmd_spawn_disaster_weather(disaster_name):
-	if Globals.admin_mode:
-		Globals.set_weather_and_disaster(disaster_name)
-		return "Clima/Desastre activado: %s" % disaster_name
-	else:
-		return "No tienes permisos para ejecutar este comando"
+	var local = _get_local_player()
+	if local == null or not local.admin_mode:
+		return "No tienes permisos"
+
+	Globals.set_weather_and_disaster(disaster_name)
+	return "Clima/Desastre activado: %s" % disaster_name
 
 
 
