@@ -178,6 +178,11 @@ func _on_back_pressed():
 	Settings.hide()
 
 
+func _get_local_player():
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.is_multiplayer_authority():
+			return p
+	return null
 
 
 
@@ -216,6 +221,11 @@ func _process(_delta):
 
 
 func _on_time_value_changed(value):
+	var player = _get_local_player()
+	if player == null or not player.admin_mode:
+		Globals.print_role("No tienes permisos para cambiar el tiempo de desastres")
+		return
+
 	if Globals.is_networking:
 		if not multiplayer.is_server():
 			return
@@ -226,6 +236,7 @@ func _on_time_value_changed(value):
 	Globals.GlobalsData.timer_disasters = value
 	Globals.GlobalsData.save_file()
 	Globals.timer.wait_time = value
+
 	
 		
 func _on_volumen_value_changed(value:float):

@@ -6,15 +6,22 @@ extends CanvasLayer
 @onready var button = $Panel/Panel2/Button
 
 
+var autocomplete_matches: Array[String] = []
+var autocomplete_index: int = 0
+var autocomplete_methods: Array = []
 var history: Array[String] = []
 var history_index: int = -1
 
-var autocomplete_methods: Array = []
 
 var dev_commands := {
 	"god_mode": {
 		"desc": "Muestra todos los comandos.",
 		"method": "_cmd_god_mode_player",
+		"args": 0
+	},
+	"ungod_mode": {
+		"desc": "Muestra todos los comandos.",
+		"method": "_cmd_ungod_mode_player",
 		"args": 0
 	},
 	"kill_player": {
@@ -52,6 +59,12 @@ var dev_commands := {
 		"method": "_cmd_admin_mode_player",
 		"args": 1
 	},
+
+	"unadmin": {
+		"desc": "Genera un desastre o clima. Uso: /spawn_disaster disaster_name",
+		"method": "_cmd_unadmin_mode_player",
+		"args": 1
+	},
 	
 }
 
@@ -70,6 +83,13 @@ func _cmd_god_mode_player():
 	player.god_mode = true
 	return "God Mode activado en ti"
 
+func _cmd_ungod_mode_player():
+	var player = _get_local_player()
+	if player == null or not player.admin_mode:
+		return "No tienes permisos"
+	player.god_mode = false
+	return "God Mode desactivado en ti"
+
 
 func _cmd_admin_mode_player(player_name):
 	var local = _get_local_player()
@@ -81,6 +101,16 @@ func _cmd_admin_mode_player(player_name):
 			return "Ahora %s es admin" % player_name
 	return "Jugador no encontrado"
 
+func _cmd_unadmin_mode_player(player_name):
+	var local = _get_local_player()
+	if local == null or not local.admin_mode:
+		return "No tienes permisos"
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.username == player_name:
+			p.admin_mode = false
+			return "Ahora %s ya no es admin" % player_name
+	return "Jugador no encontrado"
+
 
 func _cmd_kill_player(player_name):
 	var local = _get_local_player()
@@ -89,7 +119,7 @@ func _cmd_kill_player(player_name):
 	for p in get_tree().get_nodes_in_group("player"):
 		if p.username == player_name:
 			p.damage(999)
-			return "💀 %s ha sido eliminado" % player_name
+			return "%s ha sido eliminado" % player_name
 	return "Jugador no encontrado"
 
 
@@ -159,69 +189,65 @@ func _ready() -> void:
 	
 	autocomplete_methods = dev_commands.keys()
 
-
-
-
-
 func _input(_event: InputEvent) -> void:
+	if line_edit.has_focus():
+		# Autocompletado con Tab
+		if Input.is_action_just_pressed("dev_console_autocomplete"):
+			var current = line_edit.text.erase(0,1)
+			
+			if autocomplete_matches.is_empty():
+				for cmd in autocomplete_methods:
+					if cmd.begins_with(current):
+						autocomplete_matches.append(cmd)
 
-	if line_edit.text.begins_with("/"):
-		if Input.is_action_just_pressed('dev_console_autocomplete'):
-			for method in autocomplete_methods:
-				if method.begins_with(line_edit.text.erase(0,1)):
-					# Populate console input with match
-					line_edit.text = "/" + method
-					# Make sure the caret goes to the end of the line
-					line_edit.caret_column = 100000
+			if autocomplete_matches.size() > 0:
+				line_edit.text = "/" + autocomplete_matches[autocomplete_index]
+				line_edit.caret_column = line_edit.text.length()
+				autocomplete_index = (autocomplete_index + 1) % autocomplete_matches.size()
 
-		if Input.is_action_just_pressed('_dev_console_enter'):
-			if line_edit.has_focus():
-				history.push_front(line_edit.text.erase(0, 1))
-				
-				if Globals.is_networking:
-					if not is_multiplayer_authority():
-						return
-						
-					if line_edit.text.begins_with("/"):
-						msg_rpc(Globals.username, line_edit.text)
-					else:
-						msg_rpc.rpc(Globals.username, line_edit.text)
-				else:
-					msg_rpc(Globals.username, line_edit.text)
+		# Reset autocompletado si se escribe algo distinto
+		if Input.is_action_just_pressed("ui_text_input"):
+			autocomplete_matches.clear()
+			autocomplete_index = 0
 
-				history_index = -1
-				line_edit.text = ""
-				line_edit.release_focus()
-			button.release_focus()
-		elif Input.is_action_just_released('_dev_console_prev'):
-			if history.size() == 0:
-				return
-			history_index = clamp(history_index + 1, 0, history.size() - 1)
-			line_edit.text = "/" + history[history_index]
-			# Hack to make the caret go to the end of the line
-			# If I ever have a line of code over 100k characters, please send help
-			line_edit.caret_column = 100000
-		elif Input.is_action_just_released('_dev_console_next'):
-			if history.size() == 0:
-				return
-			history_index = clamp(history_index - 1, 0, history.size() - 1)
-			line_edit.text = "/" + history[history_index]
-			line_edit.caret_column = 100000
+		# Recorrer historial con flechas
+		if Input.is_action_just_pressed("dev_console_up"):
+			if history.size() > 0:
+				history_index = clamp(history_index + 1, 0, history.size() - 1)
+				line_edit.text = "/" + history[history_index]
+				line_edit.caret_column = line_edit.text.length()
 
-	else:
+		elif Input.is_action_just_pressed("dev_console_down"):
+			if history.size() > 0:
+				history_index = clamp(history_index - 1, 0, history.size() - 1)
+				line_edit.text = "/" + history[history_index]
+				line_edit.caret_column = line_edit.text.length()
+
+		# Ejecutar comando con Enter
 		if Input.is_action_just_pressed('Enter'):
-			if line_edit.has_focus():
-				if Globals.is_networking:
-					if not is_multiplayer_authority():
-						return
-
-					msg_rpc.rpc(Globals.username, line_edit.text)
-				else:
+			history.push_front(line_edit.text.erase(0, 1))
+			
+			if Globals.is_networking:
+				if not is_multiplayer_authority():
+					return
+					
+				if line_edit.text.begins_with("/"):
 					msg_rpc(Globals.username, line_edit.text)
+				else:
+					msg_rpc.rpc(Globals.username, line_edit.text)
+			else:
+				msg_rpc(Globals.username, line_edit.text)
 
-				line_edit.text = ""
-				line_edit.release_focus()
-				button.release_focus()
+			history_index = -1
+			line_edit.text = ""
+			line_edit.release_focus()
+			button.release_focus()
+
+	# Seleccionar el LineEdit al presionar T
+	if Input.is_action_just_pressed("Chat"):
+		line_edit.grab_focus()
+
+
 	
 func _console_print(text: String):
 	text_edit.text += text + "\n"

@@ -23,6 +23,13 @@ func _ready():
 	load_spawnlist_entities()
 	load_buttons()
 
+func _get_local_player():
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.is_multiplayer_authority():
+			return p
+	return null
+
+
 
 func load_spawnlist_entities():
 	var directory = "res://Scenes/"
@@ -54,34 +61,41 @@ func load_buttons():
 
 
 func on_press(i: Node):
+	var player = _get_local_player()
+	if player == null or not player.admin_mode:
+		Globals.print_role("No tienes permisos para spawnear")
+		return
+
 	if Globals.is_networking:
 		if not multiplayer.is_server():
-			Globals.print_role("You not a host")
+			Globals.print_role("You are not the host")
 			return
-		
+
 		if not is_multiplayer_authority():
 			return
 
-	var player = get_parent()
-	var raycast = player.interactor
+	var raycast = get_parent().interactor
 
 	if raycast.is_colliding():
 		var collision_point = raycast.get_collision_point()
 		var collision_normal = raycast.get_collision_normal()
 
 		var new_i = i.duplicate()
-
-		# Coloca el objeto encima del suelo, respetando la normal
-		new_i.transform.origin = collision_point + collision_normal * 0.5  # 0.5 es la altura de separación
-
+		new_i.transform.origin = collision_point + collision_normal * 0.5
 		spawnedobject.append(new_i)
 		Globals.map.add_child(new_i, true)
+
 
 	
 
 
 
 func spawnmenu():
+	var player = _get_local_player()
+	if player == null or not player.admin_mode:
+		Globals.print_role("No tienes permisos para abrir el menú de spawn")
+		return
+
 	Globals.is_spawn_menu_open = !Globals.is_spawn_menu_open
 
 	if Globals.is_spawn_menu_open:
@@ -90,6 +104,7 @@ func spawnmenu():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 	self.visible = Globals.is_spawn_menu_open
+
 
 
 
