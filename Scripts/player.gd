@@ -49,8 +49,6 @@ var min_bdradiation = 0
 @export var IsUnderWater: bool = false
 @export var IsUnderLava: bool = false
 @export var IsOnFire: bool = false
-@export var god_mode: bool = false
-@export var admin_mode: bool = false
 @export var is_alive: bool = true
 
 @export var swim_factor: float = 0.25
@@ -93,6 +91,8 @@ var min_bdradiation = 0
 @onready var spawn = $"../Spawn"
 
 @export var noclip: bool = false
+@export var god_mode: bool = false
+@export var admin_mode: bool = false
 
 
 func _enter_tree():
@@ -105,22 +105,25 @@ func _exit_tree():
 
 @rpc("any_peer", "call_local")
 func damage(value):
-	if not god_mode:
-		hearth = clamp(hearth - value, min_Hearth, Max_Hearth)
+	if god_mode:
+		return
 
-		if hearth <= 0:
-			is_alive = false
 
-			Globals.remove_points.rpc_id(id)
-			
-			if not Globals.is_networking:
-				get_tree().paused = true
+	hearth = clamp(hearth - value, min_Hearth, Max_Hearth)
 
-			if is_multiplayer_authority():
-				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-				death_menu.show()
-		else:
-			is_alive = true
+	if hearth <= 0:
+		is_alive = false
+
+		Globals.remove_points.rpc_id(id)
+		
+		if not Globals.is_networking:
+			get_tree().paused = true
+
+		if is_multiplayer_authority():
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			death_menu.show()
+	else:
+		is_alive = true
 
 func ignite(time):
 	IsOnFire = true
@@ -154,7 +157,6 @@ func _ready():
 	else:
 		camera_node.current = true
 		admin_mode = true
-
 		
 
 	Globals.local_player = self
@@ -174,6 +176,9 @@ func _ready():
 
 
 func body_temp(delta):
+	if god_mode:
+		return
+
 	var body_heat_genK        = delta
 	var body_heat_genMAX      = 0.01/4
 	var fire_heat_emission    = 50
@@ -217,6 +222,9 @@ func body_temp(delta):
 		Sneeze()
 
 func body_oxy(delta):
+	if god_mode:
+		return
+
 	if Globals.oxygen <= 20 or Globals.is_inwater(self) or IsUnderWater or Globals.is_inlava(self) or IsUnderLava:
 		body_oxygen = clamp(body_oxygen - 5 * delta, min_oxygen, Max_oxygen)
 	else:
@@ -231,6 +239,9 @@ func body_oxy(delta):
 				damage(randi_range(1,30))
 
 func body_rad(delta):
+	if god_mode:
+		return
+		
 	if Globals.bradiation >= 80 and Globals.is_outdoor(self) and Outdoor:
 		body_bradiation = clamp(body_bradiation + 5 * delta, min_bdradiation, Max_bradiation)
 	else:

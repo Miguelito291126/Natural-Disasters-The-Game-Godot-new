@@ -9,7 +9,7 @@ var credits = "Miguelillo223"
 @export var ip: String
 @export var port: int = 5555
 @export var points: int
-@export var username: String
+@export var username: String = "Player"
 @export var players_conected: Array[Node]
 @export var is_networking = false
 var enetMultiplayerpeer: ENetMultiplayerPeer
@@ -92,7 +92,6 @@ var lisener: PacketPeerUDP
 @export var is_chat_open = false
 @export var is_pause_menu_open = false
 @export var	is_spawn_menu_open = false
-	
 
 func convert_MetoSU(metres):
 	return (metres * 39.37) / 0.75

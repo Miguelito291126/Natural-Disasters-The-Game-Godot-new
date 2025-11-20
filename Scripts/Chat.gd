@@ -47,43 +47,101 @@ var dev_commands := {
 		"method": "_cmd_spawn_disaster_weather",
 		"args": 1
 	},
+	"admin": {
+		"desc": "Genera un desastre o clima. Uso: /spawn_disaster disaster_name",
+		"method": "_cmd_admin_mode_player",
+		"args": 1
+	},
 	
 }
 
-func _cmd_teleport_position(pos):
-	for player in self.get_children():
-		if player.is_multiplayer_authority() and player.is_in_group("player"):
-			player.position = pos
+func _get_local_player():
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.is_multiplayer_authority():
+			return p
+	return null
 
-func _cmd_teleport_player(player_name):
-	for player in self.get_children():
-		if player.is_multiplayer_authority() and player.is_in_group("player"):
-			for player2 in self.get_children():
-				if player2.is_in_group("player") and player2.username == player_name  :
-					player.position = player2.position
+
+func _cmd_god_mode_player():
+	var player = _get_local_player()
+	if player == null or not player.admin_mode:
+		return "No tienes permisos"
+	player.god_mode = true
+	return "God Mode activado en ti"
+
+
+func _cmd_admin_mode_player(player_name):
+	var local = _get_local_player()
+	if local == null or not local.admin_mode:
+		return "No tienes permisos"
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.username == player_name:
+			p.admin_mode = true
+			return "Ahora %s es admin" % player_name
+	return "Jugador no encontrado"
 
 
 func _cmd_kill_player(player_name):
-	for player2 in self.get_children():
-		if player2.is_in_group("player") and player2.username == player_name  :
-			player2.damage(100)
+	var local = _get_local_player()
+	if local == null or not local.admin_mode:
+		return "No tienes permisos"
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.username == player_name:
+			p.damage(999)
+			return "💀 %s ha sido eliminado" % player_name
+	return "Jugador no encontrado"
 
-func _cmd_god_mode_player(player_name):
-	for player2 in self.get_children():
-		if player2.is_in_group("player") and player2.username == player_name  :
-			player2.god_mode = true
 
 func _cmd_kick_player(player_name):
-	for player2 in self.get_children():
-		if player2.is_in_group("player") and player2.username == player_name  :
-			multiplayer.multiplayer_peer.disconnect_peer(player2.id, true)
+	var local = _get_local_player()
+	if local == null or not local.admin_mode:
+		return "No tienes permisos"
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.username == player_name:
+			multiplayer.multiplayer_peer.disconnect_peer(p.id, true)
+			return "%s expulsado" % player_name
+	return "Jugador no encontrado"
+
 
 func _cmd_damage_player(player_name, damage):
-	for player2 in self.get_children():
-		player2.damage(damage)
+	var local = _get_local_player()
+	if local == null or not local.admin_mode:
+		return "No tienes permisos"
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.username == player_name:
+			p.damage(int(damage))
+			return "%s recibió %d de daño" % [player_name, damage]
+	return "Jugador no encontrado"
+
+
+func _cmd_teleport_player(player_name, target_name):
+	var local = _get_local_player()
+	if local == null or not local.admin_mode:
+		return "No tienes permisos"
+
+	var player = null
+	var target = null
+
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.username == player_name:
+			player = p
+		if p.username == target_name:
+			target = p
+
+	if player == null or target == null:
+		return "Jugador no encontrado"
+
+	player.global_position = target.global_position
+	return "Teletransportado %s a %s" % [player_name, target_name]
 
 func _cmd_spawn_disaster_weather(disaster_name):
-	Globals.set_weather_and_disaster(disaster_name)
+	if Globals.admin_mode:
+		Globals.set_weather_and_disaster(disaster_name)
+		return "Clima/Desastre activado: %s" % disaster_name
+	else:
+		return "No tienes permisos para ejecutar este comando"
+
+
 
 func _enter_tree():
 	if Globals.is_networking:
