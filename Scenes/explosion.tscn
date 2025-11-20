@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://bb8hbryyl1ty0" path="res://Scripts/explosion.gd" id="1_o7s6l"]
 [ext_resource type="AudioStream" uid="uid://51sjjqi43ypi" path="res://Sounds/disasters/atmospheric/explosion_light9.mp3" id="3_i7oed"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_up542"]
+
 [sub_resource type="Curve" id="Curve_a801j"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.63273454, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.007078886), 0.0, 0.0, 0, 0]
 point_count = 3
@@ -113,8 +115,6 @@ material = SubResource("StandardMaterial3D_021c3")
 radial_segments = 8
 rings = 4
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_up542"]
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_y34ue"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -128,6 +128,13 @@ properties/2/replication_mode = 1
 
 [node name="Explosion" type="Node3D" groups=["Explosion"]]
 script = ExtResource("1_o7s6l")
+
+[node name="Area3D" type="Area3D" parent="." groups=["Explosion"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0103197, 0.0393953, -0.0188904)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+shape = SubResource("SphereShape3D_up542")
 
 [node name="Sparks" type="GPUParticles3D" parent="."]
 emitting = false
@@ -169,13 +176,6 @@ visibility_aabb = AABB(-94.27803, -104.06677, -99.78231, 185.2327, 181.49661, 19
 process_material = SubResource("ParticleProcessMaterial_021c3")
 draw_pass_1 = SubResource("SphereMesh_fjw3j")
 
-[node name="Area3D" type="Area3D" parent="." groups=["Explosion"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0103197, 0.0393953, -0.0188904)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
-shape = SubResource("SphereShape3D_up542")
-
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_i7oed")
 volume_db = 35.0
@@ -191,5 +191,4 @@ replication_config = SubResource("SceneReplicationConfig_y34ue")
 [connection signal="finished" from="Sparks shock" to="Sparks shock" method="_on_finished"]
 [connection signal="finished" from="Smoke shock" to="." method="_on_finished"]
 [connection signal="finished" from="Smoke" to="." method="_on_smoke_finished"]
-[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="finished" from="AudioStreamPlayer3D" to="." method="_on_finished"]

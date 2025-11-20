@@ -174,7 +174,6 @@ func _cmd_spawn_disaster_weather(disaster_name):
 	return "Clima/Desastre activado: %s" % disaster_name
 
 
-
 func _enter_tree():
 	if Globals.is_networking:
 		set_multiplayer_authority(multiplayer.get_unique_id())
@@ -206,7 +205,7 @@ func _input(_event: InputEvent) -> void:
 				autocomplete_index = (autocomplete_index + 1) % autocomplete_matches.size()
 
 		# Reset autocompletado si se escribe algo distinto
-		if Input.is_action_just_pressed("ui_text_input"):
+		if Input.is_action_just_pressed("ui_text_indent"):
 			autocomplete_matches.clear()
 			autocomplete_index = 0
 

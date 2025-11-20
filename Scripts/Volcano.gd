@@ -129,20 +129,3 @@ func _launch_fireball(range: int, time: int):
 		fireball.apply_impulse(get_lava_level_position(), launch_direction * launch_force)  # Aplicar fuerza para lanzar la bola de fuego
 		get_parent().add_child(fireball, true)  # Agregar la bola de fuego como hijo del volcán
 		await get_tree().create_timer(time).timeout
-
-
-
-func _on_volcano_area_body_entered(body:Node3D) -> void:
-	if body.is_in_group("player"):
-		body.IsInLava = true
-
-		if body.camera_node:
-			body.IsUnderLava = true
-
-
-func _on_volcano_area_body_exited(body:Node3D) -> void:
-	if body.is_in_group("player"):
-		body.IsInLava = true
-
-		if body.camera_node:
-			body.IsUnderLava = true

@@ -3,10 +3,6 @@ extends CharacterBody3D
 @export var id: int = 1
 @export var username: String = Globals.username
 @export var points: int = Globals.points
-@export var ping: int
-@export var ping_timer: float
-
-
 
 var SPEED = 0
 
@@ -90,9 +86,14 @@ var min_bdradiation = 0
 @onready var spotLight3D = $head/Camera3D/SpotLight3D
 @onready var spawn = $"../Spawn"
 
+@onready var skeleton = $"Esqueleto/Skeleton3D"
+@onready var skeleton_phy = $"Esqueleto/Skeleton3D/PhysicalBoneSimulator3D"
+@onready var capsule: CollisionShape3D = $CollisionShape3D
+
 @export var noclip: bool = false
 @export var god_mode: bool = false
 @export var admin_mode: bool = false
+@export var ragdoll_enabled = false
 
 
 func _enter_tree():
@@ -101,6 +102,20 @@ func _enter_tree():
 
 func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+
+func enable_ragdoll(enable: bool):
+	ragdoll_enabled = enable
+	skeleton_phy.active = enable
+	animation_tree_node.active = not enable
+	animationplayer_node.active = not enable
+	capsule.disabled = enable
+
+	if enable:
+		skeleton.physical_bones_start_simulation()
+	else:
+		skeleton.physical_bones_stop_simulation()
+
 
 
 @rpc("any_peer", "call_local")
@@ -115,13 +130,12 @@ func damage(value):
 		is_alive = false
 
 		Globals.remove_points.rpc_id(id)
-		
-		if not Globals.is_networking:
-			get_tree().paused = true
 
 		if is_multiplayer_authority():
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			death_menu.show()
+
+			enable_ragdoll(true)
 	else:
 		is_alive = true
 
@@ -172,6 +186,8 @@ func _ready():
 	_reset_player()
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+	enable_ragdoll(false)
 
 
 
@@ -241,7 +257,7 @@ func body_oxy(delta):
 func body_rad(delta):
 	if god_mode:
 		return
-		
+
 	if Globals.bradiation >= 80 and Globals.is_outdoor(self) and Outdoor:
 		body_bradiation = clamp(body_bradiation + 5 * delta, min_bdradiation, Max_bradiation)
 	else:
@@ -462,6 +478,81 @@ func _unhandled_input(event):
 				camera_node.rotation.x += event.axis_value * SENSIBILITY
 				camera_node.rotation_degrees.x = clamp(camera_node.rotation_degrees.x, -90, 90)
 			
+
+
+func _on_area_3d_body_entered(body:Node3D):
+	if Globals.is_networking:
+		if not is_multiplayer_authority():
+			return
+
+	if body.is_in_group("Tsunami"):
+		IsInWater = true
+		if camera_node:
+			IsUnderWater = true
+
+	elif body.is_in_group("Meteor"):
+		if Globals.is_networking:
+			damage.rpc(100)
+		else:
+			damage(100)
+
+func _on_area_3d_body_exited(body: Node3D) -> void:
+	if Globals.is_networking:
+		if not is_multiplayer_authority():
+			return
+
+	if body.is_in_group("Tsunami"):
+		IsInWater = false
+		if camera_node:
+			IsUnderWater = false
+
+
+
+
+func _on_area_3d_area_entered(area: Area3D) -> void:
+	if Globals.is_networking:
+		if not is_multiplayer_authority():
+			return
+
+	if area.is_in_group("Explosion"):
+		var area_parent = area.get_node("..")
+		var distance = (area.global_position - global_position).length()
+		var direction = (area.global_position - global_position).normalized()
+		var force = area_parent.explosion_force * (1 - distance / area_parent.explosion_radius)
+		velocity = direction * force
+		var damag = area_parent.explosion_damage
+		if Globals.is_networking:
+			damage.rpc(damag)
+		else:
+			damage(damag)
+
+	elif area.is_in_group("Volcano"):
+		IsInLava = true
+
+		if camera_node:
+			IsUnderLava = true
+
+	elif area.is_in_group("Tsunami"):
+		IsInWater = true
+		if camera_node:
+			IsUnderWater = true
+
+func _on_area_3d_area_exited(area: Area3D) -> void:
+	if Globals.is_networking:
+		if not is_multiplayer_authority():
+			return
+
+	if area.is_in_group("Volcano"):
+		IsInLava = false
+
+		if camera_node:
+			IsUnderLava = false
+	elif area.is_in_group("Tsunami"):
+		IsInWater = false
+		if camera_node:
+			IsUnderWater = false
+
+
 
 func _reset_player():
 	if Globals.is_networking:

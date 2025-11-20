@@ -63,6 +63,7 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 			destroy.rpc()
 		else:
 			destroy()
+			
 
 
 func _on_area_3d_area_entered(area: Area3D) -> void:

@@ -17,17 +17,3 @@ func _physics_process(delta):
 			body.freeze = false
 		elif body.is_in_group("player"):
 			body.velocity = direction * speed * 100 * delta
-
-
-func _on_body_entered(body:Node3D) -> void:
-	if body.is_in_group("player"):
-		body.IsInWater = true
-		if body.camera_node:
-			body.IsUnderWater = true
-
-
-func _on_body_exited(body:Node3D) -> void:
-	if body.is_in_group("player"):
-		body.IsInWater = false
-		if body.camera_node:
-			body.IsUnderWater = false
