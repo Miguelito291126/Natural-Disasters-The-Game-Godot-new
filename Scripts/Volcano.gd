@@ -15,6 +15,10 @@ var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 @onready var volcano = $Volcano
 @onready var volcano_area = $Volcano_Area
 
+@onready var smoke = $Smoke
+@onready var erupt_sparks = $"Erupt Sparks"
+@onready var erupt_smoke = $"Erupt Smoke"
+@onready var erupt_sound = $"Erupt sound"
 
 func _ready() -> void:
 	volcano_area.get_node("CollisionShape3D").shape.radius = 360 * self.scale.x
@@ -54,16 +58,17 @@ func check_pressure():
 
 
 func erupt():
-	$Smoke.emitting = false
-	$Erupt.emitting = true
-	$"Erupt Sound".play()
+	smoke.emitting = false
+	erupt_sparks.emitting = true
+	erupt_smoke.emitting = true
+	erupt_sound.play()
 	_launch_fireball(20, 1)
 
 	await await get_tree().create_timer(10).timeout
 
 	IsVolcanoAsh = true
 
-	$Smoke.emitting = true
+	smoke.emitting = true
 
 	Globals.Temperature_target =  randf_range(30,40)
 	Globals.Humidity_target = randf_range(0,10)

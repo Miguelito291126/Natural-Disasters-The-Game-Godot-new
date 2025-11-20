@@ -1,0 +1,80 @@
+[gd_scene load_steps=10 format=3 uid="uid://dn3bvjtj17h4k"]
+
+[ext_resource type="Script" uid="uid://cuk1ajugepus4" path="res://Scripts/thunder_explosion.gd" id="1_g2avj"]
+[ext_resource type="AudioStream" uid="uid://wgheb2ui6v63" path="res://Sounds/disasters/nature/thunder1.wav" id="2_g2avj"]
+
+[sub_resource type="Curve" id="Curve_a801j"]
+_limits = [0.0, 1.0, 0.0, 5.0099807]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(2.3752496, 1), 0.0, 0.0, 0, 0, Vector2(4.9999804, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_4okmj"]
+curve = SubResource("Curve_a801j")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v0fus"]
+particle_flag_align_y = true
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 500.0
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_4okmj")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a801j"]
+vertex_color_use_as_albedo = true
+albedo_color = Color(0, 1, 1, 1)
+emission_enabled = true
+emission = Color(0, 1, 1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_a801j"]
+material = SubResource("StandardMaterial3D_a801j")
+top_radius = 0.2
+bottom_radius = 0.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_up542"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_y34ue"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Thunder Explosion" type="Node3D" groups=["Explosion"]]
+script = ExtResource("1_g2avj")
+
+[node name="Parks" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 24
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+visibility_aabb = AABB(-291.23926, -148.53024, -288.6008, 587.3241, 394.7138, 576.7889)
+process_material = SubResource("ParticleProcessMaterial_v0fus")
+draw_pass_1 = SubResource("CylinderMesh_a801j")
+
+[node name="Area3D" type="Area3D" parent="." groups=["Explosion"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0103197, 0.0393953, -0.0188904)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+shape = SubResource("SphereShape3D_up542")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_g2avj")
+volume_db = 35.0
+max_db = 6.0
+max_distance = 4096.0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("../Parks")
+replication_config = SubResource("SceneReplicationConfig_y34ue")
+
+[connection signal="finished" from="Parks" to="." method="_on_finished"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="finished" from="AudioStreamPlayer3D" to="." method="_on_finished"]

@@ -89,9 +89,10 @@ var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 var broadcaster: PacketPeerUDP
 var lisener: PacketPeerUDP
 
-var is_chat_open = false
-var is_pause_menu_open = false
-var	is_spawn_menu_open = false
+@export var is_chat_open = false
+@export var is_pause_menu_open = false
+@export var	is_spawn_menu_open = false
+	
 
 func convert_MetoSU(metres):
 	return (metres * 39.37) / 0.75
@@ -560,10 +561,10 @@ func set_weather_and_disaster(weather_and_disaster_index):
 			if is_instance_valid(map):
 				map.is_storm()
 		4:
-			current_weather_and_disaster = "Linghting storm"
+			current_weather_and_disaster = "Thunderstorm"
 			current_weather_and_disaster_int = 4
 			if is_instance_valid(map):
-				map.is_linghting_storm()
+				map.is_thunderstorm()
 
 		5:
 			current_weather_and_disaster = "Tsunami"
@@ -572,7 +573,7 @@ func set_weather_and_disaster(weather_and_disaster_index):
 				map.is_tsunami()
 
 		6:
-			current_weather_and_disaster = "Meteor shower"
+			current_weather_and_disaster = "Meteor_shower"
 			current_weather_and_disaster_int = 6
 			if is_instance_valid(map):
 				map.is_meteor_shower()
@@ -629,18 +630,18 @@ func set_weather_and_disaster(weather_and_disaster_index):
 			current_weather_and_disaster_int = 3
 			if is_instance_valid(map):
 				map.is_storm()
-		"Linghting storm":
-			current_weather_and_disaster = "Linghting storm"
+		"Thunderstorm":
+			current_weather_and_disaster = "Thunderstorm"
 			current_weather_and_disaster_int = 4
 			if is_instance_valid(map):
-				map.is_linghting_storm()
+				map.is_thunderstorm()
 		"Tsunami":
 			current_weather_and_disaster = "Tsunami"
 			current_weather_and_disaster_int = 5
 			if is_instance_valid(map):
 				map.is_tsunami()
-		"Meteor shower":
-			current_weather_and_disaster = "Meteor shower"
+		"Meteor_shower":
+			current_weather_and_disaster = "Meteor_shower"
 			current_weather_and_disaster_int = 6
 			if is_instance_valid(map):
 				map.is_meteor_shower()

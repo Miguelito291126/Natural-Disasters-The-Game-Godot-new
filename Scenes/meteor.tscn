@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c6xgmy3mkckea"]
+[gd_scene load_steps=16 format=3 uid="uid://c6xgmy3mkckea"]
 
 [ext_resource type="Script" uid="uid://by5atj83em8rl" path="res://Scripts/meteors.gd" id="1_bgiwl"]
 [ext_resource type="PackedScene" uid="uid://ditwsydq4i21k" path="res://Models/Blend Format/Meteorite.blend" id="2_aq33g"]
@@ -7,17 +7,25 @@
 [sub_resource type="SphereShape3D" id="SphereShape3D_nfk2t"]
 radius = 1.17684
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wipg6"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yqud3"]
+emission_shape = 2
+emission_sphere_radius = 0.5
+direction = Vector3(0, 1, 0)
+spread = 0.0
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.099999994
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nkvcn"]
 transparency = 1
-blend_mode = 1
-shading_mode = 0
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
-billboard_mode = 3
+albedo_color = Color(0, 0, 0, 0.52156866)
 billboard_keep_scale = true
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_hqrhf"]
+material = SubResource("StandardMaterial3D_nkvcn")
 
 [sub_resource type="Gradient" id="Gradient_87f6d"]
 colors = PackedColorArray(1, 0, 0, 1, 1, 0.8, 0, 1)
@@ -48,9 +56,9 @@ sub_emitter_mode = 1
 sub_emitter_frequency = 4.0
 sub_emitter_keep_velocity = true
 
-[sub_resource type="QuadMesh" id="QuadMesh_8abkf"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nkvcn"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wipg6"]
+transparency = 1
+blend_mode = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
@@ -60,26 +68,8 @@ particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 particles_anim_loop = false
 
-[sub_resource type="Gradient" id="Gradient_54kgu"]
-offsets = PackedFloat32Array(0, 0.461039, 1)
-colors = PackedColorArray(1, 0.451763, 0.134836, 1, 0, 0, 0, 1, 0.344076, 0.344076, 0.344076, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_ywdgh"]
-gradient = SubResource("Gradient_54kgu")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yqud3"]
-emission_shape = 2
-emission_sphere_radius = 0.5
-direction = Vector3(0, 1, 0)
-spread = 0.0
-initial_velocity_min = 10.0
-initial_velocity_max = 10.0
-gravity = Vector3(0, 0, 0)
-scale_min = 0.1
-scale_max = 0.5
-color_ramp = SubResource("GradientTexture1D_ywdgh")
-
-[sub_resource type="SphereMesh" id="SphereMesh_hqrhf"]
+[sub_resource type="QuadMesh" id="QuadMesh_8abkf"]
+material = SubResource("StandardMaterial3D_wipg6")
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2w7a8"]
 properties/0/path = NodePath(".:mass")
@@ -113,24 +103,21 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 [node name="meteor" parent="Meteorite" index="0"]
 surface_material_override/0 = ExtResource("3_mekeu")
 
-[node name="Fire" type="GPUParticles3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0336982, 2.38419e-07, -0.00724411)
-material_override = SubResource("StandardMaterial3D_wipg6")
-amount = 200
-randomness = 1.0
-visibility_aabb = AABB(-0.985438, -3.25902, -1.0986, 1.97088, 6.51804, 2.1972)
-process_material = SubResource("ParticleProcessMaterial_72bi4")
-draw_pass_1 = SubResource("QuadMesh_8abkf")
-
-[node name="Smoke" type="GPUParticles3D" parent="Fire"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0336982, -2.38419e-07, 0.00724411)
-material_override = SubResource("StandardMaterial3D_nkvcn")
+[node name="Smoke" type="GPUParticles3D" parent="."]
 amount = 200
 lifetime = 3.0
 randomness = 1.0
 visibility_aabb = AABB(-0.658692, -1.53968, -0.967607, 1.3916, 3.07936, 1.93521)
 process_material = SubResource("ParticleProcessMaterial_yqud3")
 draw_pass_1 = SubResource("SphereMesh_hqrhf")
+
+[node name="Fire" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0336982, 2.38419e-07, -0.00724411)
+amount = 200
+randomness = 1.0
+visibility_aabb = AABB(-0.985438, -3.25902, -1.0986, 1.97088, 6.51804, 2.1972)
+process_material = SubResource("ParticleProcessMaterial_72bi4")
+draw_pass_1 = SubResource("QuadMesh_8abkf")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_2w7a8")

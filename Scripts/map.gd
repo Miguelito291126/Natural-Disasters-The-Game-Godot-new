@@ -71,9 +71,19 @@ func is_sun_original():
 	Globals.Wind_Direction_target = Globals.Wind_Direction_original
 	Globals.Wind_speed_target = Globals.Wind_speed_original
 
-	$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-	$WorldEnvironment.environment.volumetric_fog_enabled = false
-	$WorldEnvironment.environment.volumetric_fog_albedo = Color(1, 1, 1)
+	var player = Globals.local_player
+
+	if is_instance_valid(player):
+		player.rain_node.emitting = false
+		player.sand_node.emitting = false
+		player.dust_node.emitting = false
+		player.snow_node.emitting = false
+		$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 1)
+		$WorldEnvironment.environment.volumetric_fog_enabled = false
+		$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)
+		
+
+
 
 func is_tsunami():
 	var tsunami = Globals.tsunami_scene.instantiate()
@@ -114,7 +124,7 @@ func is_tsunami():
 
 
 
-func is_linghting_storm():
+func is_thunderstorm():
 
 	Globals.Temperature_target = randf_range(5,15)
 	Globals.Humidity_target = randf_range(30,40)
@@ -126,7 +136,7 @@ func is_linghting_storm():
 
 
 
-	while Globals.current_weather_and_disaster == "Linghting storm":
+	while Globals.current_weather_and_disaster == "Thunderstorm":
 		var player = Globals.local_player
 
 		if is_instance_valid(player):
@@ -162,7 +172,7 @@ func is_linghting_storm():
 
 		await get_tree().create_timer(0.5).timeout
 
-	while Globals.current_weather_and_disaster != "Linghting storm":
+	while Globals.current_weather_and_disaster != "Thunderstorm":
 
 		Globals.add_points.rpc()
 		
@@ -179,7 +189,7 @@ func is_meteor_shower():
 	Globals.Wind_Direction_target = Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(0, 10)
 	
-	while Globals.current_weather_and_disaster == "Meteor shower":
+	while Globals.current_weather_and_disaster == "Meteor_shower":
 		var player = Globals.local_player
 
 		if is_instance_valid(player):
@@ -198,7 +208,7 @@ func is_meteor_shower():
 
 		await get_tree().create_timer(0.5).timeout
 
-	while Globals.current_weather_and_disaster != "Meteor shower":
+	while Globals.current_weather_and_disaster != "Meteor_shower":
 
 		Globals.add_points.rpc()
 		

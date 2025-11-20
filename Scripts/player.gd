@@ -50,6 +50,7 @@ var min_bdradiation = 0
 @export var IsUnderLava: bool = false
 @export var IsOnFire: bool = false
 @export var god_mode: bool = false
+@export var admin_mode: bool = false
 @export var is_alive: bool = true
 
 @export var swim_factor: float = 0.25
@@ -90,6 +91,9 @@ var min_bdradiation = 0
 @onready var interactor: RayCast3D = $head/Camera3D/Interactor
 @onready var spotLight3D = $head/Camera3D/SpotLight3D
 @onready var spawn = $"../Spawn"
+
+@export var noclip: bool = false
+
 
 func _enter_tree():
 	if Globals.is_networking:
@@ -140,8 +144,18 @@ func _ready():
 		splash_node.emitting = false
 		dust_node.emitting = false
 		snow_node.emitting = false	
+
 		if not is_multiplayer_authority():
 			return
+		
+		if multiplayer.is_server():
+			admin_mode = true
+
+	else:
+		camera_node.current = true
+		admin_mode = true
+
+		
 
 	Globals.local_player = self
 	
@@ -156,6 +170,7 @@ func _ready():
 	_reset_player()
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
 
 
 func body_temp(delta):
@@ -306,22 +321,26 @@ func _physics_process(delta):
 		return
 
 	# Add the gravity.
-	if not is_on_floor():
-		if IsInWater or IsInLava:
-			velocity.y = Globals.gravity * delta * swim_factor
+	if not noclip:
+		# Física normal
+		if not is_on_floor():
+			if IsInWater or IsInLava:
+				velocity.y = Globals.gravity * delta * swim_factor
+			else:
+				velocity.y -= Globals.gravity * delta 
+				fall_strength = velocity.y
 		else:
-			velocity.y -= Globals.gravity * delta 
-			fall_strength = velocity.y
-		
+			if IsInWater or IsInLava:
+				pass
+			else:
+				if fall_strength <= -90:
+					if Globals.is_networking:
+						damage.rpc(50)
+					else:
+						damage(50)
 	else:
-		if IsInWater or IsInLava:
-			pass
-		else:
-			if fall_strength <= -90:
-				if Globals.is_networking:
-					damage.rpc(50)
-				else:
-					damage(50)
+		# Gravedad desactivada
+		velocity.y = 0
 
 	# Handle jump.
 	if Input.is_action_just_pressed("Jump"):
@@ -345,7 +364,15 @@ func _physics_process(delta):
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	var direction = (head_node.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized() 
+	var input_vector = Vector3(input_dir.x, 0, input_dir.y)
+	if noclip:
+		if Input.is_action_pressed("Jump"):
+			input_vector.y += 1
+		if Input.is_action_pressed("ui_down"): # o C para bajar
+			input_vector.y -= 1
+
+	var direction = (head_node.transform.basis * input_vector).normalized()
+
 	if is_on_floor():
 		if direction:
 			velocity.x = direction.x * SPEED
@@ -377,8 +404,33 @@ func _physics_process(delta):
 				target.global_rotation = hand_node.global_rotation
 				target.collision_layer = 2
 				target.linear_velocity = Vector3(0.1, 3, 0.1)
+
+	if Input.is_action_just_pressed("noclip"):
+		if admin_mode:
+			if Globals.is_networking:
+				_noclip.rpc()
+			else:
+				_noclip()
+		else:
+			Globals.print_role("No tienes permisos para usar noclip")
+
 		
 	move_and_slide()
+
+@rpc("any_peer", "call_local")
+func _noclip():
+	noclip = !noclip
+	if noclip:
+		self.set_collision_layer(0)
+		self.set_collision_mask(0)
+		velocity.y = 0
+		fall_strength = 0
+		Globals.print_role("NOCLIP ACTIVADO")
+	else:
+		self.set_collision_layer(1)
+		self.set_collision_mask(1)
+		Globals.print_role("NOCLIP DESACTIVADO")
+
 
 func _unhandled_input(event):
 	if Globals.is_networking:
@@ -399,8 +451,6 @@ func _unhandled_input(event):
 				camera_node.rotation.x += event.axis_value * SENSIBILITY
 				camera_node.rotation_degrees.x = clamp(camera_node.rotation_degrees.x, -90, 90)
 			
-
-
 
 func _reset_player():
 	if Globals.is_networking:
