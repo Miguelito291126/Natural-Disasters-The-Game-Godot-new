@@ -175,14 +175,15 @@ func _cmd_spawn_disaster_weather(disaster_name):
 
 
 func _enter_tree():
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		set_multiplayer_authority(multiplayer.get_unique_id())
 
 func _ready() -> void:
-	if Globals.is_networking:
-		self.visible = is_multiplayer_authority()
-		if not is_multiplayer_authority():
-			return
+
+	self.visible = is_multiplayer_authority()
+	
+	if not is_multiplayer_authority():
+		return
 
 	self.visible = true
 	
@@ -226,7 +227,7 @@ func _input(_event: InputEvent) -> void:
 		if Input.is_action_just_pressed('Enter'):
 			history.push_front(line_edit.text.erase(0, 1))
 			
-			if Globals.is_networking:
+			if multiplayer.multiplayer_peer != null:
 				if not is_multiplayer_authority():
 					return
 					
@@ -281,7 +282,7 @@ func _run_command(cmd: String) -> void:
 
 @rpc("any_peer", "call_local")
 func msg_rpc(username, data):
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if data.begins_with("/"):
 			if multiplayer.is_server() and is_multiplayer_authority():
 				if data != "" or data != " ":
@@ -313,10 +314,10 @@ func msg_rpc(username, data):
 	
 
 func _on_button_pressed():
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
-
+	if not is_multiplayer_authority():
+		return
+		
+	if multiplayer.multiplayer_peer != null:
 		if line_edit.text.begins_with("/"):
 			msg_rpc(Globals.username, line_edit.text)
 		else:

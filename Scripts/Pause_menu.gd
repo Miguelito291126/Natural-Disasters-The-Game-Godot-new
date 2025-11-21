@@ -54,12 +54,9 @@ func addresolutions():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			self.hide()
-			return
-
+	if not is_multiplayer_authority():
+		self.hide()
+		return
 
 	self.hide()
 	main_menu.show()
@@ -197,7 +194,7 @@ func mouse_action():
 func pause():
 	Globals.is_pause_menu_open = !Globals.is_pause_menu_open
 
-	if not Globals.is_networking:
+	if not multiplayer.multiplayer_peer != null:
 		get_tree().paused = Globals.is_pause_menu_open
 	
 	if !Globals.is_pause_menu_open:
@@ -226,7 +223,7 @@ func _on_time_value_changed(value):
 		Globals.print_role("No tienes permisos para cambiar el tiempo de desastres")
 		return
 
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if not multiplayer.is_server():
 			return
 

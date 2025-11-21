@@ -9,17 +9,15 @@ extends CanvasLayer
 var entity_scene = preload("res://Scenes/entity.tscn")
 
 func _enter_tree() -> void:
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		set_multiplayer_authority(get_parent().name.to_int())
 
 func _ready():
-	if Globals.is_networking:
-		self.visible = false
-		if not is_multiplayer_authority():
-			return
+	self.visible = is_multiplayer_authority()
 
-	self.visible = false
-
+	if not is_multiplayer_authority():
+		return
+		
 	load_spawnlist_entities()
 	load_buttons()
 
@@ -66,12 +64,12 @@ func on_press(i: Node):
 		Globals.print_role("No tienes permisos para spawnear")
 		return
 
-	if Globals.is_networking:
+	if not is_multiplayer_authority():
+		return
+		
+	if multiplayer.multiplayer_peer != null:
 		if not multiplayer.is_server():
 			Globals.print_role("You are not the host")
-			return
-
-		if not is_multiplayer_authority():
 			return
 
 	var raycast = get_parent().interactor
@@ -117,9 +115,8 @@ func remove():
 
 
 func _process(_delta):
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if Input.is_action_just_pressed("Spawnmenu"):
 		spawnmenu()

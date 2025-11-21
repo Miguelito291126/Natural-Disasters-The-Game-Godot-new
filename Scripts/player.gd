@@ -97,14 +97,14 @@ var min_bdradiation = 0
 
 
 func _enter_tree():
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		set_multiplayer_authority(str(name).to_int())
 
 func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
-@rpc("call_local", "any_peer")
+@rpc("any_peer", "call_remote") # ejecuta en TODOS los peers remotos
 func enable_ragdoll(enable: bool):
 	ragdoll_enabled = enable
 	skeleton_phy.active = enable
@@ -125,13 +125,12 @@ func damage(value):
 	if god_mode:
 		return
 
-
 	hearth = clamp(hearth - value, min_Hearth, Max_Hearth)
 
 	if hearth <= 0:
 		is_alive = false
 		
-		if Globals.is_networking:
+		if multiplayer.multiplayer_peer != null:
 			Globals.remove_points.rpc_id(id)
 			die.rpc()
 		else:
@@ -145,7 +144,7 @@ func damage(value):
 func die():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	death_menu.show()
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		enable_ragdoll.rpc(true)
 	else:
 		enable_ragdoll(true)
@@ -167,7 +166,7 @@ func Vomit():
 
 func _ready():
 
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		camera_node.current = is_multiplayer_authority()
 		rain_node.emitting = false
 		sand_node.emitting = false
@@ -175,9 +174,6 @@ func _ready():
 		dust_node.emitting = false
 		snow_node.emitting = false	
 
-		if not is_multiplayer_authority():
-			return
-		
 		if multiplayer.is_server():
 			admin_mode = true
 
@@ -195,12 +191,12 @@ func _ready():
 	snow_node.emitting = false
 
 	Globals.print_role("Im the player id: " + str(id))
-
 	_reset_player()
 
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if is_multiplayer_authority():
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		enable_ragdoll.rpc(false)
 	else:
 		enable_ragdoll(false)
@@ -236,13 +232,13 @@ func body_temp(delta):
 
 	if randi_range(1,25) == 25:
 		if alpha_cold != 0:
-			if Globals.is_networking:
+			if multiplayer.multiplayer_peer != null:
 				damage.rpc(alpha_hot + alpha_cold)	
 			else:
 				damage(alpha_hot + alpha_cold)	
 		elif alpha_hot != 0:
 
-			if Globals.is_networking:
+			if multiplayer.multiplayer_peer != null:
 				damage.rpc(alpha_hot + alpha_cold)
 			else:
 				damage(alpha_hot + alpha_cold)
@@ -265,7 +261,7 @@ func body_oxy(delta):
 	
 	if body_oxygen <= 0:
 		if randi_range(1,25) == 25:
-			if Globals.is_networking:
+			if multiplayer.multiplayer_peer != null:
 				damage.rpc(randi_range(1,30))
 			else:
 				damage(randi_range(1,30))
@@ -281,7 +277,7 @@ func body_rad(delta):
 
 	if body_bradiation >= 100:
 		if randi_range(1,25) == 25:
-			if Globals.is_networking:
+			if multiplayer.multiplayer_peer != null:
 				damage.rpc(randi_range(1,30))
 			else:
 				damage(randi_range(1,30))
@@ -302,7 +298,7 @@ func IsOnFire_effects():
 	fire_particles.emitting = IsOnFire
 	if IsOnFire:
 		if randi_range(1,5) == 5:
-			if Globals.is_networking:
+			if multiplayer.multiplayer_peer != null:
 				damage.rpc(5)
 			else:
 				damage(5)
@@ -353,9 +349,8 @@ func _process(delta):
 	wind_sound()
 
 func _physics_process(delta):
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if Globals.is_pause_menu_open:
 		return
@@ -377,7 +372,7 @@ func _physics_process(delta):
 				pass
 			else:
 				if fall_strength <= -90:
-					if Globals.is_networking:
+					if multiplayer.multiplayer_peer != null:
 						damage.rpc(50)
 					else:
 						damage(50)
@@ -450,7 +445,7 @@ func _physics_process(delta):
 
 	if Input.is_action_just_pressed("noclip"):
 		if admin_mode:
-			if Globals.is_networking:
+			if multiplayer.multiplayer_peer != null:
 				_noclip.rpc()
 			else:
 				_noclip()
@@ -476,9 +471,8 @@ func _noclip():
 
 
 func _unhandled_input(event):
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
@@ -497,9 +491,8 @@ func _unhandled_input(event):
 
 
 func _on_area_3d_body_entered(body:Node3D):
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if body.is_in_group("Tsunami"):
 		IsInWater = true
@@ -507,15 +500,14 @@ func _on_area_3d_body_entered(body:Node3D):
 			IsUnderWater = true
 
 	elif body.is_in_group("Meteor"):
-		if Globals.is_networking:
+		if multiplayer.multiplayer_peer != null:
 			damage.rpc(100)
 		else:
 			damage(100)
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if body.is_in_group("Tsunami"):
 		IsInWater = false
@@ -526,9 +518,8 @@ func _on_area_3d_body_exited(body: Node3D) -> void:
 
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if area.is_in_group("Explosion"):
 		var area_parent = area.get_node("..")
@@ -537,7 +528,7 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 		var force = area_parent.explosion_force * (1 - distance / area_parent.explosion_radius)
 		velocity = direction * force
 		var damag = area_parent.explosion_damage
-		if Globals.is_networking:
+		if multiplayer.multiplayer_peer != null:
 			damage.rpc(damag)
 		else:
 			damage(damag)
@@ -554,9 +545,8 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 			IsUnderWater = true
 
 func _on_area_3d_area_exited(area: Area3D) -> void:
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if area.is_in_group("Volcano"):
 		IsInLava = false
@@ -571,27 +561,23 @@ func _on_area_3d_area_exited(area: Area3D) -> void:
 
 
 func _reset_player():
-	if Globals.is_networking:
-		if not is_multiplayer_authority():
-			return
+	# Si soy autoridad, teletransporto y reseteo física
+	if is_multiplayer_authority():
+		position = spawn.position
+		velocity = Vector3.ZERO
 
-	Globals.print_role("Resetting player id: " + str(id))
-
+	# TODOS deben actualizar Vida, Flags y desactivar ragdoll
 	hearth = Max_Hearth
 	body_temperature = 37
 	body_oxygen = Max_oxygen
 	body_bradiation = min_bdradiation
-	velocity = Vector3(0,0,0)
-	position = spawn.position
-	IsUnderWater = false
-	IsUnderLava = false
+	is_alive = true
 	IsInWater = false
 	IsInLava = false
 	IsOnFire = false
-	is_alive = true
 	fall_strength = 0
 
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		enable_ragdoll.rpc(false)
 	else:
 		enable_ragdoll(false)

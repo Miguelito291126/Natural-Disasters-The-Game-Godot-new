@@ -5,15 +5,15 @@ extends CanvasLayer
 var player_info = preload("res://Scenes/player_info.tscn")
 
 func _enter_tree() -> void:
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		set_multiplayer_authority(get_parent().name.to_int())
 
 func _ready():
 
-	if Globals.is_networking:
+	if is_multiplayer_authority():
 		self.visible = false
-		if not is_multiplayer_authority():
-			return
+	else:
+		return
 
 	self.visible = false
 	
@@ -21,7 +21,7 @@ func _ready():
 	
 
 func _process(_delta):
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		
 		if not is_multiplayer_authority():
 			return

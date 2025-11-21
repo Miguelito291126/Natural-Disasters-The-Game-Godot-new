@@ -10,25 +10,23 @@ var NextHeartSoundTime = Time.get_unix_time_from_system()
 @onready var animation_player = $Panel/Panel2/Heart/AnimationPlayer
 
 func _ready() -> void:
-	if Globals.is_networking:
-		self.visible = is_multiplayer_authority()
-		if not is_multiplayer_authority():
-			return
+	self.visible = is_multiplayer_authority()
 
-	self.visible = true	
+	if not is_multiplayer_authority():
+		return
+
 	animation_player.play("Hearth_Animation")
 
 func _enter_tree() -> void:
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		set_multiplayer_authority(get_parent().name.to_int())
 
 func _process(_delta):
-	if Globals.is_networking:
-		self.visible = is_multiplayer_authority()
-		if not is_multiplayer_authority():
-			return
+	self.visible = is_multiplayer_authority()
+
+	if not is_multiplayer_authority():
+		return
 		
-	self.visible = true
 	var freq = clamp((1-float((44-round( get_parent().body_temperature)) / 20)) * (180/60), 0.5, 20)
 
 	if get_parent().hearth <= 0:

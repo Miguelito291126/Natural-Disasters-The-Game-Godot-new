@@ -11,7 +11,6 @@ var credits = "Miguelillo223"
 @export var points: int
 @export var username: String = "Player"
 @export var players_conected: Array[Node]
-@export var is_networking = false
 var enetMultiplayerpeer: ENetMultiplayerPeer
 
 
@@ -296,7 +295,7 @@ func wind(object):
 		if is_instance_valid(object):
 			if object.is_in_group("Destrollable") or object.is_in_group("Hause"):
 				if Wind_speed > 100:
-					if Globals.is_networking:
+					if multiplayer.multiplayer_peer != null:
 						object.destroy.rpc()
 					else:
 						object.destroy()
@@ -326,7 +325,7 @@ func get_physics_multiplier() -> float:
 	return (200.0 / 3.0) / physics_interval
 
 func hit_chance(chance: int) -> bool:
-	if is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if multiplayer.is_server():
 			# En el servidor
 			return randf() < (clamp(chance * get_physics_multiplier(), 0, 100) / 100)
@@ -346,7 +345,7 @@ func sync_player_list():
 
 
 func print_role(msg: String):
-	if is_networking:
+	if multiplayer.multiplayer_peer != null:
 		var is_server = get_tree().get_multiplayer().is_server()
 		
 		if is_server:
@@ -367,7 +366,6 @@ func hostwithport(port_int):
 		multiplayer.multiplayer_peer = enetMultiplayerpeer
 		multiplayer.allow_object_decoding = true
 		if multiplayer.is_server():
-			is_networking = true
 			if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
 				print_role("Servidor dedicado iniciado.")
 
@@ -390,7 +388,6 @@ func joinwithip(ip_str, port_int):
 		multiplayer.multiplayer_peer = enetMultiplayerpeer
 		multiplayer.allow_object_decoding = true
 		if not multiplayer.is_server():
-			is_networking = true
 			UnloadScene.unload_scene(main_menu)
 	else:
 		print_role("Fatal Error in client")
@@ -398,7 +395,6 @@ func joinwithip(ip_str, port_int):
 func server_fail():
 	print_role("client disconected: failed to load")
 	get_tree().paused = false
-	is_networking = false
 	CloseUp()
 	sync_player_list()
 	remove_all_destrolled_nodes()
@@ -407,7 +403,6 @@ func server_fail():
 func server_disconect():
 	print_role("client disconected")
 	get_tree().paused = false
-	is_networking = false
 	CloseUp()
 	sync_player_list()
 	remove_all_destrolled_nodes()
@@ -416,7 +411,6 @@ func server_disconect():
 
 func server_connected():
 	print_role("connected to server :)")
-	is_networking = true
 
 func UPNP_setup():
 	var upnp = UPNP.new()
@@ -460,7 +454,7 @@ func _exit_tree() -> void:
 
 
 func _process(_delta):
-	if is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if not multiplayer.is_server(): 
 			return
 
@@ -491,7 +485,7 @@ func _ready():
 
 		
 func player_join(peer_id):
-	if is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if not multiplayer.is_server():
 			return 
 			
@@ -515,7 +509,7 @@ func player_join_singleplayer():
 
 
 func player_disconect(peer_id):
-	if is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if not multiplayer.is_server():
 			return 
 
@@ -528,7 +522,7 @@ func player_disconect(peer_id):
 
 
 func sync_weather_and_disaster():
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if multiplayer.is_server():
 			var random_weather_and_disaster = randi_range(0,12)
 			set_weather_and_disaster.rpc(random_weather_and_disaster)
@@ -704,7 +698,7 @@ func _on_timer_timeout():
 		if started:
 			sync_weather_and_disaster()
 		else:
-			if Globals.is_networking:
+			if multiplayer.multiplayer_peer != null:
 				multiplayer.multiplayer_peer.close()
 
 @rpc("authority", "call_local")
@@ -715,7 +709,7 @@ func sync_destrolled_nodes(Hauses: Array):
 			house.destroy()
 
 func add_destrolled_nodes(Name: String):
-	if is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if not get_tree().get_multiplayer().is_server():
 			return
 
@@ -724,7 +718,7 @@ func add_destrolled_nodes(Name: String):
 
 
 func remove_destrolled_nodes(Name: String):
-	if is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if not get_tree().get_multiplayer().is_server():
 			return
 
@@ -732,7 +726,7 @@ func remove_destrolled_nodes(Name: String):
 		destrolled_node.erase(Name)
 
 func remove_all_destrolled_nodes():
-	if is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if not get_tree().get_multiplayer().is_server():
 			return
 

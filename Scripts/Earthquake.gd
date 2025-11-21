@@ -152,7 +152,7 @@ func unfreeze(v, _mag):
 func destroy(v):
 	if v.is_in_group("Destrollable") or v.is_in_group("Hause"):
 		if is_instance_valid(v):
-			if Globals.is_networking:
+			if multiplayer.multiplayer_peer != null:
 				v.destroy.rpc()
 			else:
 				v.destroy()

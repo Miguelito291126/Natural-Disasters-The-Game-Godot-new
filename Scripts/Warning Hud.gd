@@ -3,30 +3,28 @@ extends CanvasLayer
 @onready var label = $Panel/Label
 
 func _enter_tree():
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		set_multiplayer_authority(multiplayer.get_unique_id())
 
 func _ready() -> void:
-	if Globals.is_networking:
-		self.visible = is_multiplayer_authority()
-		if not is_multiplayer_authority():
-			return
+	self.visible = is_multiplayer_authority()
+	if not is_multiplayer_authority():
+		return
 
 	if Globals.gamemode != "survival":
 		self.visible = false
 		return
+		
 
-	self.visible = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	if Globals.is_networking:
+	if not is_multiplayer_authority():
+		return
+
+	if multiplayer.multiplayer_peer != null:
 		if not multiplayer.is_server():
 			return
-
-		if not is_multiplayer_authority():
-			return
-
 
 	if Globals.started:
 		label.text = "Current Disasters/Weather is: \n"  + Globals.current_weather_and_disaster + "\nTime Left for the next disasters: \n" + str(int(Globals.timer.time_left)) + "\nTime:\n" + str(Globals.Hour) + ":" + str(Globals.Minute)

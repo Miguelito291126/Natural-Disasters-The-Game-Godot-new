@@ -15,7 +15,7 @@ func _ready():
 	is_sun_original()
 
 	if Globals.gamemode == "survival":
-		if not Globals.is_networking:
+		if not multiplayer.multiplayer_peer != null:
 			Globals.player_join_singleplayer()
 			Globals.started = true
 			Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
@@ -32,7 +32,7 @@ func _ready():
 				Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
 				Globals.timer.start()
 	else:
-		if not Globals.is_networking:
+		if not multiplayer.multiplayer_peer != null:
 			Globals.player_join_singleplayer()
 		else:
 			if multiplayer.is_server():
@@ -52,7 +52,7 @@ func _physics_process(_delta):
 func _process(_delta):
 	terrain.ambient_wind = Globals.Wind_speed * _delta
 
-	if Globals.is_networking:
+	if multiplayer.multiplayer_peer != null:
 		if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
 			Globals.started = true
 		else:
