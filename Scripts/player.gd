@@ -87,6 +87,7 @@ var min_bdradiation = 0
 @onready var spawn = $"../Spawn"
 
 @onready var skeleton = $"Esqueleto/Skeleton3D"
+@onready var skeleton_phy = $"Esqueleto/Skeleton3D/PhysicalBoneSimulator3D"
 @onready var capsule: CollisionShape3D = $CollisionShape3D
 
 @export var noclip: bool = false
@@ -104,6 +105,7 @@ func _exit_tree():
 
 
 func enable_ragdoll(enable: bool):
+	skeleton_phy.active = enable
 	animation_tree_node.active = not enable
 	animationplayer_node.active = not enable
 	capsule.disabled = enable
