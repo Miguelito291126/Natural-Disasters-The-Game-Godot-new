@@ -9,13 +9,11 @@ func _enter_tree() -> void:
 		set_multiplayer_authority(get_parent().name.to_int())
 
 func _ready():
+	self.visible = false
 
 	if is_multiplayer_authority():
-		self.visible = false
-	else:
 		return
 
-	self.visible = false
 	
 
 	

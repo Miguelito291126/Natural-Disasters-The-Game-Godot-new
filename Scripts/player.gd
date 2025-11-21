@@ -134,7 +134,6 @@ func damage(value):
 			Globals.remove_points.rpc_id(id)
 			die.rpc()
 		else:
-			Globals.remove_points()
 			die()
 	else:
 		is_alive = true

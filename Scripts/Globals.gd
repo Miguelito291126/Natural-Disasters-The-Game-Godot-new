@@ -710,7 +710,7 @@ func sync_destrolled_nodes(Hauses: Array):
 
 func add_destrolled_nodes(Name: String):
 	if multiplayer.multiplayer_peer != null:
-		if not get_tree().get_multiplayer().is_server():
+		if not multiplayer.is_server():
 			return
 
 	if not destrolled_node.has(Name):
@@ -719,7 +719,7 @@ func add_destrolled_nodes(Name: String):
 
 func remove_destrolled_nodes(Name: String):
 	if multiplayer.multiplayer_peer != null:
-		if not get_tree().get_multiplayer().is_server():
+		if not multiplayer.is_server():
 			return
 
 	if destrolled_node.has(Name):
@@ -727,7 +727,7 @@ func remove_destrolled_nodes(Name: String):
 
 func remove_all_destrolled_nodes():
 	if multiplayer.multiplayer_peer != null:
-		if not get_tree().get_multiplayer().is_server():
+		if not multiplayer.is_server():
 			return
 
 	for i in destrolled_node:
