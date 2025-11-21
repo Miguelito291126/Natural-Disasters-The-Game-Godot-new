@@ -40,8 +40,7 @@ func _process(_delta):
 				if is_instance_valid(player_data):
 					var player_info_instance = player_info.instantiate()
 					player_info_instance.get_node("Username").text = player_data.username + " - "
-					player_info_instance.get_node("Points").text = str(player_data.points, " - ")
-					player_info_instance.get_node("Ping").text =  str(player_data.ping)
+					player_info_instance.get_node("Points").text = str(player_data.points)
 					list.add_child(player_info_instance, true)
 
 		# Mostrar u ocultar la lista de jugadores según la acción del teclado

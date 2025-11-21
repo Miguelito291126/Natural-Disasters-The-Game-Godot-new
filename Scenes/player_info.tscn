@@ -6,6 +6,8 @@
 offset_right = 202.0
 offset_bottom = 23.0
 theme = ExtResource("1_88m0k")
+alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Username" type="Label" parent="."]
 layout_mode = 2
@@ -13,8 +15,4 @@ text = "miguel -"
 
 [node name="Points" type="Label" parent="."]
 layout_mode = 2
-text = "points: 0 -"
-
-[node name="Ping" type="Label" parent="."]
-layout_mode = 2
-text = "ping: 100"
+text = "points: 0"

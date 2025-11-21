@@ -104,21 +104,23 @@ func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
+@rpc("call_local", "any_peer")
 func enable_ragdoll(enable: bool):
+	ragdoll_enabled = enable
 	skeleton_phy.active = enable
 	animation_tree_node.active = not enable
 	animationplayer_node.active = not enable
 	capsule.disabled = enable
 
-
 	if enable:
-		skeleton.physical_bones_start_simulation()
+		skeleton_phy.physical_bones_start_simulation()
 	else:
-		skeleton.physical_bones_stop_simulation()
+		skeleton_phy.physical_bones_stop_simulation()
 
 
 
-@rpc("any_peer", "call_local")
+
+@rpc("any_peer")
 func damage(value):
 	if god_mode:
 		return
@@ -128,16 +130,27 @@ func damage(value):
 
 	if hearth <= 0:
 		is_alive = false
-
-		Globals.remove_points.rpc_id(id)
-
-		if is_multiplayer_authority():
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			death_menu.show()
-
-			enable_ragdoll(true)
+		
+		if Globals.is_networking:
+			Globals.remove_points.rpc_id(id)
+			die.rpc()
+		else:
+			Globals.remove_points()
+			die()
 	else:
 		is_alive = true
+
+
+@rpc("any_peer", "call_local")
+func die():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	death_menu.show()
+	if Globals.is_networking:
+		enable_ragdoll.rpc(true)
+	else:
+		enable_ragdoll(true)
+
+
 
 func ignite(time):
 	IsOnFire = true
@@ -187,7 +200,10 @@ func _ready():
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
-	enable_ragdoll(false)
+	if Globals.is_networking:
+		enable_ragdoll.rpc(false)
+	else:
+		enable_ragdoll(false)
 
 
 
@@ -559,7 +575,7 @@ func _reset_player():
 		if not is_multiplayer_authority():
 			return
 
-	Globals.print_role("Resetting player :(")
+	Globals.print_role("Resetting player id: " + str(id))
 
 	hearth = Max_Hearth
 	body_temperature = 37
@@ -575,6 +591,7 @@ func _reset_player():
 	is_alive = true
 	fall_strength = 0
 
-	enable_ragdoll(false)
-
-	Globals.print_role("Finish Resetting player :D")
+	if Globals.is_networking:
+		enable_ragdoll.rpc(false)
+	else:
+		enable_ragdoll(false)

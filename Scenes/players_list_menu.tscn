@@ -23,9 +23,11 @@ offset_bottom = 23.0
 scale = Vector2(2, 2)
 mouse_filter = 2
 theme = ExtResource("2_dqhul")
+alignment = 1
 
 [node name="Info" type="HBoxContainer" parent="Panel/List"]
 layout_mode = 2
+alignment = 1
 
 [node name="Label" type="Label" parent="Panel/List/Info"]
 layout_mode = 2
@@ -34,7 +36,3 @@ text = "Name"
 [node name="Label2" type="Label" parent="Panel/List/Info"]
 layout_mode = 2
 text = "- Points"
-
-[node name="Label3" type="Label" parent="Panel/List/Info"]
-layout_mode = 2
-text = "- Ping"
