@@ -7,9 +7,10 @@ func _enter_tree():
 		set_multiplayer_authority(multiplayer.get_unique_id())
 
 func _ready() -> void:
-	self.visible = is_multiplayer_authority()
-	if not is_multiplayer_authority():
-		return
+	if multiplayer.multiplayer_peer != null:
+		self.visible = is_multiplayer_authority()
+		if not is_multiplayer_authority():
+			return
 
 	if Globals.gamemode != "survival":
 		self.visible = false
@@ -19,10 +20,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	if not is_multiplayer_authority():
-		return
-
 	if multiplayer.multiplayer_peer != null:
+		if not is_multiplayer_authority():
+			return
 		if not multiplayer.is_server():
 			return
 

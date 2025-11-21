@@ -9,10 +9,14 @@ func _enter_tree() -> void:
 		set_multiplayer_authority(get_parent().name.to_int())
 
 func _ready():
+	if multiplayer.multiplayer_peer != null:
+		if is_multiplayer_authority():
+			self.visible = false
+			return
+
 	self.visible = false
 
-	if is_multiplayer_authority():
-		return
+
 
 	
 

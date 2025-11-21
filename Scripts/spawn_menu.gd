@@ -15,15 +15,19 @@ func _enter_tree() -> void:
 func _ready():
 	self.visible = false
 
-	if not is_multiplayer_authority():
-		return
+	if multiplayer.multiplayer_peer != null:
+		if not is_multiplayer_authority():
+			return
 		
 	load_spawnlist_entities()
 	load_buttons()
 
 func _get_local_player():
 	for p in get_tree().get_nodes_in_group("player"):
-		if p.is_multiplayer_authority():
+		if multiplayer.multiplayer_peer != null:
+			if p.is_multiplayer_authority():
+				return p
+		else:
 			return p
 	return null
 
@@ -64,10 +68,10 @@ func on_press(i: Node):
 		Globals.print_role("No tienes permisos para spawnear")
 		return
 
-	if not is_multiplayer_authority():
-		return
-		
 	if multiplayer.multiplayer_peer != null:
+		if not is_multiplayer_authority():
+			return
+		
 		if not multiplayer.is_server():
 			Globals.print_role("You are not the host")
 			return
@@ -115,8 +119,9 @@ func remove():
 
 
 func _process(_delta):
-	if not is_multiplayer_authority():
-		return
+	if multiplayer.multiplayer_peer != null:
+		if not is_multiplayer_authority():
+			return
 
 	if Input.is_action_just_pressed("Spawnmenu"):
 		spawnmenu()

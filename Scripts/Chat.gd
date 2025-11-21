@@ -179,11 +179,10 @@ func _enter_tree():
 		set_multiplayer_authority(multiplayer.get_unique_id())
 
 func _ready() -> void:
-
-	self.visible = is_multiplayer_authority()
-	
-	if not is_multiplayer_authority():
-		return
+	if multiplayer.multiplayer_peer != null:
+		if not is_multiplayer_authority():
+			self.visible = false
+			return
 
 	self.visible = true
 	
@@ -314,10 +313,10 @@ func msg_rpc(username, data):
 	
 
 func _on_button_pressed():
-	if not is_multiplayer_authority():
-		return
-		
 	if multiplayer.multiplayer_peer != null:
+		if not is_multiplayer_authority():
+			return
+			
 		if line_edit.text.begins_with("/"):
 			msg_rpc(Globals.username, line_edit.text)
 		else:

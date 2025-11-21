@@ -177,7 +177,10 @@ func _on_back_pressed():
 
 func _get_local_player():
 	for p in get_tree().get_nodes_in_group("player"):
-		if p.is_multiplayer_authority():
+		if multiplayer.multiplayer_peer != null:
+			if p.is_multiplayer_authority():
+				return p
+		else:
 			return p
 	return null
 
@@ -207,8 +210,9 @@ func pause():
 
 
 func _process(_delta):
-	if not is_multiplayer_authority():
-		return
+	if multiplayer.multiplayer_peer != null:
+		if not is_multiplayer_authority():
+			return
 
 	if Input.is_action_just_pressed("Mouse Action"):
 		mouse_action()
