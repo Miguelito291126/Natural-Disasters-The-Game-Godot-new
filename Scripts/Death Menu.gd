@@ -7,11 +7,9 @@ func _on_return_pressed():
 	if not Globals.is_networking:
 		get_tree().paused = false
 		get_parent()._reset_player()
-		get_parent().enable_ragdoll(false)
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		self.hide()
 	else:
-		get_parent().enable_ragdoll(false)
 		get_parent()._reset_player()
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		self.hide()

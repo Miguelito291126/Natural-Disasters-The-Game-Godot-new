@@ -87,7 +87,6 @@ var min_bdradiation = 0
 @onready var spawn = $"../Spawn"
 
 @onready var skeleton = $"Esqueleto/Skeleton3D"
-@onready var skeleton_phy = $"Esqueleto/Skeleton3D/PhysicalBoneSimulator3D"
 @onready var capsule: CollisionShape3D = $CollisionShape3D
 
 @export var noclip: bool = false
@@ -105,11 +104,10 @@ func _exit_tree():
 
 
 func enable_ragdoll(enable: bool):
-	ragdoll_enabled = enable
-	skeleton_phy.active = enable
 	animation_tree_node.active = not enable
 	animationplayer_node.active = not enable
 	capsule.disabled = enable
+
 
 	if enable:
 		skeleton.physical_bones_start_simulation()
@@ -572,6 +570,9 @@ func _reset_player():
 	IsInWater = false
 	IsInLava = false
 	IsOnFire = false
+	is_alive = true
+	fall_strength = 0
 
+	enable_ragdoll(false)
 
 	Globals.print_role("Finish Resetting player :D")
