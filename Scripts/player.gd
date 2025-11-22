@@ -181,10 +181,6 @@ func _ready():
 
 		if multiplayer.is_server():
 			admin_mode = true
-
-	else:
-		camera_node.current = true
-		admin_mode = true
 		
 
 	Globals.local_player = self
