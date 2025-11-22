@@ -166,40 +166,39 @@ func Vomit():
 	vomit.emitting = true
 
 func _ready():
-
-	if multiplayer.multiplayer_peer != null:
-		camera_node.current = is_multiplayer_authority()
-		rain_node.emitting = false
-		sand_node.emitting = false
-		splash_node.emitting = false
-		dust_node.emitting = false
-		snow_node.emitting = false	
-
-		if multiplayer.multiplayer_peer != null:
-			if not is_multiplayer_authority():
-				return
-
-		if multiplayer.is_server():
-			admin_mode = true
-		
-
-	Globals.local_player = self
-	
 	rain_node.emitting = false
 	sand_node.emitting = false
 	splash_node.emitting = false
 	dust_node.emitting = false
 	snow_node.emitting = false
-
-	Globals.print_role("Im the player id: " + str(id))
-	_reset_player()
-
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	if multiplayer.multiplayer_peer != null:
+		camera_node.current = is_multiplayer_authority()
+
+		if not is_multiplayer_authority():
+			return
+
+		Globals.print_role("Im the player id: " + str(id))
+		Globals.local_player = self
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		_reset_player()
 		enable_ragdoll.rpc(false)
+
+		if multiplayer.is_server():
+			admin_mode = true
+
 	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		Globals.local_player = self
+		camera_node.current = true
+		admin_mode = true
+		_reset_player()
 		enable_ragdoll(false)
+
+	
+		
+		
+
 
 
 
