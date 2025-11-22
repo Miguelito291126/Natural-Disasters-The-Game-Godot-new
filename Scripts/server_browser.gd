@@ -21,8 +21,6 @@ func _process(_delta: float) -> void:
 		var room_list = JSON.parse_string(data)
 		var server_id = "%s:%s" % [server_ip, server_port]
 
-		print(server_id)
-
 		for i in list.get_children():
 			if i.name == room_list.name:
 				i.get_node("Name").text = room_list.name + " - "
@@ -45,5 +43,5 @@ func Reload(now):
 	for i in list.get_children():
 		if i is HBoxContainer:
 			if now - i.last_seen > TIMEOUT:
-				print("Eliminando servidor inactivo:", i.name)
+				Globals.print_role("Eliminando servidor inactivo:" + i.name)
 				i.queue_free()

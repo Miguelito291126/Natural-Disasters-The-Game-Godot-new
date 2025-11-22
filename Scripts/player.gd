@@ -129,7 +129,7 @@ func damage(value: float) -> void:
 
 	hearth = clamp(hearth - value, min_Hearth, Max_Hearth)
 
-	print("damage recibido:", value, "hearth ahora:", hearth) # debug
+	Globals.print_role("damage recibido:" + str(value) + " hearth ahora:" +  str(hearth)) # debug
 
 	if hearth <= 0:
 		is_alive = false
