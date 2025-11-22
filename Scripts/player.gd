@@ -1,6 +1,5 @@
 extends CharacterBody3D
 
-@export var id: int = 1
 @export var username: String = Globals.username
 @export var points: int = Globals.points
 
@@ -95,18 +94,14 @@ var min_bdradiation = 0
 @export var admin_mode: bool = false
 @export var ragdoll_enabled = false
 
-
-func _enter_tree():
-	if multiplayer.multiplayer_peer != null:
-		# Asignar correctamente la autoridad a este peer (peer local)
-		set_multiplayer_authority(multiplayer.get_unique_id())
-
-
 func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
+func _enter_tree():
+	if multiplayer.multiplayer_peer != null:
+		set_multiplayer_authority(name.to_int())
 
-@rpc("any_peer", "call_local") # ejecuta en TODOS los peers remotos
+@rpc("any_peer")
 func enable_ragdoll(enable: bool):
 	ragdoll_enabled = enable
 	skeleton_phy.active = enable
@@ -132,12 +127,15 @@ func damage(value: float) -> void:
 	Globals.print_role("damage recibido:" + str(value) + " hearth ahora:" +  str(hearth)) # debug
 
 	if hearth <= 0:
+		if not is_alive:
+			return
+		
 		is_alive = false
 
 		if multiplayer.multiplayer_peer != null:
-			Globals.remove_points.rpc_id(id)
-			die.rpc()
-			enable_ragdoll.rpc(true)
+			Globals.remove_points.rpc_id(get_multiplayer_authority())
+			die.rpc_id(get_multiplayer_authority())
+			enable_ragdoll.rpc_id(get_multiplayer_authority(), true)
 		else:
 			die()
 			enable_ragdoll(true)
@@ -147,7 +145,7 @@ func damage(value: float) -> void:
 
 
 
-@rpc("any_peer", "call_local")
+@rpc("authority", "call_local")
 func die():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	death_menu.show()
@@ -171,21 +169,21 @@ func _ready():
 	splash_node.emitting = false
 	dust_node.emitting = false
 	snow_node.emitting = false
-	
+
+
+
 	if multiplayer.multiplayer_peer != null:
 		camera_node.current = is_multiplayer_authority()
+		Globals.print_role("im id " + str(get_multiplayer_authority()) + ", I have authority: " + str(is_multiplayer_authority()))
+		
+		if is_multiplayer_authority():
+			Globals.local_player = self
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			_reset_player()
+			enable_ragdoll.rpc(false)
 
-		if not is_multiplayer_authority():
-			return
-
-		Globals.print_role("Im the player id: " + str(id))
-		Globals.local_player = self
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		_reset_player()
-		enable_ragdoll.rpc(false)
-
-		if multiplayer.is_server():
-			admin_mode = true
+			if multiplayer.is_server():
+				admin_mode = true
 
 	else:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

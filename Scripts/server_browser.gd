@@ -19,7 +19,6 @@ func _process(_delta: float) -> void:
 		var bytes = Globals.lisener.get_packet()
 		var data = bytes.get_string_from_ascii()
 		var room_list = JSON.parse_string(data)
-		var server_id = "%s:%s" % [server_ip, server_port]
 
 		for i in list.get_children():
 			if i.name == room_list.name:

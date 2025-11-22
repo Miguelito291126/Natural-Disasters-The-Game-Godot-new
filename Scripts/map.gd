@@ -23,7 +23,7 @@ func _ready():
 		else:
 			if multiplayer.is_server():
 				if not OS.has_feature("dedicated_server"):
-					Globals.player_join(1)	
+					Globals.player_join(multiplayer.get_unique_id())	
 
 				for i in multiplayer.get_peers():
 					Globals.player_join(i)
@@ -37,7 +37,7 @@ func _ready():
 		else:
 			if multiplayer.is_server():
 				if not OS.has_feature("dedicated_server"):
-					Globals.player_join(1)	
+					Globals.player_join(multiplayer.get_unique_id())	
 
 				for i in multiplayer.get_peers():
 					Globals.player_join(i)	

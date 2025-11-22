@@ -482,7 +482,7 @@ func _ready():
 	multiplayer.connection_failed.connect(server_fail)
 
 		
-func player_join(peer_id):
+func player_join(peer_id: int = 1):
 	if multiplayer.multiplayer_peer != null:
 		if not multiplayer.is_server():
 			return 
@@ -490,32 +490,47 @@ func player_join(peer_id):
 	var player = player_scene.instantiate()
 	if map and is_instance_valid(map):
 		print_role("Joined player id: " + str(peer_id))
-		player.id = peer_id
 		player.name = str(peer_id)
-		map.add_child(player, true)
+		map.add_child(player)
+		call_deferred("_deferred_after_player_spawn", peer_id)
 
-		sync_player_list.rpc()
-		sync_destrolled_nodes.rpc_id(peer_id, destrolled_node)
-		set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
+func _deferred_after_player_spawn(peer_id: int = 1):
+	# ahora que el player está en el árbol, sincronizamos datos
+	sync_player_list.rpc()                                # broadcast
+	sync_destrolled_nodes.rpc_id(peer_id, destrolled_node) # envia al cliente
+	set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
 
 
 func player_join_singleplayer():
 	var player = player_scene.instantiate()
 	player.id = 1
 	player.name = str(1)
-	map.add_child(player, true)
+	map.add_child(player)
 
 
-func player_disconect(peer_id):
+func player_disconect(peer_id: int = 1):
 	if multiplayer.multiplayer_peer != null:
 		if not multiplayer.is_server():
 			return 
 
-	var player = map.get_node(str(peer_id))
-	if is_instance_valid(player):
+	# Intentar obtener el jugador de forma segura
+	var player_node = map.get_node_or_null(str(peer_id))
+	if player_node and is_instance_valid(player_node):
 		print_role("Disconected player id: " + str(peer_id))
+		player_node.queue_free()
 		sync_player_list.rpc()
-		player.queue_free()
+	else:
+		# fallback: buscar por grupo y authority (por si el nombre cambió)
+		for p in get_tree().get_nodes_in_group("player"):
+			if is_instance_valid(p) and p.get_multiplayer_authority() == peer_id:
+				print_role("Disconected player (found by authority) id: " + str(peer_id))
+				p.queue_free()
+				sync_player_list.rpc()
+				return
+
+	# si no se encuentra, log para depurar
+	print_role("player_disconect: no se encontró player con id " + str(peer_id))
+
 
 
 
