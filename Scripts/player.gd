@@ -1,5 +1,6 @@
 extends CharacterBody3D
 
+@export var id: int = 0
 @export var username: String = Globals.username
 @export var points: int = Globals.points
 
@@ -101,7 +102,7 @@ func _enter_tree():
 	if multiplayer.multiplayer_peer != null:
 		set_multiplayer_authority(name.to_int())
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func enable_ragdoll(enable: bool):
 	ragdoll_enabled = enable
 	skeleton_phy.active = enable
@@ -145,7 +146,7 @@ func damage(value: float) -> void:
 
 
 
-@rpc("authority", "call_local")
+@rpc("any_peer", "call_local")
 func die():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	death_menu.show()

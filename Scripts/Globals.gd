@@ -491,7 +491,9 @@ func player_join(peer_id: int = 1):
 	if map and is_instance_valid(map):
 		print_role("Joined player id: " + str(peer_id))
 		player.name = str(peer_id)
+		player.id = peer_id
 		map.add_child(player)
+
 		call_deferred("_deferred_after_player_spawn", peer_id)
 
 func _deferred_after_player_spawn(peer_id: int = 1):
