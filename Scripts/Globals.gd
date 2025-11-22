@@ -475,14 +475,11 @@ func _process(_delta):
 
 
 func _ready():
-	multiplayer.multiplayer_peer = null
 	multiplayer.peer_connected.connect(player_join)
 	multiplayer.peer_disconnected.connect(player_disconect)
 	multiplayer.server_disconnected.connect(server_disconect)
 	multiplayer.connected_to_server.connect(server_connected)
 	multiplayer.connection_failed.connect(server_fail)
-
-
 
 		
 func player_join(peer_id):
@@ -700,7 +697,6 @@ func _on_timer_timeout():
 			sync_weather_and_disaster()
 		else:
 			if multiplayer.multiplayer_peer != null:
-				multiplayer.multiplayer_peer = null
 				multiplayer.multiplayer_peer.close()
 
 @rpc("authority", "call_local")

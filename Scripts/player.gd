@@ -98,7 +98,9 @@ var min_bdradiation = 0
 
 func _enter_tree():
 	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(str(name).to_int())
+		# Asignar correctamente la autoridad a este peer (peer local)
+		set_multiplayer_authority(multiplayer.get_unique_id())
+
 
 func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -120,7 +122,7 @@ func enable_ragdoll(enable: bool):
 
 
 
-@rpc("any_peer")
+@rpc("any_peer", "call_local")
 func damage(value: float) -> void:
 	if god_mode:
 		return
@@ -511,6 +513,10 @@ func _on_area_3d_body_exited(body: Node3D) -> void:
 	if multiplayer.multiplayer_peer != null:
 		if not is_multiplayer_authority():
 			return
+
+	if multiplayer.multiplayer_peer != null:
+		if not is_multiplayer_authority():
+			return
 	
 	if body.is_in_group("Tsunami"):
 		IsInWater = false
@@ -552,7 +558,7 @@ func _on_area_3d_area_exited(area: Area3D) -> void:
 	if multiplayer.multiplayer_peer != null:
 		if not is_multiplayer_authority():
 			return
-
+			
 	if area.is_in_group("Volcano"):
 		IsInLava = false
 
