@@ -106,7 +106,7 @@ func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
-@rpc("any_peer") # ejecuta en TODOS los peers remotos
+@rpc("any_peer", "call_local") # ejecuta en TODOS los peers remotos
 func enable_ragdoll(enable: bool):
 	ragdoll_enabled = enable
 	skeleton_phy.active = enable
