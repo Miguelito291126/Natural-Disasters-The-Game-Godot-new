@@ -175,6 +175,10 @@ func _ready():
 		dust_node.emitting = false
 		snow_node.emitting = false	
 
+		if multiplayer.multiplayer_peer != null:
+			if not is_multiplayer_authority():
+				return
+
 		if multiplayer.is_server():
 			admin_mode = true
 
@@ -193,7 +197,6 @@ func _ready():
 
 	Globals.print_role("Im the player id: " + str(id))
 	_reset_player()
-
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
