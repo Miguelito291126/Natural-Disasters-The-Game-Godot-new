@@ -18,6 +18,10 @@ func _ready():
 	if multiplayer.multiplayer_peer != null:
 		if not is_multiplayer_authority():
 			return
+
+	if Globals.gamemode == "survival":
+		self.visible = false
+		return
 		
 	load_spawnlist_entities()
 	load_buttons()
@@ -122,6 +126,9 @@ func _process(_delta):
 	if multiplayer.multiplayer_peer != null:
 		if not is_multiplayer_authority():
 			return
+
+	if Globals.gamemode == "survival":
+		return
 
 	if Input.is_action_just_pressed("Spawnmenu"):
 		spawnmenu()

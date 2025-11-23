@@ -95,6 +95,7 @@ var min_bdradiation = 0
 @export var admin_mode: bool = false
 @export var ragdoll_enabled = false
 
+
 func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
@@ -118,7 +119,7 @@ func enable_ragdoll(enable: bool):
 
 
 
-@rpc("any_peer", "call_local")
+@rpc("authority", "call_local")
 func damage(value: float) -> void:
 	if god_mode:
 		return
@@ -134,11 +135,11 @@ func damage(value: float) -> void:
 		is_alive = false
 
 		if multiplayer.multiplayer_peer != null:
-			Globals.remove_points.rpc_id(get_multiplayer_authority())
-			die.rpc_id(get_multiplayer_authority())
-			enable_ragdoll.rpc_id(get_multiplayer_authority(), true)
+			Globals.remove_points.rpc()
+			die.rpc()
+			enable_ragdoll.rpc(true)
 		else:
-			die()
+			die() 
 			enable_ragdoll(true)
 
 	else:
@@ -146,7 +147,7 @@ func damage(value: float) -> void:
 
 
 
-@rpc("any_peer", "call_local")
+@rpc("authority", "call_local")
 func die():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	death_menu.show()
@@ -175,7 +176,7 @@ func _ready():
 
 	if multiplayer.multiplayer_peer != null:
 		camera_node.current = is_multiplayer_authority()
-		Globals.print_role("im id " + str(get_multiplayer_authority()) + ", I have authority: " + str(is_multiplayer_authority()))
+		Globals.print_role("im id " + str(multiplayer.get_unique_id()) + ", I have authority: " + str(is_multiplayer_authority()))
 		
 		if is_multiplayer_authority():
 			Globals.local_player = self
