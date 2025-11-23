@@ -119,7 +119,7 @@ func enable_ragdoll(enable: bool):
 
 
 
-@rpc("authority", "call_local")
+@rpc("any_peer", "call_local")
 func damage(value: float) -> void:
 	if god_mode:
 		return
@@ -147,7 +147,7 @@ func damage(value: float) -> void:
 
 
 
-@rpc("authority", "call_local")
+@rpc("any_peer", "call_local")
 func die():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	death_menu.show()
