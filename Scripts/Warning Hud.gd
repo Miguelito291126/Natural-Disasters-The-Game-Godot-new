@@ -4,7 +4,7 @@ extends CanvasLayer
 
 func _enter_tree():
 	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(get_parent().name.to_int())
+		set_multiplayer_authority(multiplayer.get_unique_id())
 
 func _ready() -> void:
 	if multiplayer.multiplayer_peer != null:

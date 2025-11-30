@@ -103,54 +103,102 @@ func _enter_tree():
 	if multiplayer.multiplayer_peer != null:
 		set_multiplayer_authority(name.to_int())
 
-@rpc("any_peer", "call_local")
-func enable_ragdoll(enable: bool):
-	ragdoll_enabled = enable
-	skeleton_phy.active = enable
-	animation_tree_node.active = not enable
-	animationplayer_node.active = not enable
-	capsule.disabled = enable
+# Helper que detecta si esta instancia corresponde al jugador local (cámara activa o Globals.local_player)
+func _is_local_instance() -> bool:
+	if Globals.local_player == self:
+		return true
 
+	if camera_node and camera_node.current:
+		return true
+
+	return false	
+
+@rpc("any_peer", "call_local")
+func rpc_set_ragdoll_state(enable: bool):
+	_set_ragdoll_state(enable)
+	
+
+func _set_ragdoll_state(enable: bool) -> void:
+	ragdoll_enabled = enable
+
+	# Propiedades que afectan al servidor de fisica -> también deferidas por seguridad
+	if skeleton_phy:
+		skeleton_phy.set_deferred("active", enable)
+
+	if animation_tree_node:
+		animation_tree_node.set_deferred("active", not enable)
+
+	if animationplayer_node:
+		animationplayer_node.set_deferred("active", not enable)
+		
+	if capsule:
+		capsule.set_deferred("disabled", enable)
+
+	# Iniciar/parar la simulación física — también lo deferimos para evitar condiciones
 	if enable:
-		skeleton_phy.physical_bones_start_simulation()
+		_start_physical_bones_sim()
+		if _is_local_instance():
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			if death_menu:
+				death_menu.show()
 	else:
+		_stop_physical_bones_sim()
+
+func _start_physical_bones_sim():
+	if skeleton_phy:
+		skeleton_phy.physical_bones_start_simulation()
+
+func _stop_physical_bones_sim():
+	if skeleton_phy:
 		skeleton_phy.physical_bones_stop_simulation()
 
 
 
 
-@rpc("any_peer", "call_local")
-func damage(value: float) -> void:
+
+@rpc("authority", "call_local")
+func rpc_damage(amount: float):
+	if not is_multiplayer_authority():
+		return
+
 	if god_mode:
 		return
 
-	hearth = clamp(hearth - value, min_Hearth, Max_Hearth)
+	if not is_alive:
+		return
 
-	Globals.print_role("damage recibido:" + str(value) + " hearth ahora:" +  str(hearth)) # debug
+	hearth = clamp(hearth - amount, min_Hearth, Max_Hearth)
+	Globals.print_role("[SERVER] damage aplicado:" + str(amount) + " hearth ahora:" + str(hearth))
 
 	if hearth <= 0:
-		if not is_alive:
-			return
-		
 		is_alive = false
-
-		if multiplayer.multiplayer_peer != null:
-			Globals.remove_points.rpc()
-			die.rpc()
-			enable_ragdoll.rpc(true)
-		else:
-			die() 
-			enable_ragdoll(true)
-
+		# Notificamos a todos que este jugador debe ponerse en ragdoll (visual)
+		rpc_set_ragdoll_state.rpc(true)
+		# Aquí puedes además ejecutar lógica server-side: perder puntos, respawn timer, etc.
 	else:
 		is_alive = true
 
+func damage(amount: float) -> void:
+	if multiplayer.multiplayer_peer != null:
+		rpc_damage.rpc_id(get_multiplayer_authority(), amount)
+	else:
+		if god_mode:
+			return
 
+		if not is_alive:
+			return
 
-@rpc("any_peer", "call_local")
-func die():
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	death_menu.show()
+		hearth = clamp(hearth - amount, min_Hearth, Max_Hearth)
+		Globals.print_role("[SERVER] damage aplicado:" + str(amount) + " hearth ahora:" + str(hearth))
+
+		if hearth <= 0:	
+			is_alive = false
+			# Notificamos a todos que este jugador debe ponerse en ragdoll (visual)
+			_set_ragdoll_state(true)
+			# Aquí puedes además ejecutar lógica server-side: perder puntos, respawn timer, etc.
+		else:
+			is_alive = true
+
 
 func ignite(time):
 	IsOnFire = true
@@ -182,7 +230,7 @@ func _ready():
 			Globals.local_player = self
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 			_reset_player()
-			enable_ragdoll.rpc(false)
+			rpc_set_ragdoll_state.rpc(false)
 
 			if multiplayer.is_server():
 				admin_mode = true
@@ -193,7 +241,7 @@ func _ready():
 		camera_node.current = true
 		admin_mode = true
 		_reset_player()
-		enable_ragdoll(false)
+		_set_ragdoll_state(false)
 
 	
 		
@@ -231,16 +279,9 @@ func body_temp(delta):
 
 	if randi_range(1,25) == 25:
 		if alpha_cold != 0:
-			if multiplayer.multiplayer_peer != null:
-				damage.rpc(alpha_hot + alpha_cold)	
-			else:
-				damage(alpha_hot + alpha_cold)	
+			damage(alpha_hot + alpha_cold)	
 		elif alpha_hot != 0:
-
-			if multiplayer.multiplayer_peer != null:
-				damage.rpc(alpha_hot + alpha_cold)
-			else:
-				damage(alpha_hot + alpha_cold)
+			damage(alpha_hot + alpha_cold)
 
 	if body_temperature > 39 and randi() % 400 == 0:
 		Vomit()
@@ -260,10 +301,7 @@ func body_oxy(delta):
 	
 	if body_oxygen <= 0:
 		if randi_range(1,25) == 25:
-			if multiplayer.multiplayer_peer != null:
-				damage.rpc(randi_range(1,30))
-			else:
-				damage(randi_range(1,30))
+			damage(randi_range(1,30))
 
 func body_rad(delta):
 	if god_mode:
@@ -276,10 +314,7 @@ func body_rad(delta):
 
 	if body_bradiation >= 100:
 		if randi_range(1,25) == 25:
-			if multiplayer.multiplayer_peer != null:
-				damage.rpc(randi_range(1,30))
-			else:
-				damage(randi_range(1,30))
+			damage(randi_range(1,30))
 
 
 func Underwater_or_Underlava_effects():
@@ -297,10 +332,7 @@ func IsOnFire_effects():
 	fire_particles.emitting = IsOnFire
 	if IsOnFire:
 		if randi_range(1,5) == 5:
-			if multiplayer.multiplayer_peer != null:
-				damage.rpc(5)
-			else:
-				damage(5)
+			damage(5)
 
 
 
@@ -372,10 +404,7 @@ func _physics_process(delta):
 				pass
 			else:
 				if fall_strength <= -90:
-					if multiplayer.multiplayer_peer != null:
-						damage.rpc(50)
-					else:
-						damage(50)
+					damage(50)
 	else:
 		# Gravedad desactivada
 		velocity.y = 0
@@ -502,10 +531,7 @@ func _on_area_3d_body_entered(body:Node3D):
 			IsUnderWater = true
 
 	elif body.is_in_group("Meteor"):
-		if multiplayer.multiplayer_peer != null:
-			damage.rpc(100)
-		else:
-			damage(100)
+		damage(100)
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
 	if multiplayer.multiplayer_peer != null:
@@ -536,10 +562,8 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 		var force = area_parent.explosion_force * (1 - distance / area_parent.explosion_radius)
 		velocity = direction * force
 		var damag = area_parent.explosion_damage
-		if multiplayer.multiplayer_peer != null:
-			damage.rpc(damag)
-		else:
-			damage(damag)
+
+		damage(damag)
 
 	elif area.is_in_group("Volcano"):
 		IsInLava = true
@@ -580,16 +604,17 @@ func _reset_player():
 	IsOnFire = false
 	fall_strength = 0
 
-	if multiplayer.multiplayer_peer != null:
-		enable_ragdoll.rpc(false)
-	else:
-		enable_ragdoll(false)
+
 
 	if multiplayer.multiplayer_peer != null:
 		if not is_multiplayer_authority():
 			return
+
+	if multiplayer.multiplayer_peer != null:
+		rpc_set_ragdoll_state.rpc(false)
+	else:
+		_set_ragdoll_state(false)
 			
-	# TODOS deben actualizar Vida, Flags y desactivar ragdoll
 	position = spawn.position
 	velocity = Vector3.ZERO
 
