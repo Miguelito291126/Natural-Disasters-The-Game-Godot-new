@@ -21,7 +21,7 @@ func _ready() -> void:
 
 func _enter_tree() -> void:
 	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(get_parent().name.to_int())
+		set_multiplayer_authority(get_parent().player_id)
 
 func _process(_delta):
 	

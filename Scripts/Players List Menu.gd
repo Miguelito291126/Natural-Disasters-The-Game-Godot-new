@@ -6,7 +6,7 @@ var player_info = preload("res://Scenes/player_info.tscn")
 
 func _enter_tree() -> void:
 	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(get_parent().name.to_int())
+		set_multiplayer_authority(get_parent().player_id)
 
 func _ready():
 	if multiplayer.multiplayer_peer != null:

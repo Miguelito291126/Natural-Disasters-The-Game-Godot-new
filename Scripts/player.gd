@@ -1,6 +1,11 @@
 extends CharacterBody3D
 
-@export var id: int = 0
+@export var player_id: int = 1:
+	set(id):
+		player_id = id
+		Globals.print_role("player id: " + str(id))
+		set_auth.call_deferred(id)
+
 @export var username: String = Globals.username
 @export var points: int = Globals.points
 
@@ -95,13 +100,13 @@ var min_bdradiation = 0
 @export var admin_mode: bool = false
 @export var ragdoll_enabled = false
 
+func set_auth(id: int):
+	if multiplayer.multiplayer_peer != null:
+		Globals.print_role("set authority to: " + str(id))
+		set_multiplayer_authority(id)
 
 func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-
-func _enter_tree():
-	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(name.to_int())
 
 # Helper que detecta si esta instancia corresponde al jugador local (cámara activa o Globals.local_player)
 func _is_local_instance() -> bool:
@@ -168,7 +173,7 @@ func rpc_damage(amount: float):
 		return
 
 	hearth = clamp(hearth - amount, min_Hearth, Max_Hearth)
-	Globals.print_role("[SERVER] damage aplicado:" + str(amount) + " hearth ahora:" + str(hearth))
+	Globals.print_role("damage aplicado:" + str(amount) + " hearth ahora:" + str(hearth))
 
 	if hearth <= 0:
 		is_alive = false
@@ -180,7 +185,7 @@ func rpc_damage(amount: float):
 
 func damage(amount: float) -> void:
 	if multiplayer.multiplayer_peer != null:
-		rpc_damage.rpc_id(get_multiplayer_authority(), amount)
+		rpc_damage.rpc(amount)
 	else:
 		if god_mode:
 			return
@@ -189,7 +194,7 @@ func damage(amount: float) -> void:
 			return
 
 		hearth = clamp(hearth - amount, min_Hearth, Max_Hearth)
-		Globals.print_role("[SERVER] damage aplicado:" + str(amount) + " hearth ahora:" + str(hearth))
+		Globals.print_role("damage aplicado:" + str(amount) + " hearth ahora:" + str(hearth))
 
 		if hearth <= 0:	
 			is_alive = false
@@ -223,9 +228,12 @@ func _ready():
 
 
 	if multiplayer.multiplayer_peer != null:
+		Globals.print_role("player name: " + str(name.to_int()))
+		Globals.print_role("is authority: " + str(is_multiplayer_authority()))
+		Globals.print_role("get authority: " + str(get_multiplayer_authority()))
+
 		camera_node.current = is_multiplayer_authority()
-		Globals.print_role("im id " + str(multiplayer.get_unique_id()) + ", I have authority: " + str(is_multiplayer_authority()))
-		
+
 		if is_multiplayer_authority():
 			Globals.local_player = self
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

@@ -16,28 +16,27 @@ func _ready():
 
 	if Globals.gamemode == "survival":
 		if not multiplayer.multiplayer_peer != null:
-			Globals.player_join_singleplayer()
+			Globals.player_join(1)
 			Globals.started = true
 			Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
 			Globals.timer.start()
 		else:
 			if multiplayer.is_server():
 				if not OS.has_feature("dedicated_server"):
-					Globals.player_join(multiplayer.get_unique_id())	
+					Globals.player_join(1)
 
 				for i in multiplayer.get_peers():
 					Globals.player_join(i)
-
 				
 				Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
 				Globals.timer.start()
 	else:
 		if not multiplayer.multiplayer_peer != null:
-			Globals.player_join_singleplayer()
+			Globals.player_join(1)
 		else:
 			if multiplayer.is_server():
 				if not OS.has_feature("dedicated_server"):
-					Globals.player_join(multiplayer.get_unique_id())	
+					Globals.player_join(1)
 
 				for i in multiplayer.get_peers():
 					Globals.player_join(i)	
