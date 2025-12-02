@@ -346,14 +346,14 @@ func sync_player_list():
 
 func print_role(msg: String):
 	if multiplayer.multiplayer_peer != null:
-		var is_server = get_tree().get_multiplayer().is_server()
+		var is_server = multiplayer.is_server()
 		
 		if is_server:
 			# Azul
-			print_rich("[color=blue][Servidor] " + msg + "[/color]")
+			print_rich("[color=blue][Server] " + msg + "[/color]")
 		else:
 			# Amarillo
-			print_rich("[color=yellow][Cliente] " + msg + "[/color]")
+			print_rich("[color=yellow][Client] " + msg + "[/color]")
 	else:
 		print(msg)
 
@@ -364,17 +364,16 @@ func hostwithport(port_int):
 	var error = enetMultiplayerpeer.create_server(port_int)
 	if error == OK:
 		multiplayer.multiplayer_peer = enetMultiplayerpeer
-		multiplayer.allow_object_decoding = true
 		if multiplayer.is_server():
 			if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
-				print_role("Servidor dedicado iniciado.")
+				print_role("Dedicated server init")
 
 				await get_tree().create_timer(2).timeout
 
-				UPNP_setup()
 				SetUpBroadcast(username)
 				LoadScene.load_scene(main_menu, "map")
 			else:
+				print_role("Server init")
 				SetUpBroadcast(username)
 				LoadScene.load_scene(main_menu, "map")
 	else:
@@ -386,8 +385,8 @@ func joinwithip(ip_str, port_int):
 	var error = enetMultiplayerpeer.create_client(ip_str, port_int)
 	if error == OK:
 		multiplayer.multiplayer_peer = enetMultiplayerpeer
-		multiplayer.allow_object_decoding = true
 		if not multiplayer.is_server():
+			print_role("Client Init")
 			UnloadScene.unload_scene(main_menu)
 	else:
 		print_role("Fatal Error in client")
@@ -401,7 +400,7 @@ func server_fail():
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 	
 func server_disconect():
-	print_role("client disconected")
+	print_role("Client disconected")
 	get_tree().paused = false
 	CloseUp()
 	sync_player_list()
@@ -410,30 +409,7 @@ func server_disconect():
 
 
 func server_connected():
-	print_role("connected to server :)")
-
-func UPNP_setup():
-	var upnp = UPNP.new()
-
-	var discover_result = upnp.discover()
-	if discover_result != UPNP.UPNP_RESULT_SUCCESS:  
-		print_role("UPNP discover Failed")
-		return
-	
-	if upnp.get_gateway() and !upnp.get_gateway().is_valid_gateway():
-		print_role("UPNP invalid gateway")
-		return 
-
-	var map_result_udp = upnp.add_port_mapping(port, port, "", "UDP")
-	if map_result_udp != UPNP.UPNP_RESULT_SUCCESS:
-		print_role("UPNP port UDP mapping failed")
-		return
-
-	var map_result_tcp = upnp.add_port_mapping(port, port, "", "TCP")
-	if map_result_tcp != UPNP.UPNP_RESULT_SUCCESS:
-		print_role("UPNP port TCP mapping failed")
-		return
-
+	print_role("connected to server")
 
 
 func _exit_tree() -> void:
@@ -480,6 +456,8 @@ func _ready():
 	multiplayer.server_disconnected.connect(server_disconect)
 	multiplayer.connected_to_server.connect(server_connected)
 	multiplayer.connection_failed.connect(server_fail)
+
+	multiplayer.multiplayer_peer = null
 
 		
 func player_join(peer_id: int):
@@ -707,6 +685,7 @@ func _on_timer_timeout():
 		else:
 			if multiplayer.multiplayer_peer != null:
 				multiplayer.multiplayer_peer.close()
+				multiplayer.multiplayer_peer = null
 
 @rpc("authority", "call_local")
 func sync_destrolled_nodes(Hauses: Array):

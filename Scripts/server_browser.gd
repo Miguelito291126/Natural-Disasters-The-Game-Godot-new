@@ -42,5 +42,5 @@ func Reload(now):
 	for i in list.get_children():
 		if i is HBoxContainer:
 			if now - i.last_seen > TIMEOUT:
-				Globals.print_role("Eliminando servidor inactivo:" + i.name)
+				Globals.print_role("Removing inactive server:" + i.name)
 				i.queue_free()

@@ -13,7 +13,7 @@ var bokenhause = preload("res://Scenes/Breakable hause.tscn")
 
 @rpc("any_peer", "call_local")
 func open_door():
-	Globals.print_role("Open the door!!")
+	Globals.print_role("Open the door")
 	door.rotation.y = deg_to_rad(145)
 	door_collision_shape.disabled = true
 	door_frame_collision_shape.disabled = true
@@ -23,7 +23,7 @@ func open_door():
 
 @rpc("any_peer", "call_local")
 func close_door():
-	Globals.print_role("Close the door!!")
+	Globals.print_role("Close the door")
 	door.rotation.y = deg_to_rad(0)
 	door_collision_shape.disabled = false
 	door_frame_collision_shape.disabled = false

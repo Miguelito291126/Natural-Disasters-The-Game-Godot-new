@@ -31,7 +31,7 @@ func unload_scene(current_scene):
 
 	var loader_next_scene = ResourceLoader.load_threaded_request(scene_path, "", use_sub_theads)
 	if loader_next_scene == OK:
-		Globals.print_role("is ok")
+		Globals.print_role("unloading...")
 		set_process(true)
 
 func _process(_delta):
@@ -46,7 +46,6 @@ func _process(_delta):
 			set_process(false)
 			return
 		1:
-			Globals.print_role("progressin")
 			emit_signal("progress_changed", progress[0])
 		3:
 			Globals.print_role("Completed")

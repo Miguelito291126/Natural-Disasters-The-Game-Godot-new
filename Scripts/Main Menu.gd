@@ -78,7 +78,7 @@ func _ready():
 	Globals.SetUpLisener()
 
 	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
-		Globals.print_role("Iniciando servidor...")
+		Globals.print_role("Starting server...")
 
 		var args = OS.get_cmdline_user_args()
 		for i in range(args.size()):
@@ -96,13 +96,11 @@ func _ready():
 
 		Globals.print_role("port: " + str(Globals.port))
 		Globals.print_role("ip: " + IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4))
-		Globals.print_role("Iniciando servidor dedicado...")
+		Globals.print_role("Init dedicated server...")
 		
 		await get_tree().create_timer(2).timeout
 
 		Globals.hostwithport(Globals.port)
-	else: 
-		Globals.print_role("No se puede jugar en modo de servidor")
    
 
 func LoadGameScene():

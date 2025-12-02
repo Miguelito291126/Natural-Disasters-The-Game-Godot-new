@@ -16,6 +16,7 @@ func _on_return_pressed():
 func _on_exit_pressed():
 	if multiplayer.multiplayer_peer != null:
 		multiplayer.multiplayer_peer.close()
+		multiplayer.multiplayer_peer = null
 		return
 
 	get_tree().paused = false

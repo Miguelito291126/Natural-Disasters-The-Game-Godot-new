@@ -39,7 +39,7 @@ func load_scene(current_scene, next_scene):
 	
 	var loader_next_scene = ResourceLoader.load_threaded_request(scene_path, "", use_sub_theads)
 	if loader_next_scene == OK:
-		Globals.print_role("is ok")
+		Globals.print_role("loading...")
 		set_process(true)
 
 

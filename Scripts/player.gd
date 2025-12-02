@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var player_id: int = 1:
 	set(id):
 		player_id = id
-		Globals.print_role("player id: " + str(id))
+		Globals.print_role("Set player id: " + str(id))
 		set_auth.call_deferred(id)
 
 @export var username: String = Globals.username
@@ -173,7 +173,7 @@ func rpc_damage(amount: float):
 		return
 
 	hearth = clamp(hearth - amount, min_Hearth, Max_Hearth)
-	Globals.print_role("damage aplicado:" + str(amount) + " hearth ahora:" + str(hearth))
+	Globals.print_role("damage applied:" + str(amount) + " hearth now:" + str(hearth))
 
 	if hearth <= 0:
 		is_alive = false
@@ -194,7 +194,7 @@ func damage(amount: float) -> void:
 			return
 
 		hearth = clamp(hearth - amount, min_Hearth, Max_Hearth)
-		Globals.print_role("damage aplicado:" + str(amount) + " hearth ahora:" + str(hearth))
+		Globals.print_role("damage applied:" + str(amount) + " hearth now:" + str(hearth))
 
 		if hearth <= 0:	
 			is_alive = false
@@ -487,7 +487,7 @@ func _physics_process(delta):
 			else:
 				_noclip()
 		else:
-			Globals.print_role("No tienes permisos para usar noclip")
+			Globals.print_role("You dont have perms")
 
 		
 	move_and_slide()
@@ -500,11 +500,11 @@ func _noclip():
 		self.set_collision_mask(0)
 		velocity.y = 0
 		fall_strength = 0
-		Globals.print_role("NOCLIP ACTIVADO")
+		Globals.print_role("Noclip activated")
 	else:
 		self.set_collision_layer(1)
 		self.set_collision_mask(1)
-		Globals.print_role("NOCLIP DESACTIVADO")
+		Globals.print_role("Noclip desactivated")
 
 
 func _unhandled_input(event):

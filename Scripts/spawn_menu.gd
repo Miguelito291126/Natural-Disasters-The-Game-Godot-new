@@ -69,7 +69,7 @@ func load_buttons():
 func on_press(i: Node):
 	var player = _get_local_player()
 	if player == null or not player.admin_mode:
-		Globals.print_role("No tienes permisos para spawnear")
+		Globals.print_role("You dont have perms")
 		return
 
 	if multiplayer.multiplayer_peer != null:
@@ -99,7 +99,7 @@ func on_press(i: Node):
 func spawnmenu():
 	var player = _get_local_player()
 	if player == null or not player.admin_mode:
-		Globals.print_role("No tienes permisos para abrir el menú de spawn")
+		Globals.print_role("You dont have perms")
 		return
 
 	Globals.is_spawn_menu_open = !Globals.is_spawn_menu_open

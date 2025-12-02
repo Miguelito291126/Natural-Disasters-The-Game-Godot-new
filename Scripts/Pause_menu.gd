@@ -205,7 +205,7 @@ func _process(_delta):
 func _on_time_value_changed(value):
 	var player = _get_local_player()
 	if player == null or not player.admin_mode:
-		Globals.print_role("No tienes permisos para cambiar el tiempo de desastres")
+		Globals.print_role("You dont have perms")
 		return
 
 	if multiplayer.multiplayer_peer != null:
