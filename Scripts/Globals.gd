@@ -11,7 +11,7 @@ var credits = "Miguelillo223"
 @export var points: int
 @export var username: String = "Player"
 @export var players_conected: Array[Node]
-var enetMultiplayerpeer: ENetMultiplayerPeer
+var multiplayerpeer: ENetMultiplayerPeer
 
 
 #Globals Weather
@@ -359,11 +359,11 @@ func print_role(msg: String):
 
 
 
-func hostwithport(port_int):
-	enetMultiplayerpeer = ENetMultiplayerPeer.new()
-	var error = enetMultiplayerpeer.create_server(port_int)
+func Play_MultiplayerServer():
+	multiplayerpeer = ENetMultiplayerPeer.new()
+	var error = multiplayerpeer.create_server(port)
 	if error == OK:
-		multiplayer.multiplayer_peer = enetMultiplayerpeer
+		multiplayer.multiplayer_peer = multiplayerpeer
 		if multiplayer.is_server():
 			if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
 				print_role("Dedicated server init")
@@ -380,18 +380,18 @@ func hostwithport(port_int):
 		print_role("Fatal Error in server")
 
 
-func joinwithip(ip_str, port_int):
-	enetMultiplayerpeer = ENetMultiplayerPeer.new()
-	var error = enetMultiplayerpeer.create_client(ip_str, port_int)
+func Play_MultiplayerClient():
+	multiplayerpeer = ENetMultiplayerPeer.new()
+	var error = multiplayerpeer.create_client(ip, port)
 	if error == OK:
-		multiplayer.multiplayer_peer = enetMultiplayerpeer
+		multiplayer.multiplayer_peer = multiplayerpeer
 		if not multiplayer.is_server():
 			print_role("Client Init")
 			UnloadScene.unload_scene(main_menu)
 	else:
 		print_role("Fatal Error in client")
 
-func server_fail():
+func MultiplayerConnectionFailed():
 	print_role("client disconected: failed to load")
 	get_tree().paused = false
 	CloseUp()
@@ -399,7 +399,7 @@ func server_fail():
 	remove_all_destrolled_nodes()
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 	
-func server_disconect():
+func MultiplayerServerDisconnected():
 	print_role("Client disconected")
 	get_tree().paused = false
 	CloseUp()
@@ -408,16 +408,16 @@ func server_disconect():
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 
 
-func server_connected():
+func MultiplayerConnectionServerSucess():
 	print_role("connected to server")
 
 
 func _exit_tree() -> void:
-	multiplayer.peer_connected.disconnect(player_join)
-	multiplayer.peer_disconnected.disconnect(player_disconect)
-	multiplayer.server_disconnected.disconnect(server_disconect)
-	multiplayer.connected_to_server.disconnect(server_connected)
-	multiplayer.connection_failed.disconnect(server_fail)
+	multiplayer.peer_connected.disconnect(MultiplayerPlayerSpawner)
+	multiplayer.peer_disconnected.disconnect(MultiplayerPlayerRemover)
+	multiplayer.server_disconnected.disconnect(MultiplayerServerDisconnected)
+	multiplayer.connected_to_server.disconnect(MultiplayerConnectionServerSucess)
+	multiplayer.connection_failed.disconnect(MultiplayerConnectionFailed)
 
 	Globals.Temperature_target = Globals.Temperature_original
 	Globals.Humidity_target = Globals.Humidity_original
@@ -451,20 +451,20 @@ func _process(_delta):
 
 
 func _ready():
-	multiplayer.peer_connected.connect(player_join)
-	multiplayer.peer_disconnected.connect(player_disconect)
-	multiplayer.server_disconnected.connect(server_disconect)
-	multiplayer.connected_to_server.connect(server_connected)
-	multiplayer.connection_failed.connect(server_fail)
+	multiplayer.peer_connected.connect(MultiplayerPlayerSpawner)
+	multiplayer.peer_disconnected.connect(MultiplayerPlayerRemover)
+	multiplayer.server_disconnected.connect(MultiplayerServerDisconnected)
+	multiplayer.connected_to_server.connect(MultiplayerConnectionServerSucess)
+	multiplayer.connection_failed.connect(MultiplayerConnectionFailed)
 
 	multiplayer.multiplayer_peer = null
 
 		
-func player_join(peer_id: int):
+func MultiplayerPlayerSpawner(peer_id: int = 1):
 	if multiplayer.multiplayer_peer != null:
-		var player = player_scene.instantiate()
 		if map and is_instance_valid(map):
 			print_role("Joined player id: " + str(peer_id))
+			var player = player_scene.instantiate()
 			player.name = str(peer_id)
 			player.player_id = peer_id
 			map.add_child(player, true)
@@ -474,9 +474,9 @@ func player_join(peer_id: int):
 			sync_destrolled_nodes.rpc_id(peer_id, destrolled_node) # envia al cliente
 			set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
 	else:
-		var player = player_scene.instantiate()
 		if map and is_instance_valid(map):
 			print_role("Joined player id: " + str(peer_id))
+			var player = player_scene.instantiate()
 			player.name = str(peer_id)
 			player.player_id = peer_id
 			map.add_child(player, true)
@@ -484,7 +484,7 @@ func player_join(peer_id: int):
 			
 
 
-func player_disconect(peer_id: int):
+func MultiplayerPlayerRemover(peer_id: int = 1):
 	if multiplayer.multiplayer_peer != null:
 		# Intentar obtener el jugador de forma segura
 		var player_node = map.get_node_or_null(str(peer_id))
@@ -496,13 +496,13 @@ func player_disconect(peer_id: int):
 			# fallback: buscar por grupo y authority (por si el nombre cambió)
 			for p in get_tree().get_nodes_in_group("player"):
 				if is_instance_valid(p) and p.get_multiplayer_authority() == peer_id:
-					print_role("Disconected player (found by authority) id: " + str(peer_id))
+					print_role("Disconected player id: " + str(peer_id))
 					p.queue_free()
 					sync_player_list.rpc()
 					return
 
 		# si no se encuentra, log para depurar
-		print_role("player_disconect: no se encontró player con id " + str(peer_id))
+		print_role("player no found: " + str(peer_id))
 
 
 

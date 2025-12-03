@@ -31,6 +31,9 @@ func load_scene(current_scene, next_scene):
 
 	if current_scene != null and is_instance_valid(current_scene):
 		current_scene.queue_free()
+	else:
+		Globals.print_role("No current scene to free")
+
 
 	if GAME_SCENE.has(scene_path):
 		scene_path = GAME_SCENE[scene_path]

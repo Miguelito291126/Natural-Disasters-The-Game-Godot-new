@@ -124,6 +124,12 @@ func _on_settings_pressed():
 
 func _on_exit_pressed():
 	pause()
+	
+	if multiplayer.multiplayer_peer != null:
+		multiplayer.multiplayer_peer.close()
+		multiplayer.multiplayer_peer = null
+		return
+
 	LoadScene.load_scene(Globals.map, "res://Scenes/main_menu.tscn")
 		
 func _exit_tree() -> void:
@@ -180,7 +186,7 @@ func pause():
 
 	if not multiplayer.multiplayer_peer != null:
 		get_tree().paused = Globals.is_pause_menu_open
-	
+
 	if !Globals.is_pause_menu_open:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	else:

@@ -9,6 +9,11 @@ var NextHeartSoundTime = Time.get_unix_time_from_system()
 @onready var hearthbeat_sound = $Heartbeat
 @onready var animation_player = $Panel/Panel2/Heart/AnimationPlayer
 
+
+func _enter_tree() -> void:
+	if multiplayer.multiplayer_peer != null:
+		set_multiplayer_authority(get_parent().name.to_int())
+
 func _ready() -> void:
 	if multiplayer.multiplayer_peer != null:
 		if not is_multiplayer_authority():
@@ -19,9 +24,7 @@ func _ready() -> void:
 
 	animation_player.play("Hearth_Animation")
 
-func _enter_tree() -> void:
-	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(get_parent().player_id)
+
 
 func _process(_delta):
 	

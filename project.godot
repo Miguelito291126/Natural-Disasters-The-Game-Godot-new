@@ -21,17 +21,13 @@ config/icon="uid://dcii8d8jnctvr"
 
 [audio]
 
-buses/default_bus_layout="res://Resources/default_bus_layout.tres"
+buses/default_bus_layout="uid://cswbjaci3cvx3"
 
 [autoload]
 
 Globals="*res://Scenes/globals.tscn"
 LoadScene="*res://Scripts/LoadScene.gd"
 UnloadScene="*res://Scripts/UnloadScene.gd"
-
-[debug]
-
-gdscript/warnings/integer_division=0
 
 [display]
 
@@ -209,12 +205,6 @@ dev_console_down={
 3d_physics/layer_3="water"
 3d_physics/layer_4="lava"
 
-[network]
-
-limits/tcp/connect_timeout_seconds=60
-limits/packet_peer_stream/max_buffer_po2=64
-limits/webrtc/max_channel_in_buffer_kb=100
-
 [physics]
 
 3d/default_gravity=50.0
@@ -222,4 +212,3 @@ limits/webrtc/max_channel_in_buffer_kb=100
 [rendering]
 
 textures/vram_compression/import_s3tc_bptc=true
-textures/vram_compression/import_etc2_astc=true

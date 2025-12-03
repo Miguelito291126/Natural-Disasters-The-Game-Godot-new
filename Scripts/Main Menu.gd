@@ -148,7 +148,7 @@ func _on_port_text_changed(new_text:String):
 
 func _on_join_pressed():
 	if Globals.username.length() < 10 and Globals.username.length() >= 1:
-		Globals.joinwithip(Globals.ip, Globals.port)
+		Globals.Play_MultiplayerClient()
 	else:
 		error_text.visible = true
 		await get_tree().create_timer(2).timeout
@@ -174,14 +174,14 @@ func _on_multiplayer_pressed():
 func _on_sandbox_pressed() -> void:
 	Globals.gamemode = "sandbox"
 	if multiplayer_mode:
-		Globals.hostwithport(Globals.port)
+		Globals.Play_MultiplayerServer()
 	else:
 		LoadScene.load_scene(self, "map")
 
 func _on_survival_pressed():
 	Globals.gamemode = "survival"
 	if multiplayer_mode:
-		Globals.hostwithport(Globals.port)
+		Globals.Play_MultiplayerServer()
 	else:
 		LoadScene.load_scene(self, "map")
 

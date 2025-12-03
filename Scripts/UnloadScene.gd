@@ -12,9 +12,9 @@ var progress: Array = []
 
 var use_sub_theads: bool = false
 
-func unload_scene(current_scene):
+func unload_scene(current_scene = null):
 
-	if current_scene != null and is_instance_valid(current_scene):
+	if current_scene != null:
 		scene_path = current_scene.scene_file_path
 		scene = current_scene
 		
@@ -26,13 +26,22 @@ func unload_scene(current_scene):
 
 	await Signal(unloading_screen_scene, "safe_to_load")
 
-	if current_scene != null and is_instance_valid(current_scene):
-		current_scene.queue_free()
+	if current_scene != null:
+		if is_instance_valid(current_scene):
+			current_scene.queue_free()
 
 	var loader_next_scene = ResourceLoader.load_threaded_request(scene_path, "", use_sub_theads)
 	if loader_next_scene == OK:
 		Globals.print_role("unloading...")
 		set_process(true)
+
+func clear_nodegame_except_spawner():
+	if not is_instance_valid(Globals.main):
+		return
+	
+	for child in Globals.main.get_children():
+		if child.name != "MapSpawner": # ⚡ aquí pon el nombre exacto de tu spawner en la escena
+			child.queue_free()
 
 func _process(_delta):
 	var load_status = ResourceLoader.load_threaded_get_status(scene_path, progress)

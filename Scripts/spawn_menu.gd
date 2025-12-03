@@ -10,7 +10,7 @@ var entity_scene = preload("res://Scenes/entity.tscn")
 
 func _enter_tree() -> void:
 	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(get_parent().player_id)
+		set_multiplayer_authority(get_parent().name.to_int())
 
 func _ready():
 	self.visible = false

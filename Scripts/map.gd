@@ -15,31 +15,32 @@ func _ready():
 	is_sun_original()
 
 	if Globals.gamemode == "survival":
-		if not multiplayer.multiplayer_peer != null:
-			Globals.player_join(1)
-			Globals.started = true
-			Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
-			Globals.timer.start()
-		else:
+		if multiplayer.multiplayer_peer != null:
 			if multiplayer.is_server():
 				if not OS.has_feature("dedicated_server"):
-					Globals.player_join(1)
+					Globals.MultiplayerPlayerSpawner()
 
 				for i in multiplayer.get_peers():
-					Globals.player_join(i)
+					Globals.MultiplayerPlayerSpawner(i)
 				
 				Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
 				Globals.timer.start()
-	else:
-		if not multiplayer.multiplayer_peer != null:
-			Globals.player_join(1)
 		else:
+			Globals.MultiplayerPlayerSpawner()
+			Globals.started = true
+			Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
+			Globals.timer.start()
+	else:
+		if multiplayer.multiplayer_peer != null:
 			if multiplayer.is_server():
 				if not OS.has_feature("dedicated_server"):
-					Globals.player_join(1)
+					Globals.MultiplayerPlayerSpawner()
 
 				for i in multiplayer.get_peers():
-					Globals.player_join(i)	
+					Globals.MultiplayerPlayerSpawner(i)		
+		else:
+			Globals.MultiplayerPlayerSpawner()
+
 				
 
 # Llama a la función wind para cada objeto en la escena

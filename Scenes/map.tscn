@@ -16,6 +16,53 @@
 [ext_resource type="PackedScene" uid="uid://yrq2iuii7a14" path="res://Scenes/chat.tscn" id="14_x5dfk"]
 [ext_resource type="PackedScene" uid="uid://cb10f2tpfo0qj" path="res://Scenes/warning_hud.tscn" id="15_fls3e"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8u7l0"]
+properties/0/path = NodePath("FogVolume:shape")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("FogVolume:layers")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("HTerrain:position")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("HTerrain:rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("HTerrain:scale")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("WorldEnvironment/Sun:rotation")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("WorldEnvironment/Sun:scale")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath("WorldEnvironment/Sun:position")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+properties/8/path = NodePath("WorldEnvironment/Moon:rotation")
+properties/8/spawn = true
+properties/8/replication_mode = 1
+properties/9/path = NodePath("WorldEnvironment/Moon:position")
+properties/9/spawn = true
+properties/9/replication_mode = 1
+properties/10/path = NodePath("WorldEnvironment/Moon:scale")
+properties/10/spawn = true
+properties/10/replication_mode = 1
+properties/11/path = NodePath("Warning Hud/Panel/Label:text")
+properties/11/spawn = true
+properties/11/replication_mode = 1
+properties/12/path = NodePath("Chat:visible")
+properties/12/spawn = true
+properties/12/replication_mode = 1
+properties/13/path = NodePath("Warning Hud:visible")
+properties/13/spawn = true
+properties/13/replication_mode = 1
+properties/14/path = NodePath("Chat/Panel/TextEdit:text")
+properties/14/spawn = true
+properties/14/replication_mode = 1
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ihtyg"]
 shader = ExtResource("2_sc6k1")
 shader_parameter/day_top_color = Color(0, 0.556863, 1, 1)
@@ -73,53 +120,6 @@ noise = SubResource("FastNoiseLite_hhy4h")
 density = 0.05
 density_texture = SubResource("NoiseTexture3D_bq76v")
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8u7l0"]
-properties/0/path = NodePath("FogVolume:shape")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath("FogVolume:layers")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath("HTerrain:position")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-properties/3/path = NodePath("HTerrain:rotation")
-properties/3/spawn = true
-properties/3/replication_mode = 1
-properties/4/path = NodePath("HTerrain:scale")
-properties/4/spawn = true
-properties/4/replication_mode = 1
-properties/5/path = NodePath("WorldEnvironment/Sun:rotation")
-properties/5/spawn = true
-properties/5/replication_mode = 1
-properties/6/path = NodePath("WorldEnvironment/Sun:scale")
-properties/6/spawn = true
-properties/6/replication_mode = 1
-properties/7/path = NodePath("WorldEnvironment/Sun:position")
-properties/7/spawn = true
-properties/7/replication_mode = 1
-properties/8/path = NodePath("WorldEnvironment/Moon:rotation")
-properties/8/spawn = true
-properties/8/replication_mode = 1
-properties/9/path = NodePath("WorldEnvironment/Moon:position")
-properties/9/spawn = true
-properties/9/replication_mode = 1
-properties/10/path = NodePath("WorldEnvironment/Moon:scale")
-properties/10/spawn = true
-properties/10/replication_mode = 1
-properties/11/path = NodePath("Warning Hud/Panel/Label:text")
-properties/11/spawn = true
-properties/11/replication_mode = 1
-properties/12/path = NodePath("Chat:visible")
-properties/12/spawn = true
-properties/12/replication_mode = 1
-properties/13/path = NodePath("Warning Hud:visible")
-properties/13/spawn = true
-properties/13/replication_mode = 1
-properties/14/path = NodePath("Chat/Panel/TextEdit:text")
-properties/14/spawn = true
-properties/14/replication_mode = 1
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_b68bb"]
 size = Vector3(0, 100, 10000)
 
@@ -129,20 +129,20 @@ size = Vector3(10000, 100, 1)
 [node name="map" type="Node3D"]
 script = ExtResource("1_xn4hm")
 
+[node name="MapSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_8u7l0")
+
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://b2g31vrdy6c1x")
 spawn_path = NodePath("..")
-spawn_limit = 1
 
 [node name="DisastersSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://w8budjn2m22a", "uid://doi73cvnxims6", "uid://tjhhsh3ck07n", "uid://dni5hbhwlxmdi", "uid://d3gkmhq5kjhrj", "uid://qf81iinh5hke")
 spawn_path = NodePath("..")
-spawn_limit = 1
 
 [node name="ObjectSpawn" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://hiq4h8n7r78k", "uid://bkfobjkkd58w0", "uid://cv8xwubw2paof", "uid://bxi02esjkbgma")
 spawn_path = NodePath("..")
-spawn_limit = 1
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfhfe")
@@ -209,9 +209,6 @@ offset_right = 384.0
 offset_bottom = 288.0
 
 [node name="Warning Hud" parent="." instance=ExtResource("15_fls3e")]
-
-[node name="MapSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_8u7l0")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
