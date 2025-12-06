@@ -152,10 +152,8 @@ func unfreeze(v, _mag):
 func destroy(v):
 	if v.is_in_group("Destrollable") or v.is_in_group("Hause"):
 		if is_instance_valid(v):
-			if multiplayer.multiplayer_peer != null:
-				v.destroy.rpc()
-			else:
-				v.destroy()
+			v.destroy.rpc()
+
 
 func magnitude_modulate_sound():
 	var volume = self.magnitude  # Asumiendo que self.magnitude es una propiedad que representa la magnitud del terremoto

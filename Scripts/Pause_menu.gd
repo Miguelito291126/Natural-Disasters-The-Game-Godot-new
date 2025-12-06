@@ -124,13 +124,7 @@ func _on_settings_pressed():
 
 func _on_exit_pressed():
 	pause()
-	
-	if multiplayer.multiplayer_peer != null:
-		multiplayer.multiplayer_peer.close()
-		multiplayer.multiplayer_peer = null
-		return
-
-	LoadScene.load_scene(Globals.map, "res://Scenes/main_menu.tscn")
+	Globals.close_conection()
 		
 func _exit_tree() -> void:
 	Globals.Temperature_target = Globals.Temperature_original
@@ -164,11 +158,9 @@ func _on_back_pressed():
 
 func _get_local_player():
 	for p in get_tree().get_nodes_in_group("player"):
-		if multiplayer.multiplayer_peer != null:
-			if p.is_multiplayer_authority():
-				return p
-		else:
+		if p.is_multiplayer_authority():
 			return p
+
 	return null
 
 
@@ -184,8 +176,8 @@ func mouse_action():
 func pause():
 	Globals.is_pause_menu_open = !Globals.is_pause_menu_open
 
-	if not multiplayer.multiplayer_peer != null:
-		get_tree().paused = Globals.is_pause_menu_open
+	if multiplayer.multiplayer_peer == OfflineMultiplayerPeer:
+		get_tree().paused = false
 
 	if !Globals.is_pause_menu_open:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -197,9 +189,8 @@ func pause():
 
 
 func _process(_delta):
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if Input.is_action_just_pressed("Mouse Action"):
 		mouse_action()
@@ -214,9 +205,8 @@ func _on_time_value_changed(value):
 		Globals.print_role("You dont have perms")
 		return
 
-	if multiplayer.multiplayer_peer != null:
-		if not multiplayer.is_server():
-			return
+	if not multiplayer.is_server():
+		return
 
 	if not Globals.started:
 		return

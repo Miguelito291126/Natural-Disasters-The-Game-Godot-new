@@ -11,14 +11,13 @@ var NextHeartSoundTime = Time.get_unix_time_from_system()
 
 
 func _enter_tree() -> void:
-	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(get_parent().name.to_int())
+	set_multiplayer_authority(get_parent().name.to_int())
 
 func _ready() -> void:
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			self.visible = false
-			return
+
+	if not is_multiplayer_authority():
+		self.visible = false
+		return
 	
 	self.visible = true
 
@@ -29,11 +28,11 @@ func _ready() -> void:
 func _process(_delta):
 	
 
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			self.visible = false
-			return
-		
+
+	if not is_multiplayer_authority():
+		self.visible = false
+		return
+	
 	self.visible = true
 
 	var freq = clamp((1-float((44-round( get_parent().body_temperature)) / 20)) * (180/60), 0.5, 20)

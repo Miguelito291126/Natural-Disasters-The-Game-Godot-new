@@ -4,8 +4,7 @@ func _ready():
 	self.hide()
 
 func _on_return_pressed():
-
-	if not multiplayer.multiplayer_peer != null:
+	if multiplayer.multiplayer_peer == OfflineMultiplayerPeer:
 		get_tree().paused = false
 
 	get_parent()._reset_player()
@@ -14,10 +13,5 @@ func _on_return_pressed():
 		
 
 func _on_exit_pressed():
-	if multiplayer.multiplayer_peer != null:
-		multiplayer.multiplayer_peer.close()
-		multiplayer.multiplayer_peer = null
-		return
-
-	get_tree().paused = false
-	LoadScene.load_scene(Globals.map, "res://Scenes/main_menu.tscn")
+	Globals.close_conection()
+		

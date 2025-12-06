@@ -33,16 +33,12 @@ func close_door():
 
 
 func Interact():
-	if multiplayer.multiplayer_peer != null:
-		if not door_open:
-			open_door.rpc()
-		else:
-			close_door.rpc()
+
+	if not door_open:
+		open_door.rpc()
 	else:
-		if not door_open:
-			open_door()
-		else:
-			close_door()
+		close_door.rpc()
+
 
 @rpc("any_peer", "call_local")
 func destroy():
@@ -59,18 +55,15 @@ func destroy():
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Meteor"):
-		if multiplayer.multiplayer_peer != null:
-			destroy.rpc()
-		else:
-			destroy()
+
+		destroy.rpc()
+
 			
 
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	if area.is_in_group("Tornado") or area.is_in_group("Tsunami") or area.is_in_group("Explosion"):
-		if multiplayer.multiplayer_peer != null:
-			destroy.rpc()
-		else:
-			destroy()
+		destroy.rpc()
+
 
 

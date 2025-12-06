@@ -95,13 +95,10 @@ var min_bdradiation = 0
 @export var admin_mode: bool = false
 @export var ragdoll_enabled = false
 
-func set_auth(id: int):
-	if multiplayer.multiplayer_peer != null:
-		Globals.print_role("set authority to: " + str(id))
-		set_multiplayer_authority(id)
-
 func _enter_tree() -> void:
-	set_auth(name.to_int())
+	player_id = name.to_int()
+	Globals.print_role("set authority to: " + name)
+	set_multiplayer_authority(player_id)
 
 func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -162,16 +159,10 @@ func damage(amount: float) -> void:
 	if hearth <= 0:	
 		is_alive = false
 
-		if multiplayer.multiplayer_peer != null:
-			die.rpc()
-			Globals.remove_points.rpc()
-			_set_ragdoll_state.rpc(true)
-		else:
-			Globals.remove_points()
-			die()
-			_set_ragdoll_state(true)
+		die.rpc()
+		Globals.remove_points.rpc()
+		_set_ragdoll_state.rpc(true)
 
-		
 	else:
 		is_alive = true
 
@@ -202,35 +193,20 @@ func _ready():
 	dust_node.emitting = false
 	snow_node.emitting = false
 
-	if multiplayer.multiplayer_peer != null:
-		Globals.print_role("player name: " + str(name.to_int()))
-		Globals.print_role("is authority: " + str(is_multiplayer_authority()))
-		Globals.print_role("get authority: " + str(get_multiplayer_authority()))
+	Globals.print_role("player name: " + str(name.to_int()))
+	Globals.print_role("is authority: " + str(is_multiplayer_authority()))
+	Globals.print_role("get authority: " + str(get_multiplayer_authority()))
 
-		camera_node.current = is_multiplayer_authority()
+	camera_node.current = is_multiplayer_authority()
 
-		if is_multiplayer_authority():
-			Globals.local_player = self
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-			_reset_player()
-			_set_ragdoll_state.rpc(false)
-
-			if multiplayer.is_server():
-				admin_mode = true
-
-	else:
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if is_multiplayer_authority():
 		Globals.local_player = self
-		camera_node.current = true
-		admin_mode = true
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		_reset_player()
-		_set_ragdoll_state(false)
+		_set_ragdoll_state.rpc(false)
 
-	
-		
-		
-
-
+		if multiplayer.is_server():
+			admin_mode = true
 
 
 func body_temp(delta):
@@ -262,9 +238,10 @@ func body_temp(delta):
 
 	if randi_range(1,25) == 25:
 		if alpha_cold != 0:
-			damage(alpha_hot + alpha_cold)	
+			damage.rpc(alpha_hot + alpha_cold)	
 		elif alpha_hot != 0:
-			damage(alpha_hot + alpha_cold)
+			damage.rpc(alpha_hot + alpha_cold)
+
 
 	if body_temperature > 39 and randi() % 400 == 0:
 		Vomit()
@@ -363,9 +340,8 @@ func _process(delta):
 	wind_sound()
 
 func _physics_process(delta):
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if Globals.is_pause_menu_open:
 		return
@@ -480,9 +456,8 @@ func _noclip():
 
 
 func _unhandled_input(event):
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
@@ -566,13 +541,10 @@ func _reset_player():
 	IsOnFire = false
 	fall_strength = 0
 
-	if multiplayer.multiplayer_peer != null:
-		if is_multiplayer_authority():
-			_set_ragdoll_state.rpc(false)
-			position = spawn.position
-			velocity = Vector3.ZERO
-	else:
-		_set_ragdoll_state(false)
+
+	if is_multiplayer_authority():
+		_set_ragdoll_state.rpc(false)
 		position = spawn.position
 		velocity = Vector3.ZERO
+
 			

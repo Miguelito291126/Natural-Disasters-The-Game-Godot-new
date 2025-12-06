@@ -295,10 +295,8 @@ func wind(object):
 		if is_instance_valid(object):
 			if object.is_in_group("Destrollable") or object.is_in_group("Hause"):
 				if Wind_speed > 100:
-					if multiplayer.multiplayer_peer != null:
-						object.destroy.rpc()
-					else:
-						object.destroy()
+					object.destroy.rpc()
+
 			
 			
 
@@ -325,15 +323,13 @@ func get_physics_multiplier() -> float:
 	return (200.0 / 3.0) / physics_interval
 
 func hit_chance(chance: int) -> bool:
-	if multiplayer.multiplayer_peer != null:
-		if multiplayer.is_server():
-			# En el servidor
-			return randf() < (clamp(chance * get_physics_multiplier(), 0, 100) / 100)
-		else:
-			# En el cliente
-			return randf() < (clamp(chance * get_frame_multiplier(), 0, 100) / 100)
-	else:
+	if multiplayer.is_server():
+		# En el servidor
 		return randf() < (clamp(chance * get_physics_multiplier(), 0, 100) / 100)
+	else:
+		# En el cliente
+		return randf() < (clamp(chance * get_frame_multiplier(), 0, 100) / 100)
+
 	
 @rpc("any_peer", "call_local")
 func sync_player_list():
@@ -345,9 +341,8 @@ func sync_player_list():
 
 
 func print_role(msg: String):
-	if multiplayer.multiplayer_peer != null:
-		var is_server = multiplayer.is_server()
-		
+	if multiplayer.multiplayer_peer and multiplayer.multiplayer_peer != null and multiplayer.multiplayer_peer != OfflineMultiplayerPeer:
+		var is_server = multiplayer.is_server()	
 		if is_server:
 			# Azul
 			print_rich("[color=blue][Server] " + msg + "[/color]")
@@ -430,9 +425,8 @@ func _exit_tree() -> void:
 
 
 func _process(_delta):
-	if multiplayer.multiplayer_peer != null:
-		if not multiplayer.is_server(): 
-			return
+	if not multiplayer.is_server(): 
+		return
 
 	time_left = timer.time_left
 	Temperature = clamp(Temperature, -275.5, 275.5)
@@ -457,63 +451,48 @@ func _ready():
 	multiplayer.connected_to_server.connect(MultiplayerConnectionServerSucess)
 	multiplayer.connection_failed.connect(MultiplayerConnectionFailed)
 
-	multiplayer.multiplayer_peer = null
-
 		
 func MultiplayerPlayerSpawner(peer_id: int = 1):
-	if multiplayer.multiplayer_peer != null:
-		if map and is_instance_valid(map):
-			print_role("Joined player id: " + str(peer_id))
-			var player = player_scene.instantiate()
-			player.name = str(peer_id)
-			player.player_id = peer_id
-			map.add_child(player, true)
+	if map and is_instance_valid(map):
+		print_role("Joined player id: " + str(peer_id))
+		var player = player_scene.instantiate()
+		player.name = str(peer_id)
+		map.add_child(player, true)
 
-			# ahora que el player está en el árbol, sincronizamos datos
-			sync_player_list.rpc()                                # broadcast
-			sync_destrolled_nodes.rpc_id(peer_id, destrolled_node) # envia al cliente
-			set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
-	else:
-		if map and is_instance_valid(map):
-			print_role("Joined player id: " + str(peer_id))
-			var player = player_scene.instantiate()
-			player.name = str(peer_id)
-			player.player_id = peer_id
-			map.add_child(player, true)
+		# ahora que el player está en el árbol, sincronizamos datos
+		sync_player_list.rpc()                                # broadcast
+		sync_destrolled_nodes.rpc_id(peer_id, destrolled_node) # envia al cliente
+		set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
+
 			
 			
 
 
 func MultiplayerPlayerRemover(peer_id: int = 1):
-	if multiplayer.multiplayer_peer != null:
-		# Intentar obtener el jugador de forma segura
-		var player_node = map.get_node_or_null(str(peer_id))
-		if player_node and is_instance_valid(player_node):
-			print_role("Disconected player id: " + str(peer_id))
-			player_node.queue_free()
-			sync_player_list.rpc()
-		else:
-			# fallback: buscar por grupo y authority (por si el nombre cambió)
-			for p in get_tree().get_nodes_in_group("player"):
-				if is_instance_valid(p) and p.get_multiplayer_authority() == peer_id:
-					print_role("Disconected player id: " + str(peer_id))
-					p.queue_free()
-					sync_player_list.rpc()
-					return
+	# Intentar obtener el jugador de forma segura
+	var player_node = map.get_node_or_null(str(peer_id))
+	if player_node and is_instance_valid(player_node):
+		print_role("Disconected player id: " + str(peer_id))
+		player_node.queue_free()
+		sync_player_list.rpc()
+	else:
+		# fallback: buscar por grupo y authority (por si el nombre cambió)
+		for p in get_tree().get_nodes_in_group("player"):
+			if is_instance_valid(p) and p.get_multiplayer_authority() == peer_id:
+				print_role("Disconected player id: " + str(peer_id))
+				p.queue_free()
+				sync_player_list.rpc()
+				return
 
-		# si no se encuentra, log para depurar
-		print_role("player no found: " + str(peer_id))
+	# si no se encuentra, log para depurar
+	print_role("player no found: " + str(peer_id))
 
 
 
 func sync_weather_and_disaster():
-	if multiplayer.multiplayer_peer != null:
-		if multiplayer.is_server():
-			var random_weather_and_disaster = randi_range(0,12)
-			set_weather_and_disaster.rpc(random_weather_and_disaster)
-	else:
+	if multiplayer.is_server():
 		var random_weather_and_disaster = randi_range(0,12)
-		set_weather_and_disaster(random_weather_and_disaster)		
+		set_weather_and_disaster.rpc(random_weather_and_disaster)
 
 @rpc("any_peer", "call_local")
 func set_weather_and_disaster(weather_and_disaster_index):
@@ -675,7 +654,12 @@ func remove_points():
 		points = 0
 
 
-
+func close_conection():
+	if multiplayer.multiplayer_peer == OfflineMultiplayerPeer:
+		get_tree().paused = false
+		LoadScene.load_scene(Globals.map, "res://Scenes/main_menu.tscn")
+	else:
+		multiplayer.multiplayer_peer.close()
 
 
 func _on_timer_timeout():
@@ -683,9 +667,7 @@ func _on_timer_timeout():
 		if started:
 			sync_weather_and_disaster()
 		else:
-			if multiplayer.multiplayer_peer != null:
-				multiplayer.multiplayer_peer.close()
-				multiplayer.multiplayer_peer = null
+			multiplayer.multiplayer_peer.close()
 
 @rpc("authority", "call_local")
 func sync_destrolled_nodes(Hauses: Array):
@@ -695,26 +677,24 @@ func sync_destrolled_nodes(Hauses: Array):
 			house.destroy()
 
 func add_destrolled_nodes(Name: String):
-	if multiplayer.multiplayer_peer != null:
-		if not multiplayer.is_server():
-			return
+
+	if not multiplayer.is_server():
+		return
 
 	if not destrolled_node.has(Name):
 		destrolled_node.append(Name)
 
 
 func remove_destrolled_nodes(Name: String):
-	if multiplayer.multiplayer_peer != null:
-		if not multiplayer.is_server():
-			return
+	if not multiplayer.is_server():
+		return
 
 	if destrolled_node.has(Name):
 		destrolled_node.erase(Name)
 
 func remove_all_destrolled_nodes():
-	if multiplayer.multiplayer_peer != null:
-		if not multiplayer.is_server():
-			return
+	if not multiplayer.is_server():
+		return
 
 	for i in destrolled_node:
 		remove_destrolled_nodes(i)

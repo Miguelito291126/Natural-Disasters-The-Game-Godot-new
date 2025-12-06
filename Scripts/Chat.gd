@@ -175,14 +175,13 @@ func _cmd_spawn_disaster_weather(disaster_name):
 
 
 func _enter_tree():
-	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(multiplayer.get_unique_id())
+	set_multiplayer_authority(multiplayer.get_unique_id())
 
 func _ready() -> void:
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			self.visible = false
-			return
+
+	if not is_multiplayer_authority():
+		self.visible = false
+		return
 
 	self.visible = true
 	
@@ -226,16 +225,14 @@ func _input(_event: InputEvent) -> void:
 		if Input.is_action_just_pressed('Enter'):
 			history.push_front(line_edit.text.erase(0, 1))
 			
-			if multiplayer.multiplayer_peer != null:
-				if not is_multiplayer_authority():
-					return
-					
-				if line_edit.text.begins_with("/"):
-					msg_rpc(Globals.username, line_edit.text)
-				else:
-					msg_rpc.rpc(Globals.username, line_edit.text)
-			else:
+			if not is_multiplayer_authority():
+				return
+				
+			if line_edit.text.begins_with("/"):
 				msg_rpc(Globals.username, line_edit.text)
+			else:
+				msg_rpc.rpc(Globals.username, line_edit.text)
+
 
 			history_index = -1
 			line_edit.text = ""
@@ -281,48 +278,36 @@ func _run_command(cmd: String) -> void:
 
 @rpc("any_peer", "call_local")
 func msg_rpc(username, data):
-	if multiplayer.multiplayer_peer != null:
-		if data.begins_with("/"):
-			if multiplayer.is_server() and is_multiplayer_authority():
-				if data != "" or data != " ":
-					text_edit.text += str(username, ": ", data, "\n")
-					text_edit.scroll_vertical =  text_edit.get_line_height()
-				data = data.erase(0, 1)
-				Globals.print_role(data)
-				_run_command.rpc(data)
-			else:
-				text_edit.text +=  "You are not a have admin... \n"	
-				text_edit.scroll_vertical =  text_edit.get_line_height()
-		else:
+
+	if data.begins_with("/"):
+		if multiplayer.is_server() and is_multiplayer_authority():
 			if data != "" or data != " ":
 				text_edit.text += str(username, ": ", data, "\n")
 				text_edit.scroll_vertical =  text_edit.get_line_height()
-	else:
-		if data.begins_with("/"):
-			if data != "" or data != " ":
-				text_edit.text += str(username, ": ", data, "\n")
-				text_edit.scroll_vertical =  text_edit	.get_line_height()
 			data = data.erase(0, 1)
 			Globals.print_role(data)
-			_run_command(data)
+			_run_command.rpc(data)
 		else:
-			if data != "" or data != " ":
-				text_edit.text += str(username, ": ", data, "\n")
-				text_edit.scroll_vertical =  text_edit.get_line_height()	
+			text_edit.text +=  "You are not a have admin... \n"	
+			text_edit.scroll_vertical =  text_edit.get_line_height()
+	else:
+		if data != "" or data != " ":
+			text_edit.text += str(username, ": ", data, "\n")
+			text_edit.scroll_vertical =  text_edit.get_line_height()
+
 
 	
 
 func _on_button_pressed():
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			return
-			
-		if line_edit.text.begins_with("/"):
-			msg_rpc(Globals.username, line_edit.text)
-		else:
-			msg_rpc.rpc(Globals.username, line_edit.text)
-	else:
+
+	if not is_multiplayer_authority():
+		return
+		
+	if line_edit.text.begins_with("/"):
 		msg_rpc(Globals.username, line_edit.text)
+	else:
+		msg_rpc.rpc(Globals.username, line_edit.text)
+
 	
 	line_edit.text = ""
 	line_edit.release_focus()

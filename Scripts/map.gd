@@ -15,31 +15,26 @@ func _ready():
 	is_sun_original()
 
 	if Globals.gamemode == "survival":
-		if multiplayer.multiplayer_peer != null:
-			if multiplayer.is_server():
-				if not OS.has_feature("dedicated_server"):
-					Globals.MultiplayerPlayerSpawner()
 
-				for i in multiplayer.get_peers():
-					Globals.MultiplayerPlayerSpawner(i)
-				
-				Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
-				Globals.timer.start()
-		else:
-			Globals.MultiplayerPlayerSpawner()
-			Globals.started = true
+		if multiplayer.is_server():
+			if not OS.has_feature("dedicated_server"):
+				Globals.MultiplayerPlayerSpawner()
+
+			for i in multiplayer.get_peers():
+				Globals.MultiplayerPlayerSpawner(i)
+			
 			Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
 			Globals.timer.start()
-	else:
-		if multiplayer.multiplayer_peer != null:
-			if multiplayer.is_server():
-				if not OS.has_feature("dedicated_server"):
-					Globals.MultiplayerPlayerSpawner()
 
-				for i in multiplayer.get_peers():
-					Globals.MultiplayerPlayerSpawner(i)		
-		else:
-			Globals.MultiplayerPlayerSpawner()
+	else:
+
+		if multiplayer.is_server():
+			if not OS.has_feature("dedicated_server"):
+				Globals.MultiplayerPlayerSpawner()
+
+			for i in multiplayer.get_peers():
+				Globals.MultiplayerPlayerSpawner(i)		
+
 
 				
 
@@ -52,14 +47,13 @@ func _physics_process(_delta):
 func _process(_delta):
 	terrain.ambient_wind = Globals.Wind_speed * _delta
 
-	if multiplayer.multiplayer_peer != null:
-		if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
+	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
+		Globals.started = true
+	else:
+		if Globals.players_conected.size() > 1:
 			Globals.started = true
 		else:
-			if Globals.players_conected.size() > 1:
-				Globals.started = true
-			else:
-				Globals.started = false
+			Globals.started = false
 
 
 func is_sun_original():

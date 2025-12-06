@@ -24,19 +24,13 @@ var GlobalsData: DataResource = DataResource.load_file()
 var past_minute = -1.0
 
 func _ready():
-	if multiplayer.multiplayer_peer != null:
-		if multiplayer.is_server():
-			Globals.time = ingame_to_real_minute_duration * initial_hour * minutes_per_hour
-	else:
-		Globals.time = ingame_to_real_minute_duration * initial_hour * minutes_per_hour	
+	if multiplayer.is_server():
+		Globals.time = ingame_to_real_minute_duration * initial_hour * minutes_per_hour
+
 
 func _process(delta):
-	if multiplayer.multiplayer_peer != null:
-		if multiplayer.is_server():
-			Globals.time += delta * ingame_to_real_minute_duration * ingame_speed
-			_recalculate_time(delta)
-	else:
-		Globals.time += delta * ingame_to_real_minute_duration * ingame_speed  
+	if multiplayer.is_server():
+		Globals.time += delta * ingame_to_real_minute_duration * ingame_speed
 		_recalculate_time(delta)
 
 func _recalculate_time(delta):

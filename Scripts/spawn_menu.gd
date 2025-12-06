@@ -9,15 +9,13 @@ extends CanvasLayer
 var entity_scene = preload("res://Scenes/entity.tscn")
 
 func _enter_tree() -> void:
-	if multiplayer.multiplayer_peer != null:
-		set_multiplayer_authority(get_parent().name.to_int())
+	set_multiplayer_authority(get_parent().name.to_int())
 
 func _ready():
 	self.visible = false
 
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			return
+	if not is_multiplayer_authority():
+		return
 
 	if Globals.gamemode == "survival":
 		self.visible = false
@@ -28,11 +26,10 @@ func _ready():
 
 func _get_local_player():
 	for p in get_tree().get_nodes_in_group("player"):
-		if multiplayer.multiplayer_peer != null:
-			if p.is_multiplayer_authority():
-				return p
-		else:
-			return p
+
+				if p.is_multiplayer_authority():
+					return p
+
 	return null
 
 
@@ -72,13 +69,12 @@ func on_press(i: Node):
 		Globals.print_role("You dont have perms")
 		return
 
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			return
-		
-		if not multiplayer.is_server():
-			Globals.print_role("You are not the host")
-			return
+	if not is_multiplayer_authority():
+		return
+	
+	if not multiplayer.is_server():
+		Globals.print_role("You are not the host")
+		return
 
 	var raycast = get_parent().interactor
 
@@ -123,9 +119,9 @@ func remove():
 
 
 func _process(_delta):
-	if multiplayer.multiplayer_peer != null:
-		if not is_multiplayer_authority():
-			return
+
+	if not is_multiplayer_authority():
+		return
 
 	if Globals.gamemode == "survival":
 		return
