@@ -176,7 +176,7 @@ func mouse_action():
 func pause():
 	Globals.is_pause_menu_open = !Globals.is_pause_menu_open
 
-	if multiplayer.multiplayer_peer == OfflineMultiplayerPeer:
+	if multiplayer.multiplayer_peer is OfflineMultiplayerPeer:
 		get_tree().paused = false
 
 	if !Globals.is_pause_menu_open:
@@ -242,7 +242,6 @@ func _on_fullscreen_toggled(toggled_on:bool):
 
 func _on_reset_player_pressed():
 	get_parent()._reset_player()
-
 
 func _on_return_pressed():
 	pause()

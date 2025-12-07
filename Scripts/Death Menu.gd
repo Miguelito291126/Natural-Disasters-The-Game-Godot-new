@@ -4,7 +4,7 @@ func _ready():
 	self.hide()
 
 func _on_return_pressed():
-	if multiplayer.multiplayer_peer == OfflineMultiplayerPeer:
+	if multiplayer.multiplayer_peer is OfflineMultiplayerPeer:
 		get_tree().paused = false
 
 	get_parent()._reset_player()

@@ -11,7 +11,7 @@ var credits = "Miguelillo223"
 @export var points: int
 @export var username: String = "Player"
 @export var players_conected: Array[Node]
-var multiplayerpeer: ENetMultiplayerPeer
+var multiplayerpeer
 
 
 #Globals Weather
@@ -341,16 +341,23 @@ func sync_player_list():
 
 
 func print_role(msg: String):
-	if multiplayer.multiplayer_peer and multiplayer.multiplayer_peer != null and multiplayer.multiplayer_peer != OfflineMultiplayerPeer:
-		var is_server = multiplayer.is_server()	
-		if is_server:
-			# Azul
-			print_rich("[color=blue][Server] " + msg + "[/color]")
-		else:
-			# Amarillo
-			print_rich("[color=yellow][Client] " + msg + "[/color]")
-	else:
+	var peer = multiplayer.multiplayer_peer
+	
+	if peer == null \
+	or peer is OfflineMultiplayerPeer \
+	or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
 		print(msg)
+		return
+
+	var is_server = multiplayer.is_server()	
+	if is_server:
+		# Azul
+		print_rich("[color=blue][Server] " + msg + "[/color]")
+	else:
+		# Amarillo
+		print_rich("[color=yellow][Client] " + msg + "[/color]")
+
+		
 
 
 
@@ -392,6 +399,10 @@ func MultiplayerConnectionFailed():
 	CloseUp()
 	sync_player_list()
 	remove_all_destrolled_nodes()
+
+	multiplayerpeer = OfflineMultiplayerPeer.new()
+	multiplayer.multiplayer_peer = multiplayerpeer
+
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 	
 func MultiplayerServerDisconnected():
@@ -400,6 +411,10 @@ func MultiplayerServerDisconnected():
 	CloseUp()
 	sync_player_list()
 	remove_all_destrolled_nodes()
+
+	multiplayerpeer = OfflineMultiplayerPeer.new()
+	multiplayer.multiplayer_peer = multiplayerpeer
+
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 
 
@@ -425,6 +440,9 @@ func _exit_tree() -> void:
 
 
 func _process(_delta):
+	if not multiplayer.has_multiplayer_peer():
+		return
+	
 	if not multiplayer.is_server(): 
 		return
 
@@ -450,6 +468,10 @@ func _ready():
 	multiplayer.server_disconnected.connect(MultiplayerServerDisconnected)
 	multiplayer.connected_to_server.connect(MultiplayerConnectionServerSucess)
 	multiplayer.connection_failed.connect(MultiplayerConnectionFailed)
+
+	multiplayerpeer = OfflineMultiplayerPeer.new()
+	multiplayer.multiplayer_peer = multiplayerpeer
+	
 
 		
 func MultiplayerPlayerSpawner(peer_id: int = 1):
@@ -655,11 +677,20 @@ func remove_points():
 
 
 func close_conection():
-	if multiplayer.multiplayer_peer == OfflineMultiplayerPeer:
+	var peer = multiplayer.multiplayer_peer
+
+	# Si no hay peer o está desconectado o es offline → volver al menú
+	if peer == null \
+	or peer is OfflineMultiplayerPeer \
+	or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
 		get_tree().paused = false
 		LoadScene.load_scene(Globals.map, "res://Scenes/main_menu.tscn")
-	else:
-		multiplayer.multiplayer_peer.close()
+		return
+
+	# Si está conectado → cerrar conexión
+	peer.close()
+	multiplayerpeer.close()
+
 
 
 func _on_timer_timeout():

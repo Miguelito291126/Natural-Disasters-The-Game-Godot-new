@@ -261,7 +261,7 @@ func body_oxy(delta):
 	
 	if body_oxygen <= 0:
 		if randi_range(1,25) == 25:
-			damage(randi_range(1,30))
+			damage.rpc(randi_range(1,30))
 
 func body_rad(delta):
 	if god_mode:
@@ -274,7 +274,7 @@ func body_rad(delta):
 
 	if body_bradiation >= 100:
 		if randi_range(1,25) == 25:
-			damage(randi_range(1,30))
+			damage.rpc(randi_range(1,30))
 
 
 func Underwater_or_Underlava_effects():
@@ -292,7 +292,7 @@ func IsOnFire_effects():
 	fire_particles.emitting = IsOnFire
 	if IsOnFire:
 		if randi_range(1,5) == 5:
-			damage(5)
+			damage.rpc(5)
 
 
 
@@ -363,7 +363,7 @@ func _physics_process(delta):
 				pass
 			else:
 				if fall_strength <= -90:
-					damage(50)
+					damage.rpc(50)
 	else:
 		# Gravedad desactivada
 		velocity.y = 0
@@ -482,7 +482,7 @@ func _on_area_3d_body_entered(body:Node3D):
 			IsUnderWater = true
 
 	elif body.is_in_group("Meteor"):
-		damage(100)
+		damage.rpc(100)
 
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
@@ -503,7 +503,7 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 		velocity = direction * force
 		var damag = area_parent.explosion_damage
 
-		damage(damag)
+		damage.rpc(damag)
 
 	elif area.is_in_group("Volcano"):
 		IsInLava = true
@@ -529,7 +529,7 @@ func _on_area_3d_area_exited(area: Area3D) -> void:
 			IsUnderWater = false
 
 
-
+@rpc("any_peer", "call_local")
 func _reset_player():
 	hearth = Max_Hearth
 	body_temperature = 37
