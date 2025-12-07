@@ -1,8 +1,8 @@
 extends CharacterBody3D
 
 @export var player_id: int = 1
-@export var username: String = Globals.username
-@export var points: int = Globals.points
+@export var username: String = "Player"
+@export var points: int = 0
 
 var SPEED = 0
 
@@ -193,6 +193,7 @@ func _ready():
 	dust_node.emitting = false
 	snow_node.emitting = false
 
+
 	Globals.print_role("player name: " + str(name.to_int()))
 	Globals.print_role("is authority: " + str(is_multiplayer_authority()))
 	Globals.print_role("get authority: " + str(get_multiplayer_authority()))
@@ -204,6 +205,9 @@ func _ready():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		_reset_player()
 		_set_ragdoll_state.rpc(false)
+		username = Globals.username
+		points = Globals.points
+		label.text = Globals.username
 
 		if multiplayer.is_server():
 			admin_mode = true
@@ -327,9 +331,8 @@ func wind_sound():
 
 
 func _process(delta):
-	points = Globals.points
-	username = Globals.username
-	label.text = Globals.username
+	if not is_multiplayer_authority():
+		return
 
 	body_temp(delta)
 	body_oxy(delta)
