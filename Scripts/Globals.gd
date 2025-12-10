@@ -1,5 +1,9 @@
 extends Node
 
+
+signal current_weather_and_disaster_changed(new_disaster: String)
+
+
 #Editor
 var version = ProjectSettings.get_setting("application/config/version")
 var gamename = ProjectSettings.get_setting("application/config/name")
@@ -67,11 +71,17 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var gamemode = "survival"
 @export var GlobalsData: DataResource = DataResource.load_file()
 
-@export var current_weather_and_disaster = "Sun"
+var current_weather_and_disaster = "Original":
+	set(value):
+		if current_weather_and_disaster != value:
+			current_weather_and_disaster = value
+			current_weather_and_disaster_changed.emit(value)
+
+		
 @export var current_weather_and_disaster_int = 0
 
 var player_scene = preload("res://Scenes/player.tscn")
-var linghting_scene = preload("res://Scenes/thunder.tscn")
+var thunderstorm_scene = preload("res://Scenes/thunder.tscn")
 var meteor_scene = preload("res://Scenes/meteor.tscn")
 var tornado_scene = preload("res://Scenes/tornado.tscn")
 var tsunami_scene = preload("res://Scenes/tsunami.tscn")
@@ -104,27 +114,40 @@ func convert_VectorToAngle(vector):
 	
 	return int(360 + rad_to_deg(atan2(y,x))) % 360
 
+func _get_direct_space_state(node: Node):
+	# Intenta obtener el World3D a partir del nodo; si falla, intenta la escena actual.
+	var world = null
+	if node != null and is_instance_valid(node):
+		world = node.get_world_3d()
+	if world == null:
+		var scene = get_tree().get_current_scene()
+		if is_instance_valid(scene):
+			world = scene.get_world_3d()
+	if world == null:
+		return null
+	return world.direct_space_state
+
 func perform_trace_collision(ply, direction):
 	var start_pos = ply.global_position
 	var end_pos = start_pos + direction * 1000
-	var space_state = ply.get_world_3d().direct_space_state
+	var space_state = _get_direct_space_state(ply)
+	if space_state == null:
+		return false
 	var ray = PhysicsRayQueryParameters3D.create(start_pos, end_pos)
 	ray.exclude = [ply.get_rid()]
 	var result = space_state.intersect_ray(ray)
-
-	if result:
-		return true
-	else:
-		return false
+	return result != {}
+		
 
 func perform_trace_wind(ply, direction):
 	var start_pos = ply.global_position
 	var end_pos = start_pos + direction * 60000
-	var space_state = ply.get_world_3d().direct_space_state
+	var space_state = _get_direct_space_state(ply)
+	if space_state == null:
+		return end_pos
 	var ray = PhysicsRayQueryParameters3D.create(start_pos, end_pos)
 	ray.exclude = [ply.get_rid()]
 	var result = space_state.intersect_ray(ray)
-
 	if result:
 		return result.position
 	else:
@@ -144,20 +167,17 @@ func get_node_by_id_recursive(node: Node, node_id: int) -> Node:
 func is_below_sky(ply):
 	var start_pos = ply.global_position
 	var end_pos = start_pos + Vector3(0, 48000, 0)
-	var space_state = ply.get_world_3d().direct_space_state
+	var space_state = _get_direct_space_state(ply)
+	# Si no hay espacio de físicas disponible, asumimos "al aire libre" (true)
+	if space_state == null:
+		return true
 	var ray = PhysicsRayQueryParameters3D.create(start_pos, end_pos)
 	ray.exclude = [ply.get_rid()]
 	var result = space_state.intersect_ray(ray)
-	
 	return !result
 
 
 func is_outdoor(ply):
-	var hit_left = perform_trace_collision(ply, Vector3(1, 0, 0))
-	var hit_right = perform_trace_collision(ply, Vector3(-1, 0, 0))
-	var hit_forward = perform_trace_collision(ply, Vector3(0, 0, 1))
-	var hit_behind = perform_trace_collision(ply, Vector3(0, 0, -1))
-	var in_tunnel = (hit_left and hit_right) and not (hit_forward and hit_behind) or ((not hit_left and not hit_right) and (hit_forward or hit_behind))
 	var hit_sky = is_below_sky(ply)
 
 	if ply.is_in_group("player"):
@@ -193,15 +213,14 @@ func vec2_to_vec3(vector):
 func is_something_blocking_wind(entity):
 	var start_pos = entity.global_position
 	var end_pos = start_pos - (Wind_Direction * 300)
-	var space_state = entity.get_world_3d().direct_space_state
+	var space_state = _get_direct_space_state(entity)
+	if space_state == null:
+		# Sin información del mundo, no asumimos bloqueo
+		return false
 	var ray = PhysicsRayQueryParameters3D.create(start_pos, end_pos)
 	ray.exclude = [entity.get_rid()]
 	var result = space_state.intersect_ray(ray)
-
-	if result:
-		return true
-	else:
-		return false
+	return result != {}
 
 func calcule_bounding_radius(entity):
 	var max_radius = 0.0
@@ -522,145 +541,85 @@ func set_weather_and_disaster(weather_and_disaster_index):
 		0:
 			current_weather_and_disaster = "Sun"
 			current_weather_and_disaster_int = 0
-			if is_instance_valid(map):
-				map.is_sun()
 		1:
 			current_weather_and_disaster = "Cloud"
 			current_weather_and_disaster_int = 1
-			if is_instance_valid(map):
-				map.is_cloud()
 		2:
 			current_weather_and_disaster = "Raining"
 			current_weather_and_disaster_int = 2
-			if is_instance_valid(map):
-				map.is_raining()
 		3:
 			current_weather_and_disaster = "Storm"
 			current_weather_and_disaster_int = 3
-			if is_instance_valid(map):
-				map.is_storm()
 		4:
 			current_weather_and_disaster = "Thunderstorm"
 			current_weather_and_disaster_int = 4
-			if is_instance_valid(map):
-				map.is_thunderstorm()
-
 		5:
 			current_weather_and_disaster = "Tsunami"
 			current_weather_and_disaster_int = 5
-			if is_instance_valid(map):
-				map.is_tsunami()
-
 		6:
 			current_weather_and_disaster = "Meteor_shower"
 			current_weather_and_disaster_int = 6
-			if is_instance_valid(map):
-				map.is_meteor_shower()
 		7:
 			current_weather_and_disaster = "Volcano"
 			current_weather_and_disaster_int = 7
-			if is_instance_valid(map):
-				map.is_volcano()
 		8:
 			current_weather_and_disaster = "Tornado"
 			current_weather_and_disaster_int = 8
-			if is_instance_valid(map):
-				map.is_tornado()
 		9:
 			current_weather_and_disaster = "Acid rain"
 			current_weather_and_disaster_int = 9
-			if is_instance_valid(map):
-				map.is_acid_rain()
 		10:
 			current_weather_and_disaster = "Earthquake"
 			current_weather_and_disaster_int = 10
-			if is_instance_valid(map):
-				map.is_earthquake()
-
 		11:
 			current_weather_and_disaster = "Sand Storm"
 			current_weather_and_disaster_int = 11
-			if is_instance_valid(map):
-				map.is_sandstorm()
 		12:
 			current_weather_and_disaster = "blizzard"
 			current_weather_and_disaster_int = 12
-			if is_instance_valid(map):
-				map.is_blizzard()
-
 		"Sun":
 			current_weather_and_disaster = "Sun"
 			current_weather_and_disaster_int = 0
-			if is_instance_valid(map):
-				map.is_sun()
-
 		"Cloud":
 			current_weather_and_disaster = "Cloud"
 			current_weather_and_disaster_int = 1
-			if is_instance_valid(map):
-				map.is_cloud()
 		"Raining":
 			current_weather_and_disaster = "Raining"
 			current_weather_and_disaster_int = 2
-			if is_instance_valid(map):
-				map.is_raining()
 		"Storm":
 			current_weather_and_disaster = "Storm"
 			current_weather_and_disaster_int = 3
-			if is_instance_valid(map):
-				map.is_storm()
 		"Thunderstorm":
 			current_weather_and_disaster = "Thunderstorm"
 			current_weather_and_disaster_int = 4
-			if is_instance_valid(map):
-				map.is_thunderstorm()
 		"Tsunami":
 			current_weather_and_disaster = "Tsunami"
 			current_weather_and_disaster_int = 5
-			if is_instance_valid(map):
-				map.is_tsunami()
 		"Meteor_shower":
 			current_weather_and_disaster = "Meteor_shower"
 			current_weather_and_disaster_int = 6
-			if is_instance_valid(map):
-				map.is_meteor_shower()
 		"Volcano":
 			current_weather_and_disaster = "Volcano"
 			current_weather_and_disaster_int = 7
-			if is_instance_valid(map):
-				map.is_volcano()
 		"Tornado":
 			current_weather_and_disaster = "Tornado"
 			current_weather_and_disaster_int = 8
-			if is_instance_valid(map):
-				map.is_tornado()
 		"Acid rain":
 			current_weather_and_disaster = "Acid rain"
 			current_weather_and_disaster_int = 9
-			if is_instance_valid(map):
-				map.is_acid_rain()
 		"Earthquake":
 			current_weather_and_disaster = "Earthquake"
 			current_weather_and_disaster_int = 10
-			if is_instance_valid(map):
-				map.is_earthquake()
 
 		"Sand Storm":
 			current_weather_and_disaster = "Sand Storm"
 			current_weather_and_disaster_int = 11
-			if is_instance_valid(map):
-				map.is_sandstorm()
 		"blizzard":
 			current_weather_and_disaster = "blizzard"
 			current_weather_and_disaster_int = 12
-			if is_instance_valid(map):
-				map.is_blizzard()
-
 		_:
-			current_weather_and_disaster = "Sun"
+			current_weather_and_disaster = "Original"
 			current_weather_and_disaster_int = 0
-			if is_instance_valid(map):
-				map.is_sun_original()
 
 
 @rpc("any_peer", "call_local")

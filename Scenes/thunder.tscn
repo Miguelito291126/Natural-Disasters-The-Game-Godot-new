@@ -84,7 +84,7 @@ properties/2/path = NodePath("..:scale")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
-[node name="Thunder" type="Node3D"]
+[node name="Thunder" type="Node3D" groups=["Thunder"]]
 script = ExtResource("1_ig5to")
 
 [node name="star" type="GPUParticles3D" parent="."]

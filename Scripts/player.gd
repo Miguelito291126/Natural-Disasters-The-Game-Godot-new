@@ -298,7 +298,35 @@ func IsOnFire_effects():
 		if randi_range(1,5) == 5:
 			damage.rpc(5)
 
+func _input(event: InputEvent) -> void:
+	if not is_multiplayer_authority():
+		return
 
+	if not admin_mode and Globals.gamemode != "creative":
+		return
+
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_1:
+				Globals.set_weather_and_disaster.rpc(1)
+			KEY_2:
+				Globals.set_weather_and_disaster.rpc(2)
+			KEY_3:
+				Globals.set_weather_and_disaster.rpc(3)
+			KEY_4:
+				Globals.set_weather_and_disaster.rpc(4)
+			KEY_5:
+				Globals.set_weather_and_disaster.rpc(5)
+			KEY_6:
+				Globals.set_weather_and_disaster.rpc(6)
+			KEY_7:
+				Globals.set_weather_and_disaster.rpc(7)
+			KEY_8:
+				Globals.set_weather_and_disaster.rpc(8)
+			KEY_9:
+				Globals.set_weather_and_disaster.rpc(9)
+			KEY_0:
+				Globals.set_weather_and_disaster.rpc(0)
 
 func rain_sound():
 	Globals.is_raining = rain_node.emitting and Globals.is_outdoor(self) and Outdoor
@@ -394,24 +422,35 @@ func _physics_process(delta):
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var input_vector = Vector3(input_dir.x, 0, input_dir.y)
-	if noclip:
-		if Input.is_action_pressed("Jump"):
-			input_vector.y += 1
-		if Input.is_action_pressed("ui_down"): # o C para bajar
-			input_vector.y -= 1
-
 	var direction = (head_node.transform.basis * input_vector).normalized()
 
-	if is_on_floor():
-		if direction:
-			velocity.x = direction.x * SPEED
-			velocity.z = direction.z * SPEED
+	if noclip:
+		# Movimiento directo en noclip (vuelo libre)
+		var desired_velocity = direction * SPEED
+
+		# Control vertical en noclip
+		if Input.is_action_pressed("Jump"):
+
+			desired_velocity.y = SPEED
+		elif Input.is_action_pressed("ui_down"):
+			desired_velocity.y = -SPEED
 		else:
-			velocity.x = lerp(velocity.x, direction.x * SPEED, delta * 7.0)
-			velocity.z = lerp(velocity.z,  direction.z * SPEED, delta * 7.0)
+			desired_velocity.y = 0
+
+		# Asignar directamente la velocidad (sin gravedad ni lerp)
+		velocity = desired_velocity
 	else:
-		velocity.x = lerp(velocity.x, direction.x * SPEED, delta * 3.0)
-		velocity.z = lerp(velocity.z, direction.z * SPEED, delta * 3.0)
+		# Lógica normal cuando no es noclip
+		if is_on_floor():
+			if direction:
+				velocity.x = direction.x * SPEED
+				velocity.z = direction.z * SPEED
+			else:
+				velocity.x = lerp(velocity.x, direction.x * SPEED, delta * 7.0)
+				velocity.z = lerp(velocity.z, direction.z * SPEED, delta * 7.0)
+		else:
+			velocity.x = lerp(velocity.x, direction.x * SPEED, delta * 3.0)
+			velocity.z = lerp(velocity.z, direction.z * SPEED, delta * 3.0)
 
 
 	var horizontal_velocity = Vector2(velocity.x, velocity.z)
@@ -479,57 +518,121 @@ func _unhandled_input(event):
 
 
 func _on_area_3d_body_entered(body:Node3D):
-	if body.is_in_group("Tsunami"):
-		IsInWater = true
-		if camera_node:
-			IsUnderWater = true
-
-	elif body.is_in_group("Meteor"):
+	if body.is_in_group("Meteor"):
 		damage.rpc(100)
 
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
 	if body.is_in_group("Tsunami"):
 		IsInWater = false
-		if camera_node:
-			IsUnderWater = false
+		IsUnderWater = false
 
 
 
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	if area.is_in_group("Explosion"):
-		var area_parent = area.get_node("..")
+		var area_parent = area.get_parent()
 		var distance = (area.global_position - global_position).length()
 		var direction = (area.global_position - global_position).normalized()
+		
+		# Comprobaciones seguras
+		if not area_parent.has_meta("explosion_force") and not "explosion_force" in area_parent:
+			return
+		
 		var force = area_parent.explosion_force * (1 - distance / area_parent.explosion_radius)
 		velocity = direction * force
-		var damag = area_parent.explosion_damage
-
-		damage.rpc(damag)
+		
+		# Daño seguro (si no existe, asigna 0)
+		var damag = 0
+		if "explosion_damage" in area_parent:
+			damag = area_parent.explosion_damage
+		
+		if damag > 0:
+			damage.rpc(damag)
 
 	elif area.is_in_group("Volcano"):
 		IsInLava = true
 
-		if camera_node:
-			IsUnderLava = true
+		# Obtener la altura de la lava desde el collider del volcán
+		var collider = area.get_node_or_null("CollisionShape3D")
+		if collider and collider.shape:
+			var shape = collider.shape
+			# Si es una caja (BoxShape3D)
+			if shape is BoxShape3D:
+				var lava_surface = area.global_position.y + (shape.size.y / 2)
+				if camera_node and camera_node.global_position.y < lava_surface:
+					IsUnderLava = true
+				else:
+					IsUnderLava = false
+			# Si es un cilindro (CylinderShape3D)
+			elif shape is CylinderShape3D:
+				var lava_surface = area.global_position.y + (shape.height / 2)
+				if camera_node and camera_node.global_position.y < lava_surface:
+					IsUnderLava = true
+				else:
+					IsUnderLava = false
+			# Si es una esfera (SphereShape3D)
+			elif shape is SphereShape3D:
+				var lava_surface = area.global_position.y + shape.radius
+				if camera_node and camera_node.global_position.y < lava_surface:
+					IsUnderLava = true
+				else:
+					IsUnderLava = false
+			else:
+				# Fallback para otras formas
+				if camera_node:
+					IsUnderLava = true
+		else:
+			# Sin collider, asumir que estás bajo la lava
+			if camera_node:
+				IsUnderLava = true
 
 	elif area.is_in_group("Tsunami"):
 		IsInWater = true
-		if camera_node:
-			IsUnderWater = true
+		
+		# Obtener la altura del agua desde el collider del tsunami
+		var collider = area.get_node_or_null("CollisionShape3D")
+		if collider and collider.shape:
+			var shape = collider.shape
+			# Si es una caja (BoxShape3D)
+			if shape is BoxShape3D:
+				var water_surface = area.global_position.y + (shape.size.y / 2)
+				if camera_node and camera_node.global_position.y < water_surface:
+					IsUnderWater = true
+				else:
+					IsUnderWater = false
+			# Si es un cilindro (CylinderShape3D)
+			elif shape is CylinderShape3D:
+				var water_surface = area.global_position.y + (shape.height / 2)
+				if camera_node and camera_node.global_position.y < water_surface:
+					IsUnderWater = true
+				else:
+					IsUnderWater = false
+			# Si es una esfera (SphereShape3D)
+			elif shape is SphereShape3D:
+				var water_surface = area.global_position.y + shape.radius
+				if camera_node and camera_node.global_position.y < water_surface:
+					IsUnderWater = true
+				else:
+					IsUnderWater = false
+			else:
+				# Fallback para otras formas
+				if camera_node:
+					IsUnderWater = true
+		else:
+			# Sin collider, asumir que estás bajo el agua
+			if camera_node:
+				IsUnderWater = true
 
 func _on_area_3d_area_exited(area: Area3D) -> void:
 	if area.is_in_group("Volcano"):
 		IsInLava = false
-
-		if camera_node:
-			IsUnderLava = false
+		IsUnderLava = false
 			
 	elif area.is_in_group("Tsunami"):
 		IsInWater = false
-		if camera_node:
-			IsUnderWater = false
+		IsUnderWater = false  # ← Añade esto
 
 
 @rpc("any_peer", "call_local")
@@ -549,5 +652,3 @@ func _reset_player():
 		_set_ragdoll_state.rpc(false)
 		position = spawn.position
 		velocity = Vector3.ZERO
-
-			

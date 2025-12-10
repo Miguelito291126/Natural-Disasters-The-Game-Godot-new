@@ -59,7 +59,6 @@ process_material = SubResource("ParticleProcessMaterial_v0fus")
 draw_pass_1 = SubResource("CylinderMesh_a801j")
 
 [node name="Area3D" type="Area3D" parent="." groups=["Explosion"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0103197, 0.0393953, -0.0188904)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)

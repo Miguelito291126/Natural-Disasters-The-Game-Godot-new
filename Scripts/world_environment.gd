@@ -17,48 +17,50 @@ var GlobalsData: DataResource = DataResource.load_file()
 
 @export var ingame_speed = 1
 @export var initial_hour = 12:
-	set(h):
-		initial_hour = h
-		Globals.time = ingame_to_real_minute_duration * initial_hour * minutes_per_hour
+    set(h):
+        initial_hour = h
+        Globals.time = ingame_to_real_minute_duration * initial_hour * minutes_per_hour
 
 var past_minute = -1.0
 
 func _ready():
-	if multiplayer.is_server():
-		Globals.time = ingame_to_real_minute_duration * initial_hour * minutes_per_hour
+    if multiplayer.is_server():
+        Globals.time = ingame_to_real_minute_duration * initial_hour * minutes_per_hour
 
 
 func _process(delta):
-	if multiplayer.is_server():
-		Globals.time += delta * ingame_to_real_minute_duration * ingame_speed
-		_recalculate_time(delta)
+    if multiplayer.is_server():
+        Globals.time += delta * ingame_to_real_minute_duration * ingame_speed
+        _recalculate_time(delta)
 
 func _recalculate_time(delta):
-	var total_minutes = int(Globals.time / ingame_to_real_minute_duration)
-	Globals.Day = int(total_minutes / minutes_per_day)
+    var total_minutes = int(Globals.time / ingame_to_real_minute_duration)
+    Globals.Day = int(total_minutes / minutes_per_day)
 
-	var current_day_minutes = total_minutes % minutes_per_day
-	Globals.Hour = int(current_day_minutes / minutes_per_hour)
-	Globals.Minute = int(current_day_minutes % minutes_per_hour)
+    var current_day_minutes = total_minutes % minutes_per_day
+    Globals.Hour = int(current_day_minutes / minutes_per_hour)
+    Globals.Minute = int(current_day_minutes % minutes_per_hour)
 
-	if past_minute != Globals.Minute:
-		past_minute = Globals.Minute
+    if past_minute != Globals.Minute:
+        past_minute = Globals.Minute
 
-	# Obtener la hora del día en horas decimales (ej. 14:30 = 14.5)
-	var time_of_day = Globals.Hour + Globals.Minute / 60.0
+    # Hora en formato decimal
+    var time_of_day = Globals.Hour + Globals.Minute / 60.0
 
-	# Calcular el ángulo del sol en función de la hora del día
-	sun_angle = 90 + (time_of_day * celestial_speed_per_hour)
+    # Ángulo objetivo en grados
+    sun_angle = 90.0 + (time_of_day * celestial_speed_per_hour)
+    moon_angle = -90.0 + (time_of_day * celestial_speed_per_hour)
 
-	# Calcular el ángulo de la luna (asumiendo una fase opuesta al sol)
-	moon_angle = -90 + (time_of_day * celestial_speed_per_hour)
+    # Normalizar a [0, 360)
+    sun_angle = fmod(sun_angle, 360.0)
+    if sun_angle < 0.0:
+        sun_angle += 360.0
 
+    moon_angle = fmod(moon_angle, 360.0)
+    if moon_angle < 0.0:
+        moon_angle += 360.0
 
-	# Asegurarse de que los ángulos permanezcan en el rango [-90, 270]
-	if sun_angle < -90:
-		sun_angle += 360
-	if moon_angle < -90:
-		moon_angle += 360
-
-	Sun.rotation_degrees.x = lerp(Sun.rotation_degrees.x,sun_angle, interpolation_speed * delta)
-	Moon.rotation_degrees.x = lerp(Moon.rotation_degrees.x,moon_angle, interpolation_speed * delta)
+    # Interpolar usando la función que hace la rotación por la ruta más corta
+    var t = clamp(interpolation_speed * delta, 0.0, 1.0)
+    Sun.rotation_degrees.x = rad_to_deg(lerp_angle(deg_to_rad(Sun.rotation_degrees.x), deg_to_rad(sun_angle), t))
+    Moon.rotation_degrees.x = rad_to_deg(lerp_angle(deg_to_rad(Moon.rotation_degrees.x), deg_to_rad(moon_angle), t))

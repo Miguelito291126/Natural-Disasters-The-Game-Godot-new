@@ -7,6 +7,16 @@ extends CanvasLayer
 @onready var camera = get_parent().get_node("head/Camera3D")
 
 var entity_scene = preload("res://Scenes/entity.tscn")
+var spawn_list: Array[String] = [
+				"res://Scenes/meteor.tscn",
+				"res://Scenes/tornado.tscn",
+				"res://Scenes/volcano.tscn",
+				"res://Scenes/tsunami.tscn",
+				"res://Scenes/earthquake.tscn",
+				"res://Scenes/thunder.tscn",
+				"res://Scenes/cube.tscn",
+				"res://Scenes/sphere.tscn",
+				]
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(get_parent().name.to_int())
@@ -27,21 +37,17 @@ func _ready():
 func _get_local_player():
 	for p in get_tree().get_nodes_in_group("player"):
 
-				if p.is_multiplayer_authority():
-					return p
+		if p.is_multiplayer_authority():
+			return p
 
 	return null
 
 
 
 func load_spawnlist_entities():
-	var directory = "res://Scenes/"
-	var resources = ResourceLoader.list_directory(directory)
-	for resource in resources:
-		if resource.ends_with(".tscn"):
-			var node = load(directory + "/" + resource).instantiate()
-			if node is RigidBody3D or node is StaticBody3D or node is Area3D or node is GPUParticles3D:
-				spawnlist.append(node)
+	for spawn in spawn_list:
+		var node = load(spawn).instantiate()
+		spawnlist.append(node)
 
 
 func load_buttons():
@@ -53,12 +59,33 @@ func load_buttons():
 		label.custom_minimum_size = Vector2(150, 150) # cada celda fija
 
 		var icon = entity.get_node("Icon")
-		var icon_image = load("res://Icons/" + i.name + "_icon.png")
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.texture_normal = icon_image
 		icon.custom_minimum_size = Vector2(64, 64) # icono fijo
-		container.add_child(entity)
 
+		# Intentar cargar icono con varias variantes (por si hay espacios/mayúsculas)
+		var candidates = [
+			"res://Icons/%s_icon.png" % i.name,
+			"res://Icons/%s_icon.png" % i.name.replace(" ", "_"),
+			"res://Icons/%s_icon.png" % i.name.to_lower().replace(" ", "_"),
+			"res://Icons/%s_icon.png" % i.name.to_lower().replace(" ", ""),
+		]
+
+		var icon_image = null
+		for p in candidates:
+			icon_image = load(p)
+			if icon_image != null:
+				break
+
+		# Fallback a un icono por defecto si no se encuentra ninguno
+		if icon_image == null:
+			icon_image = load("res://Icons/default_icon.png")
+			if icon_image == null:
+				print("spawn_menu.gd: icon not found for '%s' (tried %s). Create 'res://Icons/default_icon.png' to avoid this message." % [i.name, str(candidates)])
+		
+		if icon_image != null:
+			icon.texture_normal = icon_image
+
+		container.add_child(entity)
 		icon.pressed.connect(func(): on_press(i))
 
 
@@ -71,7 +98,7 @@ func on_press(i: Node):
 
 	if not is_multiplayer_authority():
 		return
-	
+
 	if not multiplayer.is_server():
 		Globals.print_role("You are not the host")
 		return
@@ -85,6 +112,11 @@ func on_press(i: Node):
 		var new_i = i.duplicate()
 		new_i.transform.origin = collision_point + collision_normal * 0.5
 		spawnedobject.append(new_i)
+		
+		# Asignar autoridad al servidor (peer_id = 1 es el servidor)
+		new_i.set_multiplayer_authority(1)
+		
+		# Añadir al mapa como propiedad de la escena
 		Globals.map.add_child(new_i, true)
 
 

@@ -5,14 +5,23 @@ var sand_texture = preload("res://Textures/sand.png")
 @onready var terrain = $HTerrain
 @onready var worldenvironment = $WorldEnvironment
 
+
+var current_disaster = ""
+var active_disaster_nodes = []
+var is_spawning_lightning = false
+
+
 func _exit_tree():
-	is_sun_original()
+	_start_sun_original()
 	Globals.timer.stop()
 	Globals.started = false
 
 func _ready():
 	Globals.map = self
-	is_sun_original()
+	_start_sun_original()
+
+	if not Globals.current_weather_and_disaster_changed.is_connected(_on_disaster_changed):
+		Globals.current_weather_and_disaster_changed.connect(_on_disaster_changed)
 
 	if Globals.gamemode == "survival":
 
@@ -50,13 +59,20 @@ func _process(_delta):
 	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
 		Globals.started = true
 	else:
+
+		if multiplayer.multiplayer_peer == null \
+		or multiplayer.multiplayer_peer is OfflineMultiplayerPeer \
+		or multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+			Globals.started = true
+			return
+
 		if Globals.players_conected.size() > 1:
 			Globals.started = true
 		else:
 			Globals.started = false
 
 
-func is_sun_original():
+func _start_sun_original():
 	Globals.Temperature_target = Globals.Temperature_original
 	Globals.Humidity_target = Globals.Humidity_original
 	Globals.bradiation_target = Globals.bradiation_original
@@ -65,24 +81,16 @@ func is_sun_original():
 	Globals.Wind_Direction_target = Globals.Wind_Direction_original
 	Globals.Wind_speed_target = Globals.Wind_speed_original
 
-	var player = Globals.local_player
-
-	if is_instance_valid(player):
-		player.rain_node.emitting = false
-		player.sand_node.emitting = false
-		player.dust_node.emitting = false
-		player.snow_node.emitting = false
-		$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 1)
-		$WorldEnvironment.environment.volumetric_fog_enabled = false
-		$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)
+	_update_environment()
 		
 
 
 
-func is_tsunami():
+func _start_tsunami():
 	var tsunami = Globals.tsunami_scene.instantiate()
 	tsunami.position = Vector3(0,0,0)
 	add_child(tsunami, true)
+	active_disaster_nodes.append(tsunami)
 
 	Globals.Temperature_target = randf_range(20,31)
 	Globals.Humidity_target = randf_range(0,20)
@@ -92,33 +100,12 @@ func is_tsunami():
 	Globals.Wind_Direction_target = Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(0, 10)
 
-	while Globals.current_weather_and_disaster == "Tsunami":
-		var player = Globals.local_player
-		
-		if is_instance_valid(player):
-			player.rain_node.emitting = false
-			player.sand_node.emitting = false
-			player.dust_node.emitting = false
-			player.snow_node.emitting = false
-			$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 1)
-			$WorldEnvironment.environment.volumetric_fog_enabled = false
-			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)	
-
-
-		await get_tree().create_timer(0.5).timeout
-
-	while Globals.current_weather_and_disaster != "Tsunami":
-		if is_instance_valid(tsunami):
-			tsunami.queue_free()
-		
-		Globals.add_points.rpc()
-		
-		break
+	_update_environment()
 
 
 
 
-func is_thunderstorm():
+func _start_thunderstorm():
 
 	Globals.Temperature_target = randf_range(5,15)
 	Globals.Humidity_target = randf_range(30,40)
@@ -128,53 +115,12 @@ func is_thunderstorm():
 	Globals.Wind_Direction_target =  Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(0, 30)
 
-
-
-	while Globals.current_weather_and_disaster == "Thunderstorm":
-		var player = Globals.local_player
-
-		if is_instance_valid(player):
-			if Globals.is_outdoor(player):
-				player.rain_node.emitting = player.is_multiplayer_authority() or true
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = player.is_multiplayer_authority() or true
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)	
-			else:
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = false
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)				
-
-		var rand_pos = Vector3(randf_range(0,4097),1000,randf_range(0,4097))
-		var space_state = get_world_3d().direct_space_state
-		var ray = PhysicsRayQueryParameters3D.create(rand_pos, rand_pos - Vector3(0,10000,0))
-		var result = space_state.intersect_ray(ray)				
-		if randi_range(1,25) == 25:
-			var lighting = Globals.linghting_scene.instantiate()
-			if result.has("position"):
-				lighting.position = result.position
-			else:
-				lighting.position = Vector3(randf_range(0,4097),0,randf_range(0,4097))
-
-			add_child(lighting, true)
-
-		await get_tree().create_timer(0.5).timeout
-
-	while Globals.current_weather_and_disaster != "Thunderstorm":
-
-		Globals.add_points.rpc()
-		
-		break
+	_update_environment()
+	_spawn_lightning_timer()
 
 
 
-func is_meteor_shower():
+func _start_meteor_shower():
 	Globals.Temperature_target = randf_range(20,31)
 	Globals.Humidity_target = randf_range(0,20)
 	Globals.pressure_target = randf_range(10000,10020)
@@ -183,32 +129,10 @@ func is_meteor_shower():
 	Globals.Wind_Direction_target = Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(0, 10)
 	
-	while Globals.current_weather_and_disaster == "Meteor_shower":
-		var player = Globals.local_player
+	_spawn_meteor_shower_timer()
+	_update_environment()
 
-		if is_instance_valid(player):
-			player.rain_node.emitting = false
-			player.sand_node.emitting = false
-			player.dust_node.emitting = false
-			player.snow_node.emitting = false
-			$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 1)
-			$WorldEnvironment.environment.volumetric_fog_enabled = false
-			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)	
-
-
-		var meteor = Globals.meteor_scene.instantiate()
-		meteor.global_position = Vector3(randf_range(0,4097),0,randf_range(0,4097))
-		add_child(meteor, true)
-
-		await get_tree().create_timer(0.5).timeout
-
-	while Globals.current_weather_and_disaster != "Meteor_shower":
-
-		Globals.add_points.rpc()
-		
-		break
-
-func is_blizzard():
+func _start_blizzard():
 	Globals.Temperature_target =  randf_range(-20,-35)
 	Globals.Humidity_target = randf_range(20,30)
 	Globals.bradiation_target = 0
@@ -218,53 +142,10 @@ func is_blizzard():
 	Globals.Wind_speed_target = randf_range(40, 50)
 
 
-	while Globals.current_weather_and_disaster == "blizzard":
-		
-		var player = Globals.local_player
-		
-		if is_instance_valid(player):
-			if Globals.is_outdoor(player):
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = player.is_multiplayer_authority() or true
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = player.is_multiplayer_authority() or true
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)	
-			else:
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = false
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)				
-				
-		var Snow_Decal = Decal.new()
-		Snow_Decal.texture_albedo = snow_texture
-		var rand_pos = Vector3(randf_range(0,4097),1000,randf_range(0,4097))
-		var space_state = get_world_3d().direct_space_state
-		var ray = PhysicsRayQueryParameters3D.create(rand_pos, rand_pos - Vector3(0,10000,0))
-		var result = space_state.intersect_ray(ray)	
-		if result.has("position"):
-			Snow_Decal.position = result.position
-		else:
-			Snow_Decal.position = Vector3(randf_range(0,4097),0,randf_range(0,4097))
-		var randon_num = randi_range(1,256)
-		Snow_Decal.size = Vector3(randon_num,1,randon_num)
-		add_child(Snow_Decal, true)	
+	_update_environment()
 
 
-		await get_tree().create_timer(0.5).timeout	
-	
-	while Globals.current_weather_and_disaster != "blizzard":
-
-		Globals.add_points.rpc()
-		
-		break
-
-
-func is_sandstorm():
+func _start_sandstorm():
 	Globals.Temperature_target =  randf_range(30,35)
 	Globals.Humidity_target = randf_range(0,5)
 	Globals.bradiation_target = 0
@@ -273,50 +154,9 @@ func is_sandstorm():
 	Globals.Wind_Direction_target =  Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(30, 50)
 
-	while Globals.current_weather_and_disaster == "Sand Storm":
-		var player = Globals.local_player
-		
-		if is_instance_valid(player):
-			if Globals.is_outdoor(player):
-				player.rain_node.emitting = false
-				player.sand_node.emitting = player.is_multiplayer_authority() or true
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = player.is_multiplayer_authority() or true
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1, 0.647059, 0)
-			else:
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = false
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)		
+	_update_environment()
 
-		var Sand_Decal = Decal.new()
-		Sand_Decal.texture_albedo = sand_texture
-		var rand_pos = Vector3(randf_range(0,4097),1000,randf_range(0,4097))
-		var space_state = get_world_3d().direct_space_state
-		var ray = PhysicsRayQueryParameters3D.create(rand_pos, rand_pos - Vector3(0,10000,0))
-		var result = space_state.intersect_ray(ray)	
-		if result.has("position"):
-			Sand_Decal.position = result.position
-		else:
-			Sand_Decal.position = Vector3(randf_range(0,4097),0,randf_range(0,4097))
-		var randon_num = randi_range(1,256)
-		Sand_Decal.size = Vector3(randon_num,1,randon_num)
-		add_child(Sand_Decal, true)		
-			
-		await get_tree().create_timer(0.5).timeout
-
-	while Globals.current_weather_and_disaster != "Sand Storm":
-
-		Globals.add_points.rpc()
-		
-		break
-
-func is_volcano():
+func _start_volcano():
 	Globals.Temperature_target = randf_range(20,31)
 	Globals.Humidity_target = randf_range(0,20)
 	Globals.bradiation_target = 0
@@ -335,38 +175,16 @@ func is_volcano():
 		volcano.position = result.position
 	else:
 		volcano.position = Vector3(randf_range(0,4097),0,randf_range(0,4097))
+	active_disaster_nodes.append(volcano)
 
 	add_child(volcano, true)
 
-	while Globals.current_weather_and_disaster == "Volcano" and not volcano.IsVolcanoAsh:
-		var player = Globals.local_player
-
-		if is_instance_valid(player):
-			player.rain_node.emitting = false
-			player.sand_node.emitting = false
-			player.dust_node.emitting = false
-			player.snow_node.emitting = false
-			$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 1)
-			$WorldEnvironment.environment.volumetric_fog_enabled = false
-			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)
-			
-		await get_tree().create_timer(0.5).timeout
-	
-	
-
-	while Globals.current_weather_and_disaster != "Volcano":
-		if is_instance_valid(volcano):
-			volcano.IsVolcanoAsh = false
-			volcano.queue_free()
-
-		Globals.add_points.rpc()
-		
-		break
+	_update_environment()
 
 	
 
 
-func is_tornado():
+func _start_tornado():
 
 	var rand_pos = Vector3(randf_range(0,4097),1000,randf_range(0,4097))
 	var space_state = get_world_3d().direct_space_state
@@ -380,6 +198,7 @@ func is_tornado():
 	else:
 		tornado.position = Vector3(randf_range(0,4097),0,randf_range(0,4097))
 	add_child(tornado, true)
+	active_disaster_nodes.append(tornado)
 
 	Globals.Temperature_target =  randf_range(5,15)
 	Globals.Humidity_target = randf_range(30,40)
@@ -389,57 +208,13 @@ func is_tornado():
 	Globals.Wind_Direction_target =  Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(0, 30)
 
-	while Globals.current_weather_and_disaster == "Tornado":
-		var player = Globals.local_player
-
-		if is_instance_valid(player):
-			if Globals.is_outdoor(player):
-				player.rain_node.emitting = player.is_multiplayer_authority() or true
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = player.is_multiplayer_authority() or true
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)
-			else:
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = false
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)				
-
-
-
-		rand_pos = Vector3(randf_range(0,4097),1000,randf_range(0,4097))
-		space_state = get_world_3d().direct_space_state
-		ray = PhysicsRayQueryParameters3D.create(rand_pos, rand_pos - Vector3(0,10000,0))
-		result = space_state.intersect_ray(ray)			
-		
-		if randi_range(1,25) == 25:
-			var lighting = Globals.linghting_scene.instantiate()
-			if result.has("position"):
-				lighting.position = result.position
-			else:
-				lighting.position = Vector3(randf_range(0,4097),0,randf_range(0,4097))
-
-			add_child(lighting, true)
-
-		await get_tree().create_timer(0.5).timeout
-
-	while Globals.current_weather_and_disaster != "Tornado":
-		if is_instance_valid(tornado):
-			tornado.queue_free()
-
-		Globals.add_points.rpc()
-
-		break
+	_update_environment()
+	_spawn_lightning_timer()
 	
 
 
 
-func is_acid_rain():
+func _start_acid_rain():
 	Globals.Temperature_target = randf_range(20,31)
 	Globals.Humidity_target = randf_range(0,20)
 	Globals.bradiation_target = 100
@@ -448,36 +223,9 @@ func is_acid_rain():
 	Globals.Wind_Direction_target = Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(0, 10)
 
-	while Globals.current_weather_and_disaster == "Acid rain":
-		var player = Globals.local_player
+	_update_environment()
 
-		if is_instance_valid(player):
-			if Globals.is_outdoor(player):
-				player.rain_node.emitting = player.is_multiplayer_authority() or true
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = player.is_multiplayer_authority() or true
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(0,1,0)
-			else:
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = false
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(0,1,0)						
-
-		await get_tree().create_timer(0.5).timeout
-	
-	while Globals.current_weather_and_disaster != "Acid rain":
-
-		Globals.add_points.rpc()
-		
-		break
-
-func is_earthquake():
+func _start_earthquake():
 	Globals.Temperature_target = randf_range(20,31)
 	Globals.Humidity_target = randf_range(0,20)
 	Globals.bradiation_target = 0
@@ -488,34 +236,15 @@ func is_earthquake():
 
 	var earquake = Globals.earthquake_scene.instantiate()
 	add_child(earquake,true)
+	active_disaster_nodes.append(earquake)
 
-	while Globals.current_weather_and_disaster == "Earthquake":
-		var player = Globals.local_player
-
-		if is_instance_valid(player):
-			player.rain_node.emitting = false
-			player.sand_node.emitting = false
-			player.dust_node.emitting = false
-			player.snow_node.emitting = false
-			$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 1)
-			$WorldEnvironment.environment.volumetric_fog_enabled = false
-			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)
-			
-		await get_tree().create_timer(0.5).timeout
-
-	while Globals.current_weather_and_disaster != "Earthquake":
-		if is_instance_valid(earquake):
-			earquake.queue_free()
-		
-		Globals.add_points.rpc()
-		
-		break
+	_update_environment()
 
 
 
 
 
-func is_sun():
+func _start_sun():
 	Globals.Temperature_target = randf_range(20,31)
 	Globals.Humidity_target = randf_range(0,20)
 	Globals.bradiation_target = 0
@@ -524,22 +253,10 @@ func is_sun():
 	Globals.Wind_Direction_target = Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(0, 10)
 
-	while Globals.current_weather_and_disaster == "Sun":
-		var player = Globals.local_player
-
-		if is_instance_valid(player):
-			player.rain_node.emitting = false
-			player.sand_node.emitting = false
-			player.dust_node.emitting = false
-			player.snow_node.emitting = false
-			$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 1)
-			$WorldEnvironment.environment.volumetric_fog_enabled = false
-			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)
-			
-		await get_tree().create_timer(0.5).timeout
+	_update_environment()
 
 
-func is_cloud():
+func _start_cloud():
 	Globals.Temperature_target =  randf_range(20,25)
 	Globals.Humidity_target = randf_range(10,30)
 	Globals.bradiation_target = 0
@@ -549,38 +266,11 @@ func is_cloud():
 	Globals.Wind_speed_target =  randf_range(0, 10)
 
 
-	while Globals.current_weather_and_disaster == "Cloud":
-		var player = Globals.local_player
-
-		if is_instance_valid(player):
-			if Globals.is_outdoor(player):
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = player.is_multiplayer_authority() or true
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)
-			else:
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = false
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)			
-		
-		await get_tree().create_timer(0.5).timeout
-
-	while Globals.current_weather_and_disaster != "Cloud":
-
-		Globals.add_points.rpc()
-		
-		break
+	_update_environment()
 
 
 
-func is_raining():
+func _start_raining():
 
 	Globals.Temperature_target =   randf_range(10,20)
 	Globals.Humidity_target =  randf_range(20,40)
@@ -590,36 +280,9 @@ func is_raining():
 	Globals.Wind_Direction_target =  Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(0, 20)
 	
-	while Globals.current_weather_and_disaster == "Raining":
-		var player = Globals.local_player
-		
-		if is_instance_valid(player):
-			if Globals.is_outdoor(player):
-				player.rain_node.emitting = player.is_multiplayer_authority() or true
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = player.is_multiplayer_authority() or true
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)
-			else:
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = false
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)				
+	_update_environment()
 
-		await get_tree().create_timer(0.5).timeout
-
-	while Globals.current_weather_and_disaster != "Raining":
-
-		Globals.add_points.rpc()
-		
-		break
-
-func is_storm():
+func _start_storm():
 	Globals.Temperature_target =  randf_range(5,15)
 	Globals.Humidity_target = randf_range(30,40)
 	Globals.bradiation_target = 0
@@ -628,31 +291,130 @@ func is_storm():
 	Globals.Wind_Direction_target =  Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(30, 60)
 
-	while Globals.current_weather_and_disaster == "Storm":
-		var player = Globals.local_player
+	_update_environment()
+	_spawn_lightning_timer()
 
-		if is_instance_valid(player):
-			if Globals.is_outdoor(player):
-				player.rain_node.emitting = player.is_multiplayer_authority()
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = player.is_multiplayer_authority()
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)
-			else:
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$WorldEnvironment.environment.volumetric_fog_enabled = false
-				$WorldEnvironment.environment.volumetric_fog_albedo = Color(1,1,1)				
-	
+
+func _on_disaster_changed(new_disaster: String):
+	# Limpiar el desastre anterior
+	_cleanup_disaster(current_disaster)
+	current_disaster = new_disaster
+
+	# Iniciar el nuevo desastre
+	match new_disaster:
+		"Tsunami":
+			_start_tsunami()
+		"Thunderstorm":
+			_start_thunderstorm()
+		"Meteor_shower":
+			_start_meteor_shower()
+		"blizzard":
+			_start_blizzard()
+		"Sand Storm":
+			_start_sandstorm()
+		"Volcano":
+			_start_volcano()
+		"Tornado":
+			_start_tornado()
+		"Acid rain":
+			_start_acid_rain()
+		"Earthquake":
+			_start_earthquake()
+		"Sun":
+			_start_sun()
+		"Cloud":
+			_start_cloud()
+		"Raining":
+			_start_raining()
+		"Storm":
+			_start_storm()
+
+func _cleanup_disaster(disaster: String):
+	is_spawning_lightning = false
+
+	# Limpiar efectos del desastre anterior
+	for node in active_disaster_nodes:
+		if is_instance_valid(node):
+			node.queue_free()
+	active_disaster_nodes.clear()
+
+	Globals.add_points.rpc()
+
+func _spawn_meteor_shower_timer():
+	while Globals.current_weather_and_disaster == "Meteor_shower":
+		var meteor = Globals.meteor_scene.instantiate()
+		var rand_pos = Vector3(randf_range(0,4097),1000,randf_range(0,4097))
+		meteor.position = rand_pos
+		add_child(meteor, true)
+		active_disaster_nodes.append(meteor)
+		
+		await get_tree().create_timer(1).timeout
+
+func _update_environment():
+	var player = Globals.local_player
+
+	if not is_instance_valid(player):
+		return
+
+	var is_outdoor = Globals.is_outdoor(player)
+
+	# Ajustes por desastre
+	match current_disaster:
+		"blizzard":
+			player.snow_node.emitting = is_outdoor
+			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1, 1, 1)
+		"Sand Storm":
+			player.sand_node.emitting = is_outdoor
+			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1, 0.647059, 0)
+		"Acid rain":
+			player.rain_node.emitting = is_outdoor
+			$WorldEnvironment.environment.volumetric_fog_albedo = Color(0, 1, 0)
+		_:
+			player.snow_node.emitting = false
+			player.sand_node.emitting = false
+			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1, 1, 1)
+
+	# Cuando hay lluvia/tormenta u otros eventos que requieren niebla, activarla sólo si el jugador está al aire libre
+	var foggy_disasters = ["Thunderstorm", "Raining", "Storm", "Tornado", "blizzard", "Sand Storm", "Cloud", "Acid rain"]
+	$WorldEnvironment.environment.volumetric_fog_enabled = current_disaster in foggy_disasters and is_outdoor
+
+	# Nodos de partículas generales
+	player.rain_node.emitting = (current_disaster in ["Thunderstorm", "Raining", "Storm", "Tornado", "Acid rain"]) and is_outdoor
+	player.dust_node.emitting = false
+
+	# Ajuste de nubes
+	$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness",
+		0.25 if current_disaster in foggy_disasters else 1)
+
+func _spawn_lightning_timer():
+	if is_spawning_lightning:
+		return  # Evitar múltiples instancias del timer
+
+	is_spawning_lightning = true
+
+	while Globals.current_weather_and_disaster == "Thunderstorm" and is_spawning_lightning:
+		var player = Globals.local_player
+		
+		if is_instance_valid(player) and Globals.is_outdoor(player):
+			if randi_range(1, 25) == 25:
+				var lighting = Globals.thunderstorm_scene.instantiate()
+				var rand_pos = Vector3(randf_range(0, 4097), 1000, randf_range(0, 4097))
+				var space_state = get_world_3d().direct_space_state
+				
+				if space_state != null:
+					var ray = PhysicsRayQueryParameters3D.create(rand_pos, rand_pos - Vector3(0, 10000, 0))
+					var result = space_state.intersect_ray(ray)
+					
+					if result.has("position"):
+						lighting.position = result.position
+					else:
+						lighting.position = Vector3(randf_range(0, 4097), 0, randf_range(0, 4097))
+				else:
+					lighting.position = Vector3(randf_range(0, 4097), 0, randf_range(0, 4097))
+				
+				add_child(lighting, true)
+				active_disaster_nodes.append(lighting)
+		
 		await get_tree().create_timer(0.5).timeout
 
-	while Globals.current_weather_and_disaster != "Storm":
-
-		Globals.add_points.rpc()
-		
-		break
+	is_spawning_lightning = false

@@ -1,6 +1,7 @@
 extends Node3D
 
 var explosion_force = 100
+var explosion_damage = 100
 @onready var explosion_radius = $Area3D/CollisionShape3D.shape.radius
 @onready var parks = $Parks
 
