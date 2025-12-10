@@ -432,7 +432,7 @@ func _physics_process(delta):
 		if Input.is_action_pressed("Jump"):
 
 			desired_velocity.y = SPEED
-		elif Input.is_action_pressed("ui_down"):
+		elif Input.is_action_pressed("down"):
 			desired_velocity.y = -SPEED
 		else:
 			desired_velocity.y = 0
