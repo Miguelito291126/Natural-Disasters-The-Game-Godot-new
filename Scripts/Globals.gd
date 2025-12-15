@@ -429,51 +429,58 @@ func MultiplayerConnectionFailed():
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 
 @rpc("any_peer", "call_local")
-func assing_character(char: String):
+func assing_character(charac: String):
 	for c in avalible_characters:
-		if c == char:
-			character = char
+		if c == charac:
+			character = charac
 			break
 
 	if local_player and is_instance_valid(local_player):
-		local_player.character = char
+		local_player.character = charac
 
-	print_role("Asignado el personaje" + char)
+	print_role("Asignado el personaje: " + charac)
 
 @rpc("authority", "call_local")
-func assing_character_to_player(id: int, char: String):
-	if not is_character_avalible(char):
-		return
-	
-	assigned_character[id] = char
-	assing_character.rpc_id(id, char)
-	print_role("Asignado al id " + str(id) + "el personaje" + char)
+func assing_character_to_player(id: int, charac: String):
+	var chosen_char = charac
+
+	# Si el char recibido no es válido o ya está ocupado, buscamos el siguiente disponible.
+	if chosen_char == null or chosen_char == "" or not is_character_avalible(chosen_char):
+		chosen_char = get_next_avalible_character()
+
+	if chosen_char == null or chosen_char == "" or not is_character_avalible(chosen_char):
+		print_role("No hay personaje disponible para el id " + str(id))
+		return false
+
+	assigned_character[id] = chosen_char
+	assing_character.rpc_id(id, chosen_char)
+	print_role("Asignado al id " + str(id) + " el personaje " + chosen_char)
+	return true
 
 @rpc("authority",  "call_local")
 func sync_assigned_character(data: Dictionary):
 	assigned_character = data.duplicate(true)
 
-func is_character_avalible(char: String):
+func is_character_avalible(charac: String):
 	for id in assigned_character:
-		if assigned_character[id] == char:
+		if assigned_character[id] == charac:
 			return false
 
 	return true
 
 
 func get_next_avalible_character():
-	for char in avalible_characters:
-		if is_character_avalible(char):
-			return char
+	for charac in avalible_characters:
+		if is_character_avalible(charac):
+			return charac
 
-
-	return avalible_characters[0] if avalible_characters.size > 0 else "blue"
+	return null
 
 
 	
 func MultiplayerServerDisconnected():
 	print_role("Client disconected")
-	
+
 	players_conected.clear()
 	assigned_character.clear()
 	destrolled_node.clear()
@@ -554,15 +561,20 @@ func MultiplayerPlayerSpawner(peer_id: int = 1):
 		map.add_child(player, true)
 
 		
+		var assigned_ok = true
+
 		if not peer_id in assigned_character:
 			var next_character = get_next_avalible_character()
-			assing_character_to_player(peer_id, next_character)
+			assigned_ok = assing_character_to_player(peer_id, next_character)
 
-		sync_assigned_character.rpc(assigned_character)  
-		sync_assigned_character(assigned_character)  
-		sync_player_list.rpc()
-		sync_destrolled_nodes.rpc_id(peer_id, destrolled_node) # envia al cliente
-		set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
+		if assigned_ok:
+			sync_assigned_character.rpc(assigned_character)  
+			sync_assigned_character(assigned_character)  
+			sync_player_list.rpc()
+			sync_destrolled_nodes.rpc_id(peer_id, destrolled_node) # envia al cliente
+			set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
+		else:
+			print_role("No se pudo asignar personaje al jugador con id: " + str(peer_id))
 		
 	else:
 		sync_assigned_character.rpc(assigned_character)  
@@ -602,96 +614,103 @@ func MultiplayerPlayerRemover(peer_id: int = 1):
 		sync_player_list.rpc()
 		print_role("player no found: " + str(peer_id))
 
+
 func sync_weather_and_disaster():
 	if multiplayer.is_server():
 		var random_weather_and_disaster = randi_range(0,12)
 		set_weather_and_disaster.rpc(random_weather_and_disaster)
 
-@rpc("any_peer", "call_local")
+@rpc("authority", "call_local")
 func set_weather_and_disaster(weather_and_disaster_index):
 	match weather_and_disaster_index:
 		0:
 			current_weather_and_disaster = "Sun"
-			current_weather_and_disaster_int = 0
+			current_weather_and_disaster_int = weather_and_disaster_index
 		1:
 			current_weather_and_disaster = "Cloud"
-			current_weather_and_disaster_int = 1
+			current_weather_and_disaster_int = weather_and_disaster_index
 		2:
 			current_weather_and_disaster = "Raining"
-			current_weather_and_disaster_int = 2
+			current_weather_and_disaster_int = weather_and_disaster_index
 		3:
 			current_weather_and_disaster = "Storm"
-			current_weather_and_disaster_int = 3
+			current_weather_and_disaster_int = weather_and_disaster_index
 		4:
 			current_weather_and_disaster = "Thunderstorm"
-			current_weather_and_disaster_int = 4
+			current_weather_and_disaster_int = weather_and_disaster_index
 		5:
 			current_weather_and_disaster = "Tsunami"
-			current_weather_and_disaster_int = 5
+			current_weather_and_disaster_int = weather_and_disaster_index
 		6:
 			current_weather_and_disaster = "Meteor_shower"
-			current_weather_and_disaster_int = 6
+			current_weather_and_disaster_int = weather_and_disaster_index
 		7:
 			current_weather_and_disaster = "Volcano"
-			current_weather_and_disaster_int = 7
+			current_weather_and_disaster_int = weather_and_disaster_index
 		8:
 			current_weather_and_disaster = "Tornado"
-			current_weather_and_disaster_int = 8
+			current_weather_and_disaster_int = weather_and_disaster_index
 		9:
 			current_weather_and_disaster = "Acid rain"
-			current_weather_and_disaster_int = 9
+			current_weather_and_disaster_int = weather_and_disaster_index
 		10:
 			current_weather_and_disaster = "Earthquake"
-			current_weather_and_disaster_int = 10
+			current_weather_and_disaster_int = weather_and_disaster_index
 		11:
 			current_weather_and_disaster = "Sand Storm"
-			current_weather_and_disaster_int = 11
+			current_weather_and_disaster_int = weather_and_disaster_index
 		12:
 			current_weather_and_disaster = "blizzard"
-			current_weather_and_disaster_int = 12
+			current_weather_and_disaster_int = weather_and_disaster_index
+		13:
+			current_weather_and_disaster = "Dust Storm"
+			current_weather_and_disaster_int = weather_and_disaster_index
 		"Sun":
-			current_weather_and_disaster = "Sun"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 0
 		"Cloud":
-			current_weather_and_disaster = "Cloud"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 1
 		"Raining":
-			current_weather_and_disaster = "Raining"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 2
 		"Storm":
-			current_weather_and_disaster = "Storm"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 3
 		"Thunderstorm":
-			current_weather_and_disaster = "Thunderstorm"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 4
 		"Tsunami":
-			current_weather_and_disaster = "Tsunami"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 5
 		"Meteor_shower":
-			current_weather_and_disaster = "Meteor_shower"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 6
 		"Volcano":
-			current_weather_and_disaster = "Volcano"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 7
 		"Tornado":
-			current_weather_and_disaster = "Tornado"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 8
 		"Acid rain":
-			current_weather_and_disaster = "Acid rain"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 9
 		"Earthquake":
-			current_weather_and_disaster = "Earthquake"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 10
 
 		"Sand Storm":
-			current_weather_and_disaster = "Sand Storm"
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 11
 		"blizzard":
-			current_weather_and_disaster = "blizzard"
+			current_weather_and_disaster = weather_and_disaster_index
+			current_weather_and_disaster_int = 12
+		"Dust Storm":
+			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 12
 		_:
 			current_weather_and_disaster = "Original"
-			current_weather_and_disaster_int = 0
+			current_weather_and_disaster_int = -1
 
 
 @rpc("any_peer", "call_local")

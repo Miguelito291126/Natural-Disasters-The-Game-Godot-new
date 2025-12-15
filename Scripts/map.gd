@@ -12,20 +12,22 @@ var is_spawning_lightning = false
 
 
 func _exit_tree():
-	_start_sun_original()
-	Globals.timer.stop()
-	Globals.started = false
+	if multiplayer.is_server():
+		Globals.set_weather_and_disaster.rpc("Original")
+		Globals.timer.stop()
+		Globals.started = false
 
 func _ready():
 	Globals.map = self
-	_start_sun_original()
 
 	if not Globals.current_weather_and_disaster_changed.is_connected(_on_disaster_changed):
 		Globals.current_weather_and_disaster_changed.connect(_on_disaster_changed)
 
-	if Globals.gamemode == "survival":
+	
+	if multiplayer.is_server():
+		Globals.set_weather_and_disaster.rpc("Original")
 
-		if multiplayer.is_server():
+		if Globals.gamemode == "survival":
 			if not OS.has_feature("dedicated_server"):
 				Globals.MultiplayerPlayerSpawner()
 
@@ -35,9 +37,7 @@ func _ready():
 			Globals.timer.wait_time = Globals.GlobalsData.timer_disasters
 			Globals.timer.start()
 
-	else:
-
-		if multiplayer.is_server():
+		else:
 			if not OS.has_feature("dedicated_server"):
 				Globals.MultiplayerPlayerSpawner()
 
@@ -56,20 +56,24 @@ func _physics_process(_delta):
 func _process(_delta):
 	terrain.ambient_wind = Globals.Wind_speed * _delta
 
-	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
-		Globals.started = true
-	else:
-
-		if multiplayer.multiplayer_peer == null \
-		or multiplayer.multiplayer_peer is OfflineMultiplayerPeer \
-		or multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-			Globals.started = true
-			return
-
-		if Globals.players_conected.size() > 1:
+	if multiplayer.is_server():
+		if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
 			Globals.started = true
 		else:
-			Globals.started = false
+
+			if multiplayer.multiplayer_peer == null \
+			or multiplayer.multiplayer_peer is OfflineMultiplayerPeer \
+			or multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+				Globals.started = true
+				return
+
+			if Globals.gamemode == "survival":
+				if Globals.players_conected.size() > 1:
+					Globals.started = true
+				else:
+					Globals.started = false
+			else:
+				Globals.started = true
 
 
 func _start_sun_original():
@@ -295,9 +299,20 @@ func _start_storm():
 	_spawn_lightning_timer()
 
 
+func _start_DustStorm():
+	Globals.Temperature_target =  randf_range(30,40)
+	Globals.Humidity_target = randf_range(0,10)
+	Globals.bradiation_target = 0
+	Globals.oxygen_target = 0
+	Globals.pressure_target = randf_range(10000,10020)
+	Globals.Wind_Direction_target =  Vector3(randf_range(-1,1),0,randf_range(-1,1))
+	Globals.Wind_speed_target = randf_range(0, 50)
+
+	_update_environment()
+
 func _on_disaster_changed(new_disaster: String):
 	# Limpiar el desastre anterior
-	_cleanup_disaster(current_disaster)
+	_cleanup_disaster()
 	current_disaster = new_disaster
 
 	# Iniciar el nuevo desastre
@@ -328,8 +343,12 @@ func _on_disaster_changed(new_disaster: String):
 			_start_raining()
 		"Storm":
 			_start_storm()
+		"Dust Storm":
+			_start_DustStorm()
+		_:
+			_start_sun_original()
 
-func _cleanup_disaster(disaster: String):
+func _cleanup_disaster():
 	is_spawning_lightning = false
 
 	# Limpiar efectos del desastre anterior
@@ -338,7 +357,8 @@ func _cleanup_disaster(disaster: String):
 			node.queue_free()
 	active_disaster_nodes.clear()
 
-	Globals.add_points.rpc()
+	if Globals.gamemode == "survival":
+		Globals.add_points.rpc()
 
 func _spawn_meteor_shower_timer():
 	while Globals.current_weather_and_disaster == "Meteor_shower":
@@ -369,18 +389,22 @@ func _update_environment():
 		"Acid rain":
 			player.rain_node.emitting = is_outdoor
 			$WorldEnvironment.environment.volumetric_fog_albedo = Color(0, 1, 0)
+		"Dust Storm":
+			player.dust_node.emitting = is_outdoor
+			$"WorldEnvironment".environment.volumetric_fog_albedo = Color(1,1,1)
 		_:
 			player.snow_node.emitting = false
 			player.sand_node.emitting = false
+			player.dust_node.emitting = false
 			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1, 1, 1)
 
 	# Cuando hay lluvia/tormenta u otros eventos que requieren niebla, activarla sólo si el jugador está al aire libre
 	var foggy_disasters = ["Thunderstorm", "Raining", "Storm", "Tornado", "blizzard", "Sand Storm", "Cloud", "Acid rain"]
+	var rain_disasters = ["Thunderstorm", "Raining", "Storm", "Tornado", "Acid rain"]
 	$WorldEnvironment.environment.volumetric_fog_enabled = current_disaster in foggy_disasters and is_outdoor
 
 	# Nodos de partículas generales
-	player.rain_node.emitting = (current_disaster in ["Thunderstorm", "Raining", "Storm", "Tornado", "Acid rain"]) and is_outdoor
-	player.dust_node.emitting = false
+	player.rain_node.emitting = (current_disaster in rain_disasters) and is_outdoor
 
 	# Ajuste de nubes
 	$WorldEnvironment.environment.sky.sky_material.set_shader_parameter("clouds_fuzziness",

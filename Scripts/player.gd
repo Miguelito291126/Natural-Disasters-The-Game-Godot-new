@@ -89,6 +89,7 @@ var min_bdradiation = 0
 @onready var skeleton = $"Esqueleto/Skeleton3D"
 @onready var skeleton_phy = $"Esqueleto/Skeleton3D/PhysicalBoneSimulator3D"
 @onready var capsule: CollisionShape3D = $CollisionShape3D
+@onready var mesh = $Esqueleto/Skeleton3D/human
 
 @export var noclip: bool = false
 @export var god_mode: bool = false
@@ -96,8 +97,7 @@ var min_bdradiation = 0
 @export var ragdoll_enabled = false
 
 @export var character = "blue"
-
-@onready var mesh: MeshInstance3D = $Esqueleto/Skeleton3D/human
+var _last_applied_character := ""
 @export var player_materials = [preload("res://Resources/player blue.tres"), preload("res://Resources/player red.tres"), preload("res://Resources/player green.tres"), preload("res://Resources/player yellow.tres") ]
 
 func _enter_tree() -> void:
@@ -278,22 +278,37 @@ func body_rad(delta):
 			damage.rpc(randi_range(1,30))
 
 func update_character():
+	# Determinar el personaje deseado: si no somos autoridad, usamos el dict sincronizado.
+	var desired_char = character
 	if not is_multiplayer_authority():
+		if Globals.assigned_character.has(player_id):
+			desired_char = Globals.assigned_character[player_id]
+
+	if desired_char == null or desired_char == "" or desired_char == _last_applied_character:
 		return
-		
-	if character == "blue":
+
+	_last_applied_character = desired_char
+	character = desired_char
+
+	if desired_char == "blue":
 		update_material(0)
-	elif character == "red":
+	elif desired_char == "red":
 		update_material(1)
-	elif character == "green":
+	elif desired_char == "green":
 		update_material(2)
-	elif character == "yellow":
+	elif desired_char == "yellow":
 		update_material(3)
+	else:
+		update_material(0)
 
 func update_material(index):
-	mesh.surface_set_material(0, player_materials[index])
-	mesh.surface_set_material(1, player_materials[index])
-	mesh.surface_set_material(2, player_materials[index])
+	if not mesh:
+		return
+
+	# MeshInstance3D usa overrides de superficie; aplicamos a las tres superficies.
+	mesh.set_surface_override_material(0, player_materials[index])
+	mesh.set_surface_override_material(1, player_materials[index])
+	mesh.set_surface_override_material(2, player_materials[index])
 
 func Underwater_or_Underlava_effects():
 	underwatereffect.visible = IsUnderWater
@@ -373,6 +388,8 @@ func wind_sound():
 
 
 func _process(delta):
+	update_character() # también para clientes no autoridad (solo material)
+
 	if not is_multiplayer_authority():
 		return
 
@@ -383,7 +400,6 @@ func _process(delta):
 	IsOnFire_effects()
 	rain_sound()
 	wind_sound()
-	update_character()
 	update_labels()
 
 func update_labels():

@@ -78,37 +78,8 @@ func erupt():
 	Globals.Wind_Direction_target =  Vector3(randf_range(-1,1),0,randf_range(-1,1))
 	Globals.Wind_speed_target = randf_range(0, 50)
 
-	while get_parent().current_weather_and_disaster == "Volcano" and IsVolcanoAsh:
-		var player = Globals.local_player
-
-		if is_instance_valid(player):
-			if Globals.is_outdoor(player): 
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = player.is_multiplayer_authority() or true
-				player.snow_node.emitting = false
-				$"../WorldEnvironment".environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$"../WorldEnvironment".environment.volumetric_fog_enabled = player.is_multiplayer_authority() or true
-				$"../WorldEnvironment".environment.volumetric_fog_albedo = Color(0.5,0.5,0.5)
-			else:
-				player.rain_node.emitting = false
-				player.sand_node.emitting = false
-				player.dust_node.emitting = false
-				player.snow_node.emitting = false
-				$"../WorldEnvironment".environment.sky.sky_material.set_shader_parameter("clouds_fuzziness", 0.25)
-				$"../WorldEnvironment".environment.volumetric_fog_enabled = false
-				$"../WorldEnvironment".environment.volumetric_fog_albedo = Color(1,1,1)				
-			
-		await get_tree().create_timer(0.5).timeout
-
-	while get_parent().current_weather_and_disaster != "Volcano":
-		if is_instance_valid(volcano):
-			IsVolcanoAsh = false
-			queue_free()
-
-		Globals.add_points.rpc()
-		
-		break
+	if IsVolcanoAsh:
+		Globals.set_weather_and_disaster.rpc("Dust storm")
 
 func _process(_delta: float) -> void:
 	volcano_area.global_position = get_lava_level_position()
