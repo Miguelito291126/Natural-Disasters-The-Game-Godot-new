@@ -20,9 +20,6 @@ var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 @onready var erupt_smoke = $"Erupt Smoke"
 @onready var erupt_sound = $"Erupt Sound"
 
-func _ready() -> void:
-	volcano_area.get_node("CollisionShape3D").shape.radius = 360 * self.scale.x
-
 func check_pressure():
 	# Verifica si la presión del volcán es mayor o igual a 100
 	if Pressure >= 100:
