@@ -399,7 +399,7 @@ func _update_environment():
 			$WorldEnvironment.environment.volumetric_fog_albedo = Color(1, 1, 1)
 
 	# Cuando hay lluvia/tormenta u otros eventos que requieren niebla, activarla sólo si el jugador está al aire libre
-	var foggy_disasters = ["Thunderstorm", "Raining", "Storm", "Tornado", "blizzard", "Sand Storm", "Cloud", "Acid rain"]
+	var foggy_disasters = ["Thunderstorm", "Raining", "Storm", "Tornado", "blizzard", "Sand Storm", "Cloud", "Acid rain", "Dust Storm"]
 	var rain_disasters = ["Thunderstorm", "Raining", "Storm", "Tornado", "Acid rain"]
 	$WorldEnvironment.environment.volumetric_fog_enabled = current_disaster in foggy_disasters and is_outdoor
 
