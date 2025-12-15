@@ -391,7 +391,7 @@ func _update_environment():
 			$WorldEnvironment.environment.volumetric_fog_albedo = Color(0, 1, 0)
 		"Dust Storm":
 			player.dust_node.emitting = is_outdoor
-			$"WorldEnvironment".environment.volumetric_fog_albedo = Color(1,1,1)
+			$"WorldEnvironment".environment.volumetric_fog_albedo = Color(0,0,0)
 		_:
 			player.snow_node.emitting = false
 			player.sand_node.emitting = false
