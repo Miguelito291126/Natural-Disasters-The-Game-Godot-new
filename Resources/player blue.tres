@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dm41re6d42qbq"]
+
+[resource]
+resource_name = "body"
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.15874515, 0, 0.9059196, 1)
+roughness = 0.5

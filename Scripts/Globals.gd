@@ -102,6 +102,10 @@ var lisener: PacketPeerUDP
 @export var is_pause_menu_open = false
 @export var	is_spawn_menu_open = false
 
+@export var	character: String = "blue"
+@export var	avalible_characters = ["blue", "red", "green", "yellow"]
+@export var assigned_character: Dictionary
+
 func convert_MetoSU(metres):
 	return (metres * 39.37) / 0.75
 
@@ -408,29 +412,74 @@ func Play_MultiplayerClient():
 		multiplayer.multiplayer_peer = multiplayerpeer
 		if not multiplayer.is_server():
 			print_role("Client Init")
-			UnloadScene.unload_scene(main_menu)
 	else:
 		print_role("Fatal Error in client")
 
 func MultiplayerConnectionFailed():
-	print_role("client disconected: failed to load")
-	get_tree().paused = false
-	CloseUp()
-	sync_player_list()
-	remove_all_destrolled_nodes()
+	print_role("Client disconected")
+	players_conected.clear()
+	assigned_character.clear()
+	destrolled_node.clear()
 
+	CloseUp()
+	
 	multiplayerpeer = OfflineMultiplayerPeer.new()
 	multiplayer.multiplayer_peer = multiplayerpeer
 
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
+
+@rpc("any_peer", "call_local")
+func assing_character(char: String):
+	for c in avalible_characters:
+		if c == char:
+			character = char
+			break
+
+	if local_player and is_instance_valid(local_player):
+		local_player.character = char
+
+	print_role("Asignado el personaje" + char)
+
+@rpc("authority", "call_local")
+func assing_character_to_player(id: int, char: String):
+	if not is_character_avalible(char):
+		return
+	
+	assigned_character[id] = char
+	assing_character.rpc_id(id, char)
+	print_role("Asignado al id " + str(id) + "el personaje" + char)
+
+@rpc("authority",  "call_local")
+func sync_assigned_character(data: Dictionary):
+	assigned_character = data.duplicate(true)
+
+func is_character_avalible(char: String):
+	for id in assigned_character:
+		if assigned_character[id] == char:
+			return false
+
+	return true
+
+
+func get_next_avalible_character():
+	for char in avalible_characters:
+		if is_character_avalible(char):
+			return char
+
+
+	return avalible_characters[0] if avalible_characters.size > 0 else "blue"
+
+
 	
 func MultiplayerServerDisconnected():
 	print_role("Client disconected")
-	get_tree().paused = false
-	CloseUp()
-	sync_player_list()
-	remove_all_destrolled_nodes()
+	
+	players_conected.clear()
+	assigned_character.clear()
+	destrolled_node.clear()
 
+	CloseUp()
+	
 	multiplayerpeer = OfflineMultiplayerPeer.new()
 	multiplayer.multiplayer_peer = multiplayerpeer
 
@@ -439,6 +488,7 @@ func MultiplayerServerDisconnected():
 
 func MultiplayerConnectionServerSucess():
 	print_role("connected to server")
+	UnloadScene.unload_scene(main_menu)
 
 
 func _exit_tree() -> void:
@@ -494,41 +544,63 @@ func _ready():
 
 		
 func MultiplayerPlayerSpawner(peer_id: int = 1):
+	if not multiplayer.is_server():
+		return
+
 	if map and is_instance_valid(map):
 		print_role("Joined player id: " + str(peer_id))
 		var player = player_scene.instantiate()
 		player.name = str(peer_id)
 		map.add_child(player, true)
 
-		# ahora que el player está en el árbol, sincronizamos datos
-		sync_player_list.rpc()                                # broadcast
+		
+		if not peer_id in assigned_character:
+			var next_character = get_next_avalible_character()
+			assing_character_to_player(peer_id, next_character)
+
+		sync_assigned_character.rpc(assigned_character)  
+		sync_assigned_character(assigned_character)  
+		sync_player_list.rpc()
 		sync_destrolled_nodes.rpc_id(peer_id, destrolled_node) # envia al cliente
 		set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
-
-			
-			
+		
+	else:
+		sync_assigned_character.rpc(assigned_character)  
+		sync_assigned_character(assigned_character)  
+		sync_player_list.rpc()     
+		sync_destrolled_nodes.rpc_id(peer_id, destrolled_node)                           # broadcast
+		print_role("No se pudo añadir al jugador con el id: " + str(peer_id))	
 
 
 func MultiplayerPlayerRemover(peer_id: int = 1):
+	if not multiplayer.is_server():
+		return
+
 	# Intentar obtener el jugador de forma segura
 	var player_node = map.get_node_or_null(str(peer_id))
 	if player_node and is_instance_valid(player_node):
 		print_role("Disconected player id: " + str(peer_id))
 		player_node.queue_free()
+
+		await player_node.tree_exited
+
+		if peer_id in assigned_character:
+			assigned_character.erase(peer_id)
+
+
+		sync_assigned_character.rpc(assigned_character)  
+		sync_assigned_character(assigned_character)  
 		sync_player_list.rpc()
+
+		
 	else:
-		# fallback: buscar por grupo y authority (por si el nombre cambió)
-		for p in get_tree().get_nodes_in_group("player"):
-			if is_instance_valid(p) and p.get_multiplayer_authority() == peer_id:
-				print_role("Disconected player id: " + str(peer_id))
-				p.queue_free()
-				sync_player_list.rpc()
-				return
+		if peer_id in assigned_character:
+			assigned_character.erase(peer_id)
 
-	# si no se encuentra, log para depurar
-	print_role("player no found: " + str(peer_id))
-
-
+		sync_assigned_character.rpc(assigned_character)  
+		sync_assigned_character(assigned_character)  
+		sync_player_list.rpc()
+		print_role("player no found: " + str(peer_id))
 
 func sync_weather_and_disaster():
 	if multiplayer.is_server():
@@ -663,8 +735,8 @@ func _on_timer_timeout():
 func sync_destrolled_nodes(Hauses: Array):
 	for house_name in Hauses:
 		var house = get_tree().get_current_scene().get_node_or_null(house_name)
-		if house and not house.destrolled:
-			house.destroy()
+		if house:
+			house.queue_free()
 
 func add_destrolled_nodes(Name: String):
 

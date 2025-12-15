@@ -95,6 +95,11 @@ var min_bdradiation = 0
 @export var admin_mode: bool = false
 @export var ragdoll_enabled = false
 
+@export var character = "blue"
+
+@onready var mesh: MeshInstance3D = $Esqueleto/Skeleton3D/human
+@export var player_materials = [preload("res://Resources/player blue.tres"), preload("res://Resources/player red.tres"), preload("res://Resources/player green.tres"), preload("res://Resources/player yellow.tres") ]
+
 func _enter_tree() -> void:
 	player_id = name.to_int()
 	Globals.print_role("set authority to: " + name)
@@ -103,15 +108,6 @@ func _enter_tree() -> void:
 func _exit_tree():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-# Helper que detecta si esta instancia corresponde al jugador local (cámara activa o Globals.local_player)
-func _is_local_instance() -> bool:
-	if Globals.local_player == self:
-		return true
-
-	if camera_node and camera_node.current:
-		return true
-
-	return false	
 
 @rpc("any_peer", "call_local")
 func _set_ragdoll_state(enable: bool) -> void:
@@ -159,19 +155,21 @@ func damage(amount: float) -> void:
 	if hearth <= 0:	
 		is_alive = false
 
-		die.rpc()
+		# Solo ejecutar die() en la instancia local del jugador que murió
+		if is_multiplayer_authority():
+			die()
+
 		Globals.remove_points.rpc()
 		_set_ragdoll_state.rpc(true)
 
 	else:
 		is_alive = true
 
-@rpc("any_peer", "call_local")
+
 func die():
-	if _is_local_instance():
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		if death_menu:
-			death_menu.show()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	if death_menu:
+		death_menu.show()
 
 func ignite(time):
 	IsOnFire = true
@@ -206,8 +204,7 @@ func _ready():
 		_reset_player()
 		_set_ragdoll_state.rpc(false)
 		username = Globals.username
-		points = Globals.points
-		label.text = Globals.username
+
 
 		if multiplayer.is_server():
 			admin_mode = true
@@ -280,6 +277,23 @@ func body_rad(delta):
 		if randi_range(1,25) == 25:
 			damage.rpc(randi_range(1,30))
 
+func update_character():
+	if not is_multiplayer_authority():
+		return
+		
+	if character == "blue":
+		update_material(0)
+	elif character == "red":
+		update_material(1)
+	elif character == "green":
+		update_material(2)
+	elif character == "yellow":
+		update_material(3)
+
+func update_material(index):
+	mesh.surface_set_material(0, player_materials[index])
+	mesh.surface_set_material(1, player_materials[index])
+	mesh.surface_set_material(2, player_materials[index])
 
 func Underwater_or_Underlava_effects():
 	underwatereffect.visible = IsUnderWater
@@ -369,6 +383,16 @@ func _process(delta):
 	IsOnFire_effects()
 	rain_sound()
 	wind_sound()
+	update_character()
+	update_labels()
+
+func update_labels():
+	if not is_multiplayer_authority():
+		return
+
+	username = Globals.username
+	points = Globals.points
+	label.text = Globals.username
 
 func _physics_process(delta):
 	if not is_multiplayer_authority():
