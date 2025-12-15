@@ -79,7 +79,7 @@ func erupt():
 	Globals.Wind_speed_target = randf_range(0, 50)
 
 	if IsVolcanoAsh:
-		Globals.set_weather_and_disaster.rpc("Dust storm")
+		Globals.set_weather_and_disaster.rpc("Dust Storm")
 
 func _process(_delta: float) -> void:
 	volcano_area.global_position = get_lava_level_position()
