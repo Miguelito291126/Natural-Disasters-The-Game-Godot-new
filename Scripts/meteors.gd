@@ -6,7 +6,11 @@ var is_volcano_rock = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.global_position += Vector3(0, 1000, 0)
+	# Solo mover hacia arriba si NO es una roca del volcán
+	if not is_volcano_rock:
+		self.global_position += Vector3(0, 1000, 0)
+
+		
 	self.gravity_scale = Globals.gravity
 
 func _on_body_entered(body):
