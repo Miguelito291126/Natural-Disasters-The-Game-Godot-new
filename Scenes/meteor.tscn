@@ -86,8 +86,6 @@ properties/3/spawn = true
 properties/3/replication_mode = 1
 
 [node name="meteor" type="RigidBody3D" groups=["Meteor", "movable_objects"]]
-collision_layer = 255
-collision_mask = 255
 can_sleep = false
 continuous_cd = true
 contact_monitor = true
