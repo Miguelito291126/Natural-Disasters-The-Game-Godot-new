@@ -10,13 +10,13 @@ var entity_scene = preload("res://Scenes/entity.tscn")
 var spawn_list: Array[String] = [
 				"res://Scenes/meteor.tscn",
 				"res://Scenes/tornado.tscn",
-				"res://Scenes/volcano.tscn",
+				"res://Scenes/Volcano.tscn",
 				"res://Scenes/tsunami.tscn",
 				"res://Scenes/earthquake.tscn",
 				"res://Scenes/thunder.tscn",
 				"res://Scenes/cube.tscn",
 				"res://Scenes/Sphere.tscn",
-				"res://Scenes/Hause.tscn",
+				"res://Scenes/hause.tscn",
 				]
 
 func _enter_tree() -> void:

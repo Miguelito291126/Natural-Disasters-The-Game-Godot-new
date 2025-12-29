@@ -7,7 +7,7 @@ signal current_weather_and_disaster_changed(new_disaster: String)
 #Editor
 var version = ProjectSettings.get_setting("application/config/version")
 var gamename = ProjectSettings.get_setting("application/config/name")
-var credits = "Miguelillo223"
+var credits = "Miguelito2911"
 
 #Network
 @export var ip: String
