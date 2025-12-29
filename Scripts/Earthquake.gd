@@ -20,6 +20,7 @@ func _physics_process(delta):
 
 func _ready() -> void:
 	PlayInitialSounds()
+	destroy_all_houses()
 	
 	await get_tree().create_timer(randi_range(Life[0], Life[1])).timeout
 	EarthquakeDecay()
@@ -153,6 +154,12 @@ func destroy(v):
 	if v.is_in_group("Destrollable") or v.is_in_group("Hause"):
 		if is_instance_valid(v):
 			v.destroy.rpc()
+
+func destroy_all_houses():
+	# Destruir todas las casas al iniciar el terremoto
+	for house in get_tree().get_nodes_in_group("Hause"):
+		if is_instance_valid(house):
+			destroy(house)
 
 
 func magnitude_modulate_sound():

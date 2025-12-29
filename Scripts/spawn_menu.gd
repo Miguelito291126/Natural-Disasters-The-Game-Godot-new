@@ -16,6 +16,7 @@ var spawn_list: Array[String] = [
 				"res://Scenes/thunder.tscn",
 				"res://Scenes/cube.tscn",
 				"res://Scenes/Sphere.tscn",
+				"res://Scenes/Hause.tscn",
 				]
 
 func _enter_tree() -> void:

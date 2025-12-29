@@ -99,6 +99,7 @@ var head_bone_index: int = -1
 
 # Transforms originales de cabeza y cámara para restaurar al revivir / salir del ragdoll
 var head_default_transform: Transform3D
+var head_default_local_transform: Transform3D
 var camera_default_transform: Transform3D
 # Transform local original de la cámara (offset respecto al padre/head)
 var camera_default_local_transform: Transform3D
@@ -145,9 +146,9 @@ func _set_ragdoll_state(enable: bool) -> void:
 		_stop_physical_bones_sim()
 		# Al salir del ragdoll, restaurar la posición/rotación de la cabeza y la cámara
 		if head_node:
-			head_node.transform = head_default_transform
+			head_node.transform = head_default_local_transform
 		if camera_node:
-			camera_node.transform = camera_default_transform
+			camera_node.transform = camera_default_local_transform
 
 func _start_physical_bones_sim():
 	if skeleton_phy:
@@ -160,18 +161,23 @@ func _stop_physical_bones_sim():
 func _update_camera_follow_ragdoll():
 	# 1) Prioridad: seguir un hueso FÍSICO (PhysicalBone3D), que sí se mueve con el ragdoll
 	if ragdoll_follow_bone and camera_node:
-		var bone_transform := ragdoll_follow_bone.global_transform
-		# Mantener el mismo offset local que tiene la cámara en el jugador vivo
-		camera_node.global_transform = bone_transform * camera_default_local_transform
+		var bone_transform: Transform3D = ragdoll_follow_bone.global_transform
+		# Posición: misma posición relativa que la cámara viva, pero rotación original (para que no mire al suelo)
+		var local_origin: Vector3 = camera_default_local_transform.origin
+		var target_position: Vector3 = bone_transform * local_origin
+		camera_node.global_position = target_position
+		camera_node.global_basis = camera_default_transform.basis
 		return
 
 	# 2) Fallback: si por alguna razón no hay hueso físico, usar el hueso "cuello" del Skeleton
 	if skeleton and head_bone_index >= 0 and camera_node:
-		var bone_global_pose = skeleton.get_bone_global_pose(head_bone_index)
-		var bone_world_transform = skeleton.global_transform * bone_global_pose
+		var bone_global_pose: Transform3D = skeleton.get_bone_global_pose(head_bone_index)
+		var bone_world_transform: Transform3D = skeleton.global_transform * bone_global_pose
 		
-		# Mantener el mismo offset local que tiene la cámara
-		camera_node.global_transform = bone_world_transform * camera_default_local_transform
+		var local_origin2: Vector3 = camera_default_local_transform.origin
+		var target_position2: Vector3 = bone_world_transform * local_origin2
+		camera_node.global_position = target_position2
+		camera_node.global_basis = camera_default_transform.basis
 
 
 @rpc("any_peer", "call_local")
@@ -233,9 +239,10 @@ func _ready():
 
 	# Guardar transform original de la cabeza y de la cámara
 	if head_node:
-		head_default_transform = head_node.transform
+		head_default_transform = head_node.global_transform
+		head_default_local_transform = head_node.transform
 	if camera_node:
-		camera_default_transform = camera_node.transform
+		camera_default_transform = camera_node.global_transform
 		camera_default_local_transform = camera_node.transform
 
 	# Obtener el índice del hueso "cuello" para seguir en ragdoll
