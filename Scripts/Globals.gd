@@ -85,7 +85,7 @@ var thunderstorm_scene = preload("res://Scenes/thunder.tscn")
 var meteor_scene = preload("res://Scenes/meteor.tscn")
 var tornado_scene = preload("res://Scenes/tornado.tscn")
 var tsunami_scene = preload("res://Scenes/tsunami.tscn")
-var volcano_scene = preload("res://Scenes/volcano.tscn")
+var volcano_scene = preload("res://Scenes/Volcano.tscn")
 var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 
 @onready var timer = $Timer
