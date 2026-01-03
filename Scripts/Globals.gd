@@ -417,6 +417,7 @@ func Play_MultiplayerClient():
 
 func MultiplayerConnectionFailed():
 	print_role("Client disconected")
+
 	players_conected.clear()
 	assigned_character.clear()
 	destrolled_node.clear()
@@ -733,8 +734,7 @@ func close_conection():
 	if peer == null \
 	or peer is OfflineMultiplayerPeer \
 	or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-		get_tree().paused = false
-		LoadScene.load_scene(Globals.map, "res://Scenes/main_menu.tscn")
+		MultiplayerServerDisconnected()
 		return
 
 	# Si está conectado → cerrar conexión
