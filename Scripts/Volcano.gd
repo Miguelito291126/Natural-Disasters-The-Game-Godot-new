@@ -35,8 +35,9 @@ func check_pressure():
 			if randi() % 3 == 0:
 				# Crea una instancia del objeto que representa el terremoto
 				earthquake = earthquake_scene.instantiate()
-				earthquake.global_transform.origin = global_transform.origin
 				get_parent().add_child(earthquake)
+				earthquake.global_transform.origin = global_transform.origin
+				
 
 				
 			# Llama a la función Erupt después de un tiempo aleatorio entre 10 y 20 segundos
@@ -91,9 +92,9 @@ func _launch_fireball(range: int, time: int):
 	for i in range:
 		var fireball = fireball_scene.instantiate()
 		var launch_direction = Vector3(randi_range(-1,1), 1, randi_range(-1,1)).normalized()  # Dirección hacia arriba
+		get_parent().add_child(fireball, true)  # Agregar la bola de fuego como hijo del volcán primero
 		fireball.global_position = get_lava_level_position() # Posición inicial en el volcán
 		fireball.scale = Vector3(1,1,1)
 		fireball.is_volcano_rock = true
 		fireball.apply_impulse(get_lava_level_position(), launch_direction * launch_force)  # Aplicar fuerza para lanzar la bola de fuego
-		get_parent().add_child(fireball, true)  # Agregar la bola de fuego como hijo del volcán
 		await get_tree().create_timer(time).timeout

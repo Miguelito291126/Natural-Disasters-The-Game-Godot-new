@@ -46,8 +46,8 @@ func destroy():
 		return
 
 	var Broken_Hause = bokenhause.instantiate()
-	Broken_Hause.global_position = self.global_position
 	get_parent().add_child(Broken_Hause)
+	Broken_Hause.global_position = self.global_position
 	destrolled = true
     # Guardar path en Globals
 	Globals.add_destrolled_nodes(self.get_path())
