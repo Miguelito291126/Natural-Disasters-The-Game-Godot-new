@@ -7,7 +7,7 @@ signal current_weather_and_disaster_changed(new_disaster: String)
 #Editor
 var version = ProjectSettings.get_setting("application/config/version")
 var gamename = ProjectSettings.get_setting("application/config/name")
-var credits = "Miguelillo223"
+var credits = "Miguelito2911"
 
 #Network
 @export var ip: String
@@ -85,7 +85,7 @@ var thunderstorm_scene = preload("res://Scenes/thunder.tscn")
 var meteor_scene = preload("res://Scenes/meteor.tscn")
 var tornado_scene = preload("res://Scenes/tornado.tscn")
 var tsunami_scene = preload("res://Scenes/tsunami.tscn")
-var volcano_scene = preload("res://Scenes/volcano.tscn")
+var volcano_scene = preload("res://Scenes/Volcano.tscn")
 var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 
 @onready var timer = $Timer
@@ -441,6 +441,7 @@ func Play_MultiplayerClient():
 
 func MultiplayerConnectionFailed():
 	print_role("Client disconected")
+
 	players_conected.clear()
 	assigned_character.clear()
 	destrolled_node.clear()
@@ -757,8 +758,7 @@ func close_conection():
 	if peer == null \
 	or peer is OfflineMultiplayerPeer \
 	or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-		get_tree().paused = false
-		LoadScene.load_scene(Globals.map, "res://Scenes/main_menu.tscn")
+		MultiplayerServerDisconnected()
 		return
 
 	# Si está conectado → cerrar conexión

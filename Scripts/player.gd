@@ -91,6 +91,19 @@ var min_bdradiation = 0
 @onready var capsule: CollisionShape3D = $CollisionShape3D
 @onready var mesh = $Esqueleto/Skeleton3D/human
 
+# Hueso físico de referencia para el ragdoll (cerca del cuello/torso)
+@onready var ragdoll_follow_bone: Node3D = $"Esqueleto/Skeleton3D/PhysicalBoneSimulator3D/Physical Bone clumna3"
+
+# Índice del hueso de la cabeza para seguir en ragdoll
+var head_bone_index: int = -1
+
+# Transforms originales de cabeza y cámara para restaurar al revivir / salir del ragdoll
+var head_default_transform: Transform3D
+var head_default_local_transform: Transform3D
+var camera_default_transform: Transform3D
+# Transform local original de la cámara (offset respecto al padre/head)
+var camera_default_local_transform: Transform3D
+
 @export var noclip: bool = false
 @export var god_mode: bool = false
 @export var admin_mode: bool = false
@@ -131,6 +144,11 @@ func _set_ragdoll_state(enable: bool) -> void:
 		_start_physical_bones_sim()
 	else:
 		_stop_physical_bones_sim()
+		# Al salir del ragdoll, restaurar la posición/rotación de la cabeza y la cámara
+		if head_node:
+			head_node.transform = head_default_local_transform
+		if camera_node:
+			camera_node.transform = camera_default_local_transform
 
 func _start_physical_bones_sim():
 	if skeleton_phy:
@@ -139,6 +157,27 @@ func _start_physical_bones_sim():
 func _stop_physical_bones_sim():
 	if skeleton_phy:
 		skeleton_phy.physical_bones_stop_simulation()
+
+func _update_camera_follow_ragdoll():
+	# 1) Prioridad: seguir un hueso FÍSICO (PhysicalBone3D), que sí se mueve con el ragdoll
+	if ragdoll_follow_bone and camera_node:
+		var bone_transform: Transform3D = ragdoll_follow_bone.global_transform
+		# Posición: misma posición relativa que la cámara viva, pero rotación original (para que no mire al suelo)
+		var local_origin: Vector3 = camera_default_local_transform.origin
+		var target_position: Vector3 = bone_transform * local_origin
+		camera_node.global_position = target_position
+		camera_node.global_basis = camera_default_transform.basis
+		return
+
+	# 2) Fallback: si por alguna razón no hay hueso físico, usar el hueso "cuello" del Skeleton
+	if skeleton and head_bone_index >= 0 and camera_node:
+		var bone_global_pose: Transform3D = skeleton.get_bone_global_pose(head_bone_index)
+		var bone_world_transform: Transform3D = skeleton.global_transform * bone_global_pose
+		
+		var local_origin2: Vector3 = camera_default_local_transform.origin
+		var target_position2: Vector3 = bone_world_transform * local_origin2
+		camera_node.global_position = target_position2
+		camera_node.global_basis = camera_default_transform.basis
 
 
 @rpc("any_peer", "call_local")
@@ -197,6 +236,21 @@ func _ready():
 	Globals.print_role("get authority: " + str(get_multiplayer_authority()))
 
 	camera_node.current = is_multiplayer_authority()
+
+	# Guardar transform original de la cabeza y de la cámara
+	if head_node:
+		head_default_transform = head_node.global_transform
+		head_default_local_transform = head_node.transform
+	if camera_node:
+		camera_default_transform = camera_node.global_transform
+		camera_default_local_transform = camera_node.transform
+
+	# Obtener el índice del hueso "cuello" para seguir en ragdoll
+	if skeleton:
+		head_bone_index = skeleton.find_bone("cuello")
+		# Si por alguna razón no lo encuentra, usar un índice conocido del esqueleto (9 = cuello en la escena)
+		if head_bone_index == -1 and skeleton.get_bone_count() > 9:
+			head_bone_index = 9
 
 	if is_multiplayer_authority():
 		Globals.local_player = self
@@ -331,7 +385,7 @@ func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
 
-	if not admin_mode and Globals.gamemode != "creative":
+	if not admin_mode and Globals.gamemode != "sandbox":
 		return
 
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -419,6 +473,11 @@ func _physics_process(delta):
 			
 	if Globals.is_chat_open:
 		return
+	
+	# Hacer que la cámara siga al cuerpo en ragdoll
+	if ragdoll_enabled:
+		_update_camera_follow_ragdoll()
+		return  # No procesar movimiento cuando el ragdoll está activo
 
 	# Add the gravity.
 	if not noclip:
@@ -541,6 +600,10 @@ func _noclip():
 
 func _unhandled_input(event):
 	if not is_multiplayer_authority():
+		return
+
+	# No permitir control de cámara cuando el ragdoll está activo
+	if ragdoll_enabled:
 		return
 
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:

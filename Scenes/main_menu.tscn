@@ -1,10 +1,10 @@
 [gd_scene load_steps=7 format=3 uid="uid://do0o8aqqmmmlj"]
 
 [ext_resource type="Script" uid="uid://btknoqxml4ghf" path="res://Scripts/Main Menu.gd" id="1_r752f"]
-[ext_resource type="AudioStream" uid="uid://cjhfwfsyaih6q" path="res://Sounds/music/waiting-time-175800.mp3" id="2_0u7u3"]
 [ext_resource type="Theme" uid="uid://cb8utilpq2brs" path="res://Resources/pause_and_menu_theme.tres" id="2_8ye2w"]
 [ext_resource type="Texture2D" uid="uid://66hhd27hjdj8" path="res://Icons/disasters.png" id="3_wgml2"]
 [ext_resource type="Script" uid="uid://cjfq4grssrun7" path="res://Scripts/server_browser.gd" id="4_n45e2"]
+[ext_resource type="AudioStream" uid="uid://c1kkmsj0cr015" path="res://Sounds/music/natural disasters the game menu song.wav" id="5_n45e2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cp0ys"]
 bg_color = Color(0.61441946, 0.23361233, 0, 1)
@@ -429,7 +429,7 @@ vertical_alignment = 1
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 process_mode = 3
-stream = ExtResource("2_0u7u3")
+stream = ExtResource("5_n45e2")
 autoplay = true
 bus = &"Music"
 
