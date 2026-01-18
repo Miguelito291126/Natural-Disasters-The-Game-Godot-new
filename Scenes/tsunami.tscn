@@ -25,6 +25,21 @@ properties/4/replication_mode = 1
 properties/5/path = NodePath("tsunami:scale")
 properties/5/spawn = true
 properties/5/replication_mode = 1
+properties/6/path = NodePath(".:direction")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:total_distance")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+properties/8/path = NodePath(".:distance_traveled")
+properties/8/spawn = true
+properties/8/replication_mode = 1
+properties/9/path = NodePath(".:tsunami_strength")
+properties/9/spawn = true
+properties/9/replication_mode = 1
+properties/10/path = NodePath(".:speed")
+properties/10/spawn = true
+properties/10/replication_mode = 1
 
 [node name="tsunami" type="Area3D" groups=["Tsunami"]]
 collision_layer = 4

@@ -1,14 +1,14 @@
 extends Area3D
 
 @onready var tsunami = $tsunami
-var speed = 100
-var tsunami_strength = 100
-var direction = Vector3(0, 0, 1)
-var distance_traveled = 0.0
-var total_distance = 4097.0  # Adjust this value based on your scene
+@export var speed = 100
+@export var tsunami_strength = 100
+@export var direction = Vector3(0, 0, 1)
+@export var distance_traveled = 0.0
+@export var total_distance = 4097.0  # Adjust this value based on your scene
 
 func _physics_process(delta):
-	position += direction * speed * delta
+	global_position += direction * speed * delta
 
 	for body in get_overlapping_bodies():
 		if body.is_in_group("movable_objects") and body.is_class("RigidBody3D"):

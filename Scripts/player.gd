@@ -385,10 +385,13 @@ func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
 
-	if not admin_mode and Globals.gamemode != "sandbox":
-		return
-
 	if event is InputEventKey and event.pressed and not event.echo:
+		if not admin_mode:
+			return
+
+		if Globals.gamemode != "sandbox":
+			return
+
 		match event.keycode:
 			KEY_1:
 				Globals.set_weather_and_disaster.rpc(1)
