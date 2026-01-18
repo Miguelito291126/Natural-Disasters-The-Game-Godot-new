@@ -155,11 +155,11 @@ func damage(amount: float) -> void:
 	if hearth <= 0:	
 		is_alive = false
 
-		# Solo ejecutar die() en la instancia local del jugador que murió
+		# Solo ejecutar die() y quitar puntos en la instancia local del jugador que murió
 		if is_multiplayer_authority():
 			die()
+			Globals.remove_points()
 
-		Globals.remove_points.rpc()
 		_set_ragdoll_state.rpc(true)
 
 	else:
@@ -508,10 +508,12 @@ func _physics_process(delta):
 				target.Interact()
 		elif target != null and target.is_in_group("Pickable"):
 			if Input.is_action_pressed("Interact"):
-				target.global_position = hand_node.global_position
-				target.global_rotation = hand_node.global_rotation
-				target.collision_layer = 2
-				target.linear_velocity = Vector3(0.1, 3, 0.1)
+				if multiplayer.is_server():
+					# Si somos el servidor/host, llamamos DIRECTO
+					Globals.request_pick_object(get_path(), target.get_path())
+				else:
+					# Si somos cliente, usamos RPC hacia el servidor
+					Globals.request_pick_object.rpc(get_path(), target.get_path())
 
 	if Input.is_action_just_pressed("noclip"):
 		if admin_mode:

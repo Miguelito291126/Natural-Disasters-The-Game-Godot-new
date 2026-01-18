@@ -404,6 +404,30 @@ func Play_MultiplayerServer():
 	else:
 		print_role("Fatal Error in server")
 
+@rpc("any_peer")
+func request_pick_object(player_path: NodePath, target_path: NodePath) -> void:
+	# Solo el servidor debe ejecutar esta lógica
+	if not multiplayer.is_server():
+		return
+
+	var root := get_tree().get_root()
+
+	var player := root.get_node_or_null(player_path)
+	var target := root.get_node_or_null(target_path)
+
+	if player == null or target == null:
+		return
+
+	if not target.is_in_group("Pickable"):
+		return
+
+	# Colocar el objeto en la mano del jugador
+	target.global_position = player.hand_node.global_position
+	target.global_rotation = player.hand_node.global_rotation
+	target.collision_layer = 2
+
+	if target is RigidBody3D:
+		target.linear_velocity = Vector3(0.1, 3, 0.1)
 
 func Play_MultiplayerClient():
 	multiplayerpeer = ENetMultiplayerPeer.new()
@@ -457,7 +481,7 @@ func assing_character_to_player(id: int, charac: String):
 	print_role("Asignado al id " + str(id) + " el personaje " + chosen_char)
 	return true
 
-@rpc("authority",  "call_local")
+@rpc("any_peer", "call_local")
 func sync_assigned_character(data: Dictionary):
 	assigned_character = data.duplicate(true)
 
