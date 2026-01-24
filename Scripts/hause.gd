@@ -9,7 +9,7 @@ extends StaticBody3D
 @export var door_open = false
 @export var destrolled = false
 
-@export var bokenhause = preload("res://Scenes/Breakable hause.tscn")
+@export var bokenhause = preload("res://Scenes/breakable hause.tscn")
 ## Factor extra de escala para las piezas destruidas. Las mallas del Breakable
 ## están en unidades más pequeñas que la casa; aumenta si se ven diminutas.
 @export var breakable_scale_factor: float = 2.6
