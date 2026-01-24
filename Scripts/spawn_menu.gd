@@ -10,7 +10,7 @@ var entity_scene = preload("res://Scenes/entity.tscn")
 var spawn_list: Array[String] = [
 				"res://Scenes/meteor.tscn",
 				"res://Scenes/tornado.tscn",
-				"res://Scenes/Volcano.tscn",
+				"res://Scenes/volcano.tscn",
 				"res://Scenes/tsunami.tscn",
 				"res://Scenes/earthquake.tscn",
 				"res://Scenes/thunder.tscn",
