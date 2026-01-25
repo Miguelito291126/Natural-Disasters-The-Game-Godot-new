@@ -280,29 +280,52 @@ func _run_command(cmd: String) -> void:
 func msg_rpc(username, data):
 
 	if data.begins_with("/"):
-		if multiplayer.is_server() and is_multiplayer_authority():
-			if data != "" or data != " ":
-				text_edit.text += str(username, ": ", data, "\n")
-				text_edit.scroll_vertical =  text_edit.get_line_height()
-			data = data.erase(0, 1)
-			Globals.print_role(data)
-			_run_command.rpc(data)
-		else:
-			text_edit.text +=  "You are not a have admin... \n"	
-			text_edit.scroll_vertical =  text_edit.get_line_height()
+		# Buscar el jugador que envió el comando
+		var jugador_encontrado = null
+		for player in get_tree().get_nodes_in_group("player"):	
+			if is_instance_valid(player) and player is CharacterBody3D:	
+				var player_username = player.username
+				if player_username == username:
+					jugador_encontrado = player
+					break
+		
+		# Si no se encuentra el jugador, bloquear el comando
+		if jugador_encontrado == null:
+			_console_print("Error: Jugador no encontrado")
+			return
+		
+		# Verificar si el jugador es admin
+		if not jugador_encontrado.admin_mode:
+			_console_print("No tienes permisos para ejecutar comandos")
+			return
+
+		# Validar que el comando no esté vacío
+		var comando_limpio = data.strip_edges()
+		if comando_limpio.length() <= 1:  # Solo tiene "/" o está vacío
+			return
+		
+		# Mostrar el comando en el chat
+		text_edit.text += str(username, ": ", data, "\n")
+		text_edit.scroll_vertical = text_edit.get_line_height()
+		
+		# Ejecutar el comando (quitar el "/" del inicio)
+		data = data.erase(0, 1)
+		Globals.print_role(data)
+		_run_command.rpc(data)
 	else:
-		if data != "" or data != " ":
+		# Mensaje normal (no comando)
+		var mensaje_limpio = data.strip_edges()
+		if mensaje_limpio.length() > 0:
 			text_edit.text += str(username, ": ", data, "\n")
-			text_edit.scroll_vertical =  text_edit.get_line_height()
+			text_edit.scroll_vertical = text_edit.get_line_height()
 
 
 	
 
 func _on_button_pressed():
-
 	if not is_multiplayer_authority():
 		return
-		
+
 	if line_edit.text.begins_with("/"):
 		msg_rpc(Globals.username, line_edit.text)
 	else:

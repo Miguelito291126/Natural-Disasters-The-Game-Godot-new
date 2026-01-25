@@ -362,6 +362,52 @@ func sync_player_list():
 		if is_instance_valid(p):
 			players_conected.append(p)
 
+# Función para verificar si hay jugadores con el mismo nombre
+func hay_jugadores_con_mismo_nombre(nombre_a_verificar: String, excluir_jugador: Node = null) -> bool:
+	var contador = 0
+	for player in get_tree().get_nodes_in_group("player"):
+		# Si se debe excluir un jugador específico, saltarlo
+		if excluir_jugador != null and player == excluir_jugador:
+			continue
+		
+		# Verificar si el nombre coincide
+		if is_instance_valid(player) and player.has("username") and player.username == nombre_a_verificar:
+			contador += 1
+			# Si encontramos al menos uno con el mismo nombre, retornar true
+			if contador >= 1:
+				return true
+	
+	return false
+
+# Función para obtener todos los jugadores que tienen el mismo nombre
+func obtener_jugadores_con_mismo_nombre(nombre_a_verificar: String, excluir_jugador: Node = null) -> Array:
+	var jugadores_duplicados = []
+	
+	for player in get_tree().get_nodes_in_group("player"):
+		# Si se debe excluir un jugador específico, saltarlo
+		if excluir_jugador != null and player == excluir_jugador:
+			continue
+		
+		# Verificar si el nombre coincide
+		if is_instance_valid(player) and player.has("username") and player.username == nombre_a_verificar:
+			jugadores_duplicados.append(player)
+	
+	return jugadores_duplicados
+
+# Función para contar cuántos jugadores tienen el mismo nombre
+func contar_jugadores_con_mismo_nombre(nombre_a_verificar: String, excluir_jugador: Node = null) -> int:
+	var contador = 0
+	for player in get_tree().get_nodes_in_group("player"):
+		# Si se debe excluir un jugador específico, saltarlo
+		if excluir_jugador != null and player == excluir_jugador:
+			continue
+		
+		# Verificar si el nombre coincide
+		if is_instance_valid(player) and player.has("username") and player.username == nombre_a_verificar:
+			contador += 1
+	
+	return contador
+
 
 func print_role(msg: String):
 	var peer = multiplayer.multiplayer_peer
@@ -521,7 +567,6 @@ func MultiplayerServerDisconnected():
 func MultiplayerConnectionServerSucess():
 	print_role("connected to server")
 	UnloadScene.unload_scene(main_menu)
-
 
 func _exit_tree() -> void:
 	multiplayer.peer_connected.disconnect(MultiplayerPlayerSpawner)

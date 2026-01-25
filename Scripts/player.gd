@@ -223,6 +223,38 @@ func Vomit():
 	vomit_audio.play()
 	vomit.emitting = true
 
+# Función para verificar si hay jugadores con el mismo nombre
+func hay_jugadores_con_mismo_nombre(nombre_a_verificar: String, excluir_este_jugador: bool = true) -> bool:
+	var contador = 0
+	for player in get_tree().get_nodes_in_group("player"):
+		# Si se debe excluir este jugador, saltarlo
+		if excluir_este_jugador and player == self:
+			continue
+		
+		# Verificar si el nombre coincide
+		if player.username == nombre_a_verificar:
+			contador += 1
+			# Si encontramos al menos uno con el mismo nombre, retornar true
+			if contador >= 1:
+				return true
+	
+	return false
+
+# Función para obtener todos los jugadores que tienen el mismo nombre
+func obtener_jugadores_con_mismo_nombre(nombre_a_verificar: String, excluir_este_jugador: bool = true) -> Array:
+	var jugadores_duplicados = []
+	
+	for player in get_tree().get_nodes_in_group("player"):
+		# Si se debe excluir este jugador, saltarlo
+		if excluir_este_jugador and player == self:
+			continue
+		
+		# Verificar si el nombre coincide
+		if player.username == nombre_a_verificar:
+			jugadores_duplicados.append(player)
+	
+	return jugadores_duplicados
+
 func _ready():
 	rain_node.emitting = false
 	sand_node.emitting = false
@@ -258,7 +290,25 @@ func _ready():
 		_reset_player()
 		_set_ragdoll_state.rpc(false)
 		username = Globals.username
-
+		
+		# Verificar si hay jugadores con el mismo nombre y añadir número si es necesario
+		var nombre_base = Globals.username
+		var contador = 0
+		
+		for player in get_tree().get_nodes_in_group("player"):
+			# Saltar el jugador actual
+			if player == self:
+				continue
+			
+			# Verificar si el nombre coincide (sin contar números añadidos)
+			var player_username = player.username
+			if player_username == nombre_base or player_username.begins_with(nombre_base):
+				contador += 1
+		
+		# Si hay duplicados, añadir número al nombre
+		if contador > 0:
+			Globals.username = nombre_base + str(contador + 1)
+			username = Globals.username
 
 		if multiplayer.is_server():
 			admin_mode = true
