@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://tnp2kd6nh30i" path="res://Models/Blend Format/hause.blend" id="2_f6ooy"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_bem26"]
-size = Vector3(15.2687, 21.3746, 16.4832)
+size = Vector3(21.445698, 28.105757, 17.610619)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_gw74x"]
 data = PackedVector3Array(1, -0.98109996, 0.3909, 1, -1, -1, 1, -1, 1, 1, -0.98109996, 0.3909, 1, -0.98109996, -0.3066, 1, -1, -1)
@@ -72,7 +72,7 @@ collision_layer = 13
 collision_mask = 13
 
 [node name="RoomCollision" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.70342, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10032654, 13.068998, 0.56370926)
 shape = SubResource("BoxShape3D_bem26")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

@@ -1,7 +1,267 @@
-[gd_scene load_steps=3 format=3 uid="uid://v8h7dsg76elc"]
+[gd_scene load_steps=3 format=3 uid="uid://b4wxj3o8ub80a"]
 
 [ext_resource type="PackedScene" uid="uid://b410wmhh5ywm6" path="res://Models/Blend Format/Breakable hause.blend" id="1_mrv3i"]
 [ext_resource type="Script" uid="uid://cyhpepnhku0um" path="res://Scripts/breakable_hause.gd" id="2_ouavs"]
 
-[node name="Breakable hause" instance=ExtResource("1_mrv3i")]
+[node name="breakable hause" groups=["movable_objects"] instance=ExtResource("1_mrv3i")]
 script = ExtResource("2_ouavs")
+
+[node name="floor_cell" parent="." index="0"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="floor_cell_001" parent="." index="1"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="floor_cell_002" parent="." index="2"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="floor_cell_003" parent="." index="3"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="Roof_cell" parent="." index="4"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="Roof_cell_001" parent="." index="5"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="Roof_cell_002" parent="." index="6"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="Roof_cell_003" parent="." index="7"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="Roof_cell_004" parent="." index="8"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="Roof_cell_005" parent="." index="9"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="door_cell" parent="." index="10"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="door_cell_001" parent="." index="11"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="door_cell_002" parent="." index="12"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="door_cell_003" parent="." index="13"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="door_cell_004" parent="." index="14"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="door_cell_005" parent="." index="15"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="door_cell_006" parent="." index="16"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="door_cell_007" parent="." index="17"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_cell_001" parent="." index="18"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_cell_002" parent="." index="19"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_cell_003" parent="." index="20"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_cell_004" parent="." index="21"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_cell_005" parent="." index="22"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_cell_006" parent="." index="23"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_cell_007" parent="." index="24"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_001_cell" parent="." index="25"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_001_cell_001" parent="." index="26"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_001_cell_002" parent="." index="27"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_001_cell_003" parent="." index="28"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_001_cell_004" parent="." index="29"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_001_cell_005" parent="." index="30"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_001_cell_006" parent="." index="31"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="windows_001_cell_007" parent="." index="32"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_001_cell" parent="." index="33"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_001_cell_001" parent="." index="34"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_001_cell_002" parent="." index="35"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_001_cell_003" parent="." index="36"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_002_cell" parent="." index="37"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_002_cell_001" parent="." index="38"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_002_cell_002" parent="." index="39"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_002_cell_003" parent="." index="40"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_003_cell" parent="." index="41"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_003_cell_001" parent="." index="42"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_003_cell_002" parent="." index="43"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_003_cell_003" parent="." index="44"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_003_cell_004" parent="." index="45"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_003_cell_005" parent="." index="46"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_003_cell_006" parent="." index="47"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_003_cell_007" parent="." index="48"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_004_cell" parent="." index="49"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_004_cell_001" parent="." index="50"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_004_cell_002" parent="." index="51"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_004_cell_003" parent="." index="52"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_004_cell_004" parent="." index="53"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_004_cell_005" parent="." index="54"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_004_cell_006" parent="." index="55"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_004_cell_007" parent="." index="56"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_005_cell" parent="." index="57"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_005_cell_001" parent="." index="58"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_005_cell_002" parent="." index="59"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_005_cell_003" parent="." index="60"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_005_cell_004" parent="." index="61"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_005_cell_005" parent="." index="62"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_005_cell_006" parent="." index="63"]
+collision_layer = 13
+collision_mask = 13
+
+[node name="wall_005_cell_007" parent="." index="64"]
+collision_layer = 13
+collision_mask = 13
