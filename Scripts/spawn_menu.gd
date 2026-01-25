@@ -115,11 +115,6 @@ func on_press(i: Node):
 
 
 func spawnmenu():
-	var player = _get_local_player()
-	if player == null or not player.admin_mode:
-		Globals.print_role("You dont have perms")
-		return
-
 	Globals.is_spawn_menu_open = !Globals.is_spawn_menu_open
 
 	if Globals.is_spawn_menu_open:
