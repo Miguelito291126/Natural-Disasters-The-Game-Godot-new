@@ -24,14 +24,7 @@ func _enter_tree() -> void:
 
 func _ready():
 	self.visible = false
-
-	if not is_multiplayer_authority():
-		return
-
-	if Globals.gamemode == "survival":
-		self.visible = false
-		return
-		
+	
 	load_spawnlist_entities()
 	load_buttons()
 
@@ -81,7 +74,7 @@ func load_buttons():
 		if icon_image == null:
 			icon_image = load("res://Icons/default_icon.png")
 			if icon_image == null:
-				print("spawn_menu.gd: icon not found for '%s' (tried %s). Create 'res://Icons/default_icon.png' to avoid this message." % [i.name, str(candidates)])
+				Globals.print_role("spawn_menu.gd: icon not found for '%s' (tried %s). Create 'res://Icons/default_icon.png' to avoid this message." % [i.name, str(candidates)])
 		
 		if icon_image != null:
 			icon.texture_normal = icon_image
@@ -98,10 +91,6 @@ func on_press(i: Node):
 		return
 
 	if not is_multiplayer_authority():
-		return
-
-	if not multiplayer.is_server():
-		Globals.print_role("You are not the host")
 		return
 
 	var raycast = get_parent().interactor
