@@ -12,6 +12,9 @@ var autocomplete_methods: Array = []
 var history: Array[String] = []
 var history_index: int = -1
 var user_is_scrolling: bool = false
+var scroll_retries := 0
+const MAX_SCROLL_RETRIES := 5
+
 
 
 var dev_commands := {
@@ -287,31 +290,36 @@ func _is_at_bottom() -> bool:
 	return scroll_bar.value >= (scroll_bar.max_value - 20)
 
 func _scroll_to_bottom():
-	# Usar call_deferred para asegurar que el texto se haya renderizado
-	# Esto es especialmente importante en clientes que reciben mensajes vía RPC
+	scroll_retries = 0
 	call_deferred("_do_scroll_to_bottom")
 
 func _do_scroll_to_bottom():
-	# Esta función se ejecuta con call_deferred, así que ya estamos en el siguiente frame
+	# Si el nodo ya no existe, parar
+	if not is_instance_valid(self) or not is_inside_tree():
+		return
+
+	if not is_instance_valid(text_edit):
+		return
+
 	var scroll_bar = text_edit.get_v_scroll_bar()
-	
+
 	if scroll_bar == null:
-		# Si no hay scroll_bar aún, intentar de nuevo
-		call_deferred("_do_scroll_to_bottom")
+		scroll_retries += 1
+		if scroll_retries < MAX_SCROLL_RETRIES:
+			call_deferred("_do_scroll_to_bottom")
 		return
-	
-	# Obtener el max_value actualizado
+
 	var max_val = scroll_bar.max_value
-	
-	# Si el max_value aún no está disponible, intentar de nuevo
 	if max_val <= 0:
-		call_deferred("_do_scroll_to_bottom")
+		scroll_retries += 1
+		if scroll_retries < MAX_SCROLL_RETRIES:
+			call_deferred("_do_scroll_to_bottom")
 		return
-	
-	# Establecer el scroll al máximo valor disponible
-	# Usar set_deferred para asegurar que se actualice correctamente en clientes
-	text_edit.set_deferred("scroll_vertical", max_val)
-	scroll_bar.set_deferred("value", max_val)
+
+	# Scroll final
+	text_edit.scroll_vertical = max_val
+	scroll_bar.value = max_val
+
 
 func _console_print(text: String):
 	# Verificar si estaba al final ANTES de añadir el texto
