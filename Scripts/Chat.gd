@@ -11,6 +11,7 @@ var autocomplete_index: int = 0
 var autocomplete_methods: Array = []
 var history: Array[String] = []
 var history_index: int = -1
+var user_is_scrolling: bool = false
 
 
 var dev_commands := {
@@ -269,9 +270,35 @@ func _input(_event: InputEvent) -> void:
 
 
 	
+func _is_at_bottom() -> bool:
+	var scroll_bar = text_edit.get_v_scroll_bar()
+	if scroll_bar == null:
+		return true
+	# Considerar que está al final si está dentro de 20 píxeles del máximo
+	# Esto permite un pequeño margen para detectar si el usuario está scrolleando
+	if scroll_bar.max_value <= 0:
+		return true
+	return scroll_bar.value >= (scroll_bar.max_value - 20)
+
+func _scroll_to_bottom():
+	# Usar call_deferred para asegurar que el texto se haya renderizado
+	# Esto es especialmente importante en clientes que reciben mensajes vía RPC
+	call_deferred("_do_scroll_to_bottom")
+
+func _do_scroll_to_bottom():
+	var scroll_bar = text_edit.get_v_scroll_bar()
+	if scroll_bar != null and scroll_bar.max_value > 0:
+		# Establecer el scroll al máximo valor disponible
+		# No tocar scroll_bar.value directamente para no interferir con el scroll manual
+		text_edit.scroll_vertical = scroll_bar.max_value
+
 func _console_print(text: String):
+	# Verificar si estaba al final ANTES de añadir el texto
+	var was_at_bottom = _is_at_bottom()
 	text_edit.text += text + "\n"
-	text_edit.scroll_vertical = text_edit.get_line_height()
+	# Solo hacer scroll si estaba al final antes de añadir el texto
+	if was_at_bottom:
+		_scroll_to_bottom()
 
 @rpc("any_peer", "call_local")
 func _run_command(cmd: String) -> void:
@@ -331,9 +358,13 @@ func msg_rpc(username, data):
 		if comando_limpio.length() <= 1:  # Solo tiene "/" o está vacío
 			return
 		
+		# Verificar si estaba al final ANTES de añadir el texto
+		var was_at_bottom = _is_at_bottom()
 		# Mostrar el comando en el chat
 		text_edit.text += str(username, ": ", data, "\n")
-		text_edit.scroll_vertical = text_edit.get_line_height()
+		# Solo hacer scroll si estaba al final antes de añadir el texto
+		if was_at_bottom:
+			_scroll_to_bottom()
 		
 		# Ejecutar el comando (quitar el "/" del inicio)
 		data = data.erase(0, 1)
@@ -343,8 +374,12 @@ func msg_rpc(username, data):
 		# Mensaje normal (no comando)
 		var mensaje_limpio = data.strip_edges()
 		if mensaje_limpio.length() > 0:
+			# Verificar si estaba al final ANTES de añadir el texto
+			var was_at_bottom = _is_at_bottom()
 			text_edit.text += str(username, ": ", data, "\n")
-			text_edit.scroll_vertical = text_edit.get_line_height()
+			# Solo hacer scroll si estaba al final antes de añadir el texto
+			if was_at_bottom:
+				_scroll_to_bottom()
 
 
 	

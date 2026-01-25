@@ -441,6 +441,10 @@ func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
 
+	# Bloquear input cuando el chat está abierto
+	if Globals.is_chat_open:
+		return
+
 	if event is InputEventKey and event.pressed and not event.echo:
 		if not admin_mode:
 			return
@@ -659,6 +663,10 @@ func _noclip():
 
 func _unhandled_input(event):
 	if not is_multiplayer_authority():
+		return
+
+	# No permitir control de cámara cuando el chat está abierto
+	if Globals.is_chat_open:
 		return
 
 	# No permitir control de cámara cuando el ragdoll está activo

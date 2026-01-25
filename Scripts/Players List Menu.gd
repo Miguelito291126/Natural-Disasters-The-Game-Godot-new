@@ -26,8 +26,7 @@ func update_list(players_array: Array):
         list.add_child(inst)
 
 func _process(_delta):
-    if Input.is_action_just_pressed("List of players"):
-        self.visible = !self.visible
+
 
     # Solo el servidor sincroniza
     if not multiplayer.is_server():
@@ -44,3 +43,11 @@ func _process(_delta):
 
     # Enviar a todos
     sync_players.rpc(data)
+
+
+func _input(_event: InputEvent) -> void:
+    if Globals.is_chat_open:
+        return
+    
+    if Input.is_action_just_pressed("List of players"):
+        self.visible = !self.visible
