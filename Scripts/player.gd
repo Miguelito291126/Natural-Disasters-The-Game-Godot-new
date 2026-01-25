@@ -123,6 +123,12 @@ func _exit_tree():
 
 
 @rpc("any_peer", "call_local")
+func _set_admin_mode(enable: bool) -> void:
+	admin_mode = enable
+	if multiplayer.is_server():
+		Globals.print_role("Admin mode cambiado para %s: %s" % [username, str(enable)])
+
+@rpc("any_peer", "call_local")
 func _set_ragdoll_state(enable: bool) -> void:
 	ragdoll_enabled = enable
 

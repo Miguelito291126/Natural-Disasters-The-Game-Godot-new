@@ -95,21 +95,49 @@ func _cmd_admin_mode_player(player_name):
 	var local = _get_local_player()
 	if local == null or not local.admin_mode:
 		return "No tienes permisos"
+	
+	# Solo el servidor puede cambiar admin_mode
+	if not multiplayer.is_server():
+		return "Solo el servidor puede cambiar permisos de admin"
+	
+	# Buscar el jugador por nombre
+	var jugador_encontrado = null
 	for p in get_tree().get_nodes_in_group("player"):
-		if p.username == player_name:
-			p.admin_mode = true
-			return "Ahora %s es admin" % player_name
-	return "Jugador no encontrado"
+		if is_instance_valid(p) and p.username == player_name:
+			jugador_encontrado = p
+			break
+	
+	if jugador_encontrado == null:
+		return "Jugador no encontrado: %s" % player_name
+	
+	# Usar RPC para sincronizar el cambio en todos los clientes
+	# call_local ya ejecuta la función localmente en el servidor
+	jugador_encontrado._set_admin_mode.rpc(true)
+	return "Ahora %s es admin" % player_name
 
 func _cmd_unadmin_mode_player(player_name):
 	var local = _get_local_player()
 	if local == null or not local.admin_mode:
 		return "No tienes permisos"
+	
+	# Solo el servidor puede cambiar admin_mode
+	if not multiplayer.is_server():
+		return "Solo el servidor puede cambiar permisos de admin"
+	
+	# Buscar el jugador por nombre
+	var jugador_encontrado = null
 	for p in get_tree().get_nodes_in_group("player"):
-		if p.username == player_name:
-			p.admin_mode = false
-			return "Ahora %s ya no es admin" % player_name
-	return "Jugador no encontrado"
+		if is_instance_valid(p) and p.username == player_name:
+			jugador_encontrado = p
+			break
+	
+	if jugador_encontrado == null:
+		return "Jugador no encontrado: %s" % player_name
+	
+	# Usar RPC para sincronizar el cambio en todos los clientes
+	# call_local ya ejecuta la función localmente en el servidor
+	jugador_encontrado._set_admin_mode.rpc(false)
+	return "Ahora %s ya no es admin" % player_name
 
 
 func _cmd_kill_player(player_name):
@@ -228,11 +256,7 @@ func _input(_event: InputEvent) -> void:
 			if not is_multiplayer_authority():
 				return
 				
-			if line_edit.text.begins_with("/"):
-				msg_rpc(Globals.username, line_edit.text)
-			else:
-				msg_rpc.rpc(Globals.username, line_edit.text)
-
+			msg_rpc.rpc(Globals.username, line_edit.text)
 
 			history_index = -1
 			line_edit.text = ""
@@ -251,6 +275,9 @@ func _console_print(text: String):
 
 @rpc("any_peer", "call_local")
 func _run_command(cmd: String) -> void:
+	if not is_multiplayer_authority():
+		return
+		
 	var parts = cmd.strip_edges().split(" ")
 	var command_name = parts[0]
 	var args = parts.slice(1, parts.size())
@@ -311,7 +338,7 @@ func msg_rpc(username, data):
 		# Ejecutar el comando (quitar el "/" del inicio)
 		data = data.erase(0, 1)
 		Globals.print_role(data)
-		_run_command.rpc(data)
+		_run_command(data)
 	else:
 		# Mensaje normal (no comando)
 		var mensaje_limpio = data.strip_edges()
@@ -326,12 +353,8 @@ func _on_button_pressed():
 	if not is_multiplayer_authority():
 		return
 
-	if line_edit.text.begins_with("/"):
-		msg_rpc(Globals.username, line_edit.text)
-	else:
-		msg_rpc.rpc(Globals.username, line_edit.text)
+	msg_rpc.rpc(Globals.username, line_edit.text)
 
-	
 	line_edit.text = ""
 	line_edit.release_focus()
 	button.release_focus()
