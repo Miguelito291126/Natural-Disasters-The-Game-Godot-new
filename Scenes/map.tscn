@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://6jmdwj3vn6m0" path="res://addons/zylann.hterrain/tools/icons/icon_detail_layer_node.svg" id="10_lmmy2"]
 [ext_resource type="Texture2D" uid="uid://b8j13f56alvd7" path="res://Sprites/clipart974730.png" id="10_ux663"]
 [ext_resource type="AudioStream" uid="uid://debjmlamr7n2y" path="res://Sounds/music/natural disasters the game song.wav" id="10_w1fny"]
-[ext_resource type="PackedScene" uid="uid://hiq4h8n7r78k" path="res://Scenes/hause.tscn" id="11_8ni8s"]
+[ext_resource type="PackedScene" uid="uid://ddlqooa2yb6y4" path="res://Scenes/hause.tscn" id="11_8ni8s"]
 [ext_resource type="PackedScene" uid="uid://yrq2iuii7a14" path="res://Scenes/chat.tscn" id="14_x5dfk"]
 [ext_resource type="PackedScene" uid="uid://cb10f2tpfo0qj" path="res://Scenes/warning_hud.tscn" id="15_fls3e"]
 
@@ -62,6 +62,15 @@ properties/13/replication_mode = 1
 properties/14/path = NodePath("Chat/Panel/TextEdit:text")
 properties/14/spawn = true
 properties/14/replication_mode = 1
+properties/15/path = NodePath("Chat/Panel/TextEdit:scroll_vertical")
+properties/15/spawn = true
+properties/15/replication_mode = 1
+properties/16/path = NodePath("Chat/Panel/TextEdit:scroll_horizontal")
+properties/16/spawn = true
+properties/16/replication_mode = 1
+properties/17/path = NodePath("Chat/Panel/TextEdit:scroll_v_scroll_speed")
+properties/17/spawn = true
+properties/17/replication_mode = 1
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ihtyg"]
 shader = ExtResource("2_sc6k1")
@@ -141,7 +150,7 @@ _spawnable_scenes = PackedStringArray("uid://w8budjn2m22a", "uid://doi73cvnxims6
 spawn_path = NodePath("..")
 
 [node name="ObjectSpawn" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://hiq4h8n7r78k", "uid://bkfobjkkd58w0", "uid://cv8xwubw2paof", "uid://bxi02esjkbgma")
+_spawnable_scenes = PackedStringArray("uid://bkfobjkkd58w0", "uid://cv8xwubw2paof")
 spawn_path = NodePath("..")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
