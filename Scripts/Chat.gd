@@ -217,6 +217,10 @@ func _ready() -> void:
 	autocomplete_methods = dev_commands.keys()
 
 func _input(_event: InputEvent) -> void:
+	# Solo procesar input si este chat tiene autoridad
+	if not is_multiplayer_authority():
+		return
+	
 	if line_edit.has_focus():
 		# Autocompletado con Tab
 		if Input.is_action_just_pressed("dev_console_autocomplete"):
@@ -253,9 +257,6 @@ func _input(_event: InputEvent) -> void:
 		# Ejecutar comando con Enter
 		if Input.is_action_just_pressed('Enter'):
 			history.push_front(line_edit.text.erase(0, 1))
-			
-			if not is_multiplayer_authority():
-				return
 				
 			msg_rpc.rpc(Globals.username, line_edit.text)
 
@@ -263,10 +264,14 @@ func _input(_event: InputEvent) -> void:
 			line_edit.text = ""
 			line_edit.release_focus()
 			button.release_focus()
+			# Asegurar que is_chat_open se establece en false cuando se cierra el chat
+			Globals.is_chat_open = false
 
 	# Seleccionar el LineEdit al presionar T
 	if Input.is_action_just_pressed("Chat"):
 		line_edit.grab_focus()
+		# Asegurar que is_chat_open se establece cuando se abre el chat
+		Globals.is_chat_open = true
 
 
 	
@@ -278,6 +283,7 @@ func _is_at_bottom() -> bool:
 	# Esto permite un pequeño margen para detectar si el usuario está scrolleando
 	if scroll_bar.max_value <= 0:
 		return true
+	
 	return scroll_bar.value >= (scroll_bar.max_value - 20)
 
 func _scroll_to_bottom():
@@ -286,11 +292,26 @@ func _scroll_to_bottom():
 	call_deferred("_do_scroll_to_bottom")
 
 func _do_scroll_to_bottom():
+	# Esta función se ejecuta con call_deferred, así que ya estamos en el siguiente frame
 	var scroll_bar = text_edit.get_v_scroll_bar()
-	if scroll_bar != null and scroll_bar.max_value > 0:
-		# Establecer el scroll al máximo valor disponible
-		# No tocar scroll_bar.value directamente para no interferir con el scroll manual
-		text_edit.scroll_vertical = scroll_bar.max_value
+	
+	if scroll_bar == null:
+		# Si no hay scroll_bar aún, intentar de nuevo
+		call_deferred("_do_scroll_to_bottom")
+		return
+	
+	# Obtener el max_value actualizado
+	var max_val = scroll_bar.max_value
+	
+	# Si el max_value aún no está disponible, intentar de nuevo
+	if max_val <= 0:
+		call_deferred("_do_scroll_to_bottom")
+		return
+	
+	# Establecer el scroll al máximo valor disponible
+	# Usar set_deferred para asegurar que se actualice correctamente en clientes
+	text_edit.set_deferred("scroll_vertical", max_val)
+	scroll_bar.set_deferred("value", max_val)
 
 func _console_print(text: String):
 	# Verificar si estaba al final ANTES de añadir el texto
@@ -332,7 +353,9 @@ func _run_command(cmd: String) -> void:
 
 @rpc("any_peer", "call_local")
 func msg_rpc(username, data):
-
+	# Esta función se ejecuta en todos los clientes (call_local)
+	# Asegurar que el scroll funcione incluso si este chat no tiene autoridad
+	
 	if data.begins_with("/"):
 		# Buscar el jugador que envió el comando
 		var jugador_encontrado = null
@@ -366,10 +389,12 @@ func msg_rpc(username, data):
 		if was_at_bottom:
 			_scroll_to_bottom()
 		
-		# Ejecutar el comando (quitar el "/" del inicio)
-		data = data.erase(0, 1)
-		Globals.print_role(data)
-		_run_command(data)
+		# Ejecutar el comando solo si este chat tiene autoridad
+		if is_multiplayer_authority():
+			# Ejecutar el comando (quitar el "/" del inicio)
+			data = data.erase(0, 1)
+			Globals.print_role(data)
+			_run_command(data)
 	else:
 		# Mensaje normal (no comando)
 		var mensaje_limpio = data.strip_edges()
@@ -393,6 +418,8 @@ func _on_button_pressed():
 	line_edit.text = ""
 	line_edit.release_focus()
 	button.release_focus()
+	# Asegurar que is_chat_open se establece en false cuando se cierra el chat
+	Globals.is_chat_open = false
 
 
 func _on_line_edit_focus_entered() -> void:

@@ -442,6 +442,14 @@ func _input(event: InputEvent) -> void:
 		return
 
 	# Bloquear input cuando el chat está abierto
+	# Verificar tanto la variable global como si algún LineEdit tiene foco
+	# Buscar el nodo Chat en la escena
+	var chat_node = get_tree().get_root().find_child("Chat", true, false)
+	if chat_node != null:
+		var line_edit = chat_node.get_node_or_null("Panel/Panel2/LineEdit")
+		if line_edit != null and line_edit.has_focus():
+			return
+	
 	if Globals.is_chat_open:
 		return
 
@@ -666,6 +674,13 @@ func _unhandled_input(event):
 		return
 
 	# No permitir control de cámara cuando el chat está abierto
+	# Verificar tanto la variable global como si algún LineEdit tiene foco
+	var chat_node = get_tree().get_root().find_child("Chat", true, false)
+	if chat_node != null:
+		var line_edit = chat_node.get_node_or_null("Panel/Panel2/LineEdit")
+		if line_edit != null and line_edit.has_focus():
+			return
+	
 	if Globals.is_chat_open:
 		return
 
