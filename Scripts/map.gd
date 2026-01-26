@@ -322,7 +322,7 @@ func _on_disaster_changed(new_disaster: String):
 			_start_tsunami()
 		"Thunderstorm":
 			_start_thunderstorm()
-		"Meteor_shower":
+		"Meteors shower":
 			_start_meteor_shower()
 		"blizzard":
 			_start_blizzard()
@@ -403,7 +403,7 @@ func _spawn_decals_over_time(scene, total, delay):
 
 
 func _spawn_meteor_shower_timer():
-	while Globals.current_weather_and_disaster == "Meteor_shower":
+	while Globals.current_weather_and_disaster == "Meteors shower":
 		var meteor = Globals.meteor_scene.instantiate()
 		var rand_pos = Vector3(randf_range(0,4097),1000,randf_range(0,4097))
 		meteor.position = rand_pos

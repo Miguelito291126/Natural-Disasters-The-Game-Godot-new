@@ -712,7 +712,7 @@ func set_weather_and_disaster(weather_and_disaster_index):
 			current_weather_and_disaster = "Tsunami"
 			current_weather_and_disaster_int = weather_and_disaster_index
 		6:
-			current_weather_and_disaster = "Meteor_shower"
+			current_weather_and_disaster = "Meteors shower"
 			current_weather_and_disaster_int = weather_and_disaster_index
 		7:
 			current_weather_and_disaster = "Volcano"
@@ -753,7 +753,7 @@ func set_weather_and_disaster(weather_and_disaster_index):
 		"Tsunami":
 			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 5
-		"Meteor_shower":
+		"Meteors shower":
 			current_weather_and_disaster = weather_and_disaster_index
 			current_weather_and_disaster_int = 6
 		"Volcano":
