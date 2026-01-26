@@ -364,6 +364,9 @@ func _cleanup_disaster():
 		Globals.add_points.rpc()
 
 func _spawn_decals(scene: PackedScene, amount: int):
+	if not multiplayer.is_server():
+		return
+
 	var space_state = get_world_3d().direct_space_state
 
 	for i in amount:
