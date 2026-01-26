@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://026kxaorsntg"]
+
+[ext_resource type="Texture2D" uid="uid://cwuhmhe8cdcs6" path="res://Textures/snow.png" id="1_rpqdl"]
+
+[node name="SnowDecal" type="Decal"]
+layers = 2
+size = Vector3(3, 3, 3)
+texture_albedo = ExtResource("1_rpqdl")
+modulate = Color(1, 1, 1, 0.8)
+cull_mask = 2

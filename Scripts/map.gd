@@ -1,13 +1,14 @@
 extends Node3D
-var snow_texture = preload("res://Textures/snow.png")
-var sand_texture = preload("res://Textures/sand.png")
 
 @onready var terrain = $HTerrain
 @onready var worldenvironment = $WorldEnvironment
+@export var snow_decal_scene: PackedScene
+@export var sand_decal_scene: PackedScene
 
 
 var current_disaster = ""
-var active_disaster_nodes = []
+var active_disaster_nodes: Array = []
+var active_decals: Array = []
 var is_spawning_lightning = false
 
 
@@ -325,8 +326,10 @@ func _on_disaster_changed(new_disaster: String):
 			_start_meteor_shower()
 		"blizzard":
 			_start_blizzard()
+			_spawn_decals(snow_decal_scene, 200)
 		"Sand Storm":
 			_start_sandstorm()
+			_spawn_decals(sand_decal_scene, 200)
 		"Volcano":
 			_start_volcano()
 		"Tornado":
@@ -359,6 +362,45 @@ func _cleanup_disaster():
 
 	if Globals.gamemode == "survival":
 		Globals.add_points.rpc()
+
+func _spawn_decals(scene: PackedScene, amount: int):
+	var space_state = get_world_3d().direct_space_state
+
+	for i in amount:
+		var rand_pos = Vector3(
+			randf_range(0, 4097),
+			1000,
+			randf_range(0, 4097)
+		)
+
+		var ray = PhysicsRayQueryParameters3D.create(
+			rand_pos,
+			rand_pos - Vector3(0, 2000, 0)
+		)
+
+		var result = space_state.intersect_ray(ray)
+
+		if result.has("position"):
+			var decal = scene.instantiate()
+
+			# 🔥 Tamaño aleatorio entre 3 y 500
+			var random_size = randf_range(3.0, 500.0)
+			decal.size = Vector3(random_size, random_size, random_size)
+
+			decal.position = result.position + Vector3(0, 0.05, 0)
+			decal.rotation.y = randf_range(0, TAU)
+
+			add_child(decal, true)
+			active_decals.append(decal)
+
+
+
+func _spawn_decals_over_time(scene, total, delay):
+	for i in total:
+		_spawn_decals(scene, 1)
+		await get_tree().create_timer(delay).timeout
+
+
 
 func _spawn_meteor_shower_timer():
 	while Globals.current_weather_and_disaster == "Meteor_shower":

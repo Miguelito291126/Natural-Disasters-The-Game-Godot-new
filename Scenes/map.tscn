@@ -1,9 +1,11 @@
-[gd_scene load_steps=26 format=3 uid="uid://csivk4bmioako"]
+[gd_scene load_steps=28 format=3 uid="uid://csivk4bmioako"]
 
 [ext_resource type="Script" uid="uid://qrldb3mvolox" path="res://Scripts/map.gd" id="1_xn4hm"]
+[ext_resource type="PackedScene" uid="uid://026kxaorsntg" path="res://Scenes/snow_decal.tscn" id="2_k63oc"]
 [ext_resource type="Shader" uid="uid://4lxdfdreyjat" path="res://clouds.gdshader" id="2_sc6k1"]
 [ext_resource type="Script" uid="uid://bea103amee2fs" path="res://Scripts/world_environment.gd" id="3_575xv"]
 [ext_resource type="Texture2D" uid="uid://p56xwtihxq22" path="res://Sprites/dark-black-texture-with-beautiful-stars-vector.jpg" id="3_bukha"]
+[ext_resource type="PackedScene" uid="uid://d1xsirclagru0" path="res://Scenes/sand_decal.tscn" id="3_j4oe2"]
 [ext_resource type="Script" uid="uid://uyjwx55t6exd" path="res://addons/zylann.hterrain/hterrain.gd" id="3_je8e7"]
 [ext_resource type="Script" uid="uid://bw4xc3evjuel3" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="5_sr3y7"]
 [ext_resource type="Resource" uid="uid://butsxhw35emxq" path="res://Data/data.hterrain" id="6_ipvnn"]
@@ -137,6 +139,8 @@ size = Vector3(10000, 100, 1)
 
 [node name="map" type="Node3D"]
 script = ExtResource("1_xn4hm")
+snow_decal_scene = ExtResource("2_k63oc")
+sand_decal_scene = ExtResource("3_j4oe2")
 
 [node name="MapSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_8u7l0")
@@ -176,7 +180,7 @@ shader_type = "Classic4Lite"
 custom_shader = null
 custom_globalmap_shader = null
 texture_set = SubResource("Resource_xkn0v")
-render_layers = 1
+render_layers = 2
 cast_shadow = 1
 shader_params/u_ground_uv_scale = 20
 shader_params/u_depth_blending = true
@@ -188,6 +192,7 @@ metadata/_edit_group_ = true
 script = ExtResource("9_smrgu")
 layer_index = 1
 texture = ExtResource("10_ux663")
+render_layers = 2
 shader_params/u_globalmap_tint_bottom = 0.0
 shader_params/u_globalmap_tint_top = null
 shader_params/u_bottom_ao = null
@@ -209,7 +214,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1201.83, 9.32904, 996.233)
 gizmo_extents = 2.9
 
 [node name="Hause" parent="." instance=ExtResource("11_8ni8s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, 1.44768, 1012.02)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, -0.1644988, 1012.02)
 
 [node name="Chat" parent="." instance=ExtResource("14_x5dfk")]
 

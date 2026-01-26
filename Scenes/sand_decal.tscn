@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1xsirclagru0"]
+
+[ext_resource type="Texture2D" uid="uid://d08uua26dkymy" path="res://Textures/sand.png" id="1_jjp8o"]
+
+[node name="SandDecal" type="Decal"]
+layers = 2
+size = Vector3(3, 3, 3)
+texture_albedo = ExtResource("1_jjp8o")
+modulate = Color(1, 1, 1, 0.8)
+cull_mask = 2
