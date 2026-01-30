@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://c6xgmy3mkckea"]
+[gd_scene format=3 uid="uid://c6xgmy3mkckea"]
 
 [ext_resource type="Script" uid="uid://by5atj83em8rl" path="res://Scripts/meteors.gd" id="1_bgiwl"]
 [ext_resource type="PackedScene" uid="uid://ditwsydq4i21k" path="res://Models/Blend Format/Meteorite.blend" id="2_aq33g"]
@@ -8,13 +8,13 @@
 radius = 1.17684
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yqud3"]
-emission_shape = 2
-emission_sphere_radius = 0.5
+emission_shape = 1
+emission_sphere_radius = 3.0
+angle_min = 1.0728835e-05
+angle_max = 360.00003
 direction = Vector3(0, 1, 0)
 spread = 0.0
-initial_velocity_min = 10.0
-initial_velocity_max = 10.0
-gravity = Vector3(0, 0, 0)
+gravity = Vector3(0, 9.8, 0)
 scale_min = 0.099999994
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nkvcn"]
@@ -42,13 +42,11 @@ curve = SubResource("Curve_baojq")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_72bi4"]
 emission_shape = 1
-emission_sphere_radius = 1.0
+emission_sphere_radius = 3.0
 angle_max = 360.0
-inherit_velocity_ratio = 1.0
 direction = Vector3(0, 1, 0)
 spread = 0.0
-initial_velocity_max = 5.0
-gravity = Vector3(0, 0, 0)
+gravity = Vector3(0, 9.8, 0)
 scale_min = 0.5
 scale_curve = SubResource("CurveTexture_rfffs")
 color_ramp = SubResource("GradientTexture1D_1cdtt")
@@ -91,42 +89,42 @@ properties/5/path = NodePath(".:is_volcano_rock")
 properties/5/spawn = true
 properties/5/replication_mode = 1
 
-[node name="meteor" type="RigidBody3D" groups=["Meteor", "movable_objects"]]
+[node name="meteor" type="RigidBody3D" unique_id=988161167 groups=["Meteor", "movable_objects"]]
 can_sleep = false
 continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 50
 script = ExtResource("1_bgiwl")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1511882317]
 shape = SubResource("SphereShape3D_nfk2t")
 
-[node name="Meteorite" parent="." instance=ExtResource("2_aq33g")]
+[node name="Meteorite" parent="." unique_id=442151971 instance=ExtResource("2_aq33g")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 
 [node name="meteor" parent="Meteorite" index="0"]
 surface_material_override/0 = ExtResource("3_mekeu")
 
-[node name="Smoke" type="GPUParticles3D" parent="."]
-amount = 200
+[node name="Smoke" type="GPUParticles3D" parent="." unique_id=1597378505]
+amount = 500
 lifetime = 3.0
 randomness = 1.0
-visibility_aabb = AABB(-0.658692, -1.53968, -0.967607, 1.3916, 3.07936, 1.93521)
+visibility_aabb = AABB(-3.7683752, -3.8854194, -3.9482198, 7.593956, 51.94885, 7.7871113)
 process_material = SubResource("ParticleProcessMaterial_yqud3")
 draw_pass_1 = SubResource("SphereMesh_hqrhf")
 
-[node name="Fire" type="GPUParticles3D" parent="."]
+[node name="Fire" type="GPUParticles3D" parent="." unique_id=322415375]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0336982, 2.38419e-07, -0.00724411)
-amount = 200
+amount = 500
 randomness = 1.0
-visibility_aabb = AABB(-0.985438, -3.25902, -1.0986, 1.97088, 6.51804, 2.1972)
+visibility_aabb = AABB(-3.8072925, -3.7815475, -3.932142, 7.5510683, 12.348292, 7.7622595)
 process_material = SubResource("ParticleProcessMaterial_72bi4")
 draw_pass_1 = SubResource("QuadMesh_8abkf")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1556579431]
 replication_config = SubResource("SceneReplicationConfig_2w7a8")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1465076809]
 light_color = Color(1, 0.458824, 0, 1)
 light_energy = 1000.0
 shadow_enabled = true

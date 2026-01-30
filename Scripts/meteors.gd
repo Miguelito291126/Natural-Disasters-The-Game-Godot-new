@@ -11,14 +11,16 @@ func _ready():
 		self.global_position += Vector3(0, 1000, 0)
 
 		
-	self.gravity_scale = Globals.gravity
+	self.gravity_scale = Globals.gravity * 0.3
+	self.linear_damp = 8.0
+
 
 func _on_body_entered(body):
 	if body == self:
 		return
 
 	var explosion_node = explosion_scene.instantiate()
-	explosion_node.position = self.position
+	explosion_node.global_position = self.global_position
 	explosion_node.get_node("Area3D/CollisionShape3D").shape.radius = rand_num
 	get_parent().add_child(explosion_node, true)
 	self.queue_free()

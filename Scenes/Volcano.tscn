@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://qf81iinh5hke"]
+[gd_scene format=3 uid="uid://qf81iinh5hke"]
 
 [ext_resource type="Script" uid="uid://v1omqd38x1jy" path="res://Scripts/Volcano.gd" id="1_3fq1s"]
 [ext_resource type="PackedScene" uid="uid://q6hkv3yre3tn" path="res://Models/Blend Format/Volcano.blend" id="3_t7vbc"]
@@ -251,85 +251,83 @@ properties/16/replication_mode = 1
 [sub_resource type="SphereShape3D" id="SphereShape3D_lhoig"]
 radius = 40.4438
 
-[node name="volcano" type="StaticBody3D" groups=["Volcano"]]
+[node name="volcano" type="StaticBody3D" unique_id=155383846 groups=["Volcano"]]
 collision_layer = 8
 collision_mask = 8
 script = ExtResource("1_3fq1s")
 
-[node name="Smoke" type="GPUParticles3D" parent="."]
+[node name="Smoke" type="GPUParticles3D" parent="." unique_id=1448149535]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.30945, 361.779, -21.4574)
 amount = 1000
 lifetime = 5.0
 randomness = 1.0
-visibility_aabb = AABB(-0.658692, -1.53968, -0.967607, 1.3916, 3.07936, 1.93521)
+visibility_aabb = AABB(-58.60888, -57.13556, -59.970276, 117.14829, 967.47253, 119.54341)
 process_material = SubResource("ParticleProcessMaterial_m887n")
 draw_pass_1 = SubResource("SphereMesh_otd4a")
 
-[node name="Erupt Sparks" type="GPUParticles3D" parent="."]
+[node name="Erupt Sparks" type="GPUParticles3D" parent="." unique_id=1670428151]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.58344, 408.84, -19.9021)
 emitting = false
 amount = 3000
 lifetime = 3.0
 one_shot = true
 explosiveness = 1.0
-visibility_aabb = AABB(-1320.153, -631.4635, -1302.2173, 2632.4211, 1787.1222, 2591.8826)
+visibility_aabb = AABB(-231.25519, -59.94941, -228.50272, 459.98126, 345.57846, 469.30838)
 process_material = SubResource("ParticleProcessMaterial_a8im6")
 draw_pass_1 = SubResource("SphereMesh_lfpic")
 
-[node name="Erupt Smoke" type="GPUParticles3D" parent="."]
+[node name="Erupt Smoke" type="GPUParticles3D" parent="." unique_id=1828307724]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.58344, 408.84, -19.9021)
 emitting = false
 amount = 3000
 lifetime = 3.0
 one_shot = true
 explosiveness = 1.0
-visibility_aabb = AABB(-1302.8911, -617.1547, -1315.1563, 2625.8271, 1783.2686, 2622.8496)
+visibility_aabb = AABB(-205.91684, -55.53253, -237.88928, 439.3877, 343.52756, 486.9402)
 process_material = SubResource("ParticleProcessMaterial_k2ra4")
 draw_pass_1 = SubResource("SphereMesh_exwvd")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1420944619]
 shape = SubResource("ConcavePolygonShape3D_l4up6")
 
-[node name="Volcano" parent="." instance=ExtResource("3_t7vbc")]
+[node name="Volcano" parent="." unique_id=1395059966 instance=ExtResource("3_t7vbc")]
 
 [node name="volcano" parent="Volcano" index="0"]
 surface_material_override/0 = ExtResource("4_lfpic")
 surface_material_override/1 = ExtResource("5_k2ra4")
 
-[node name="Erupt Sound" type="AudioStreamPlayer3D" parent="."]
+[node name="Erupt Sound" type="AudioStreamPlayer3D" parent="." unique_id=1161809023]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 318.367, 0)
 stream = ExtResource("6_wqc32")
 volume_db = 80.0
 max_distance = 4096.0
 
-[node name="Volcano_Animation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_4f0xq")
-}
-autoplay = "Volcano"
+[node name="Volcano_Animation" type="AnimationPlayer" parent="." unique_id=1834543101]
+libraries/ = SubResource("AnimationLibrary_4f0xq")
+autoplay = &"Volcano"
 
-[node name="Lava loop" type="AudioStreamPlayer3D" parent="."]
+[node name="Lava loop" type="AudioStreamPlayer3D" parent="." unique_id=1409483434]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 180.253, 0)
 stream = ExtResource("7_exwvd")
 volume_db = 16.054
 autoplay = true
 max_distance = 500.0
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=136822687]
 replication_config = SubResource("SceneReplicationConfig_kspno")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=366638761]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04098, 114.685, 0.212049)
 light_color = Color(1, 0.516667, 0, 1)
 light_energy = 1000.0
 shadow_enabled = true
 omni_range = 363.787
 
-[node name="Volcano_Area" type="Area3D" parent="." groups=["Volcano"]]
+[node name="Volcano_Area" type="Area3D" parent="." unique_id=1774524554 groups=["Volcano"]]
 collision_layer = 8
 collision_mask = 8
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Volcano_Area"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Volcano_Area" unique_id=1472593047]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 293.014, 0)
 shape = SubResource("SphereShape3D_lhoig")
 
