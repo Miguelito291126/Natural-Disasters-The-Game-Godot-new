@@ -25,7 +25,7 @@ extends Control
 
 var multiplayer_mode = false
 
-var resolution: Dictionary = {
+var resolutions_dic: Dictionary = {
 	"2400x1080 ": Vector2i(2400, 1080 ),
 	"1920x1080": Vector2i(1920, 1080),
 	"1600x900": Vector2i(1600, 900),
@@ -50,12 +50,10 @@ func addresolutions():
 	var current_resolution = Globals.GlobalsData.resolution
 	var index = 0
 	
-	for r in resolution:
+	for r in resolutions_dic:
 		resolutions.add_item(r,index)
-		
-		if resolution[r] == current_resolution:
-			resolutions._select_int(index)
 		index += 1
+
 
 
 # Called when the node enters the scene tree for the first time.
@@ -109,19 +107,18 @@ func LoadGameScene():
 	port_text.text = str(Globals.port)
 	
 	addresolutions()
-	DisplayServer.window_set_size(Globals.GlobalsData.resolution)
-	get_viewport().set_size(Globals.GlobalsData.resolution)
 
 	fullscreen.button_pressed = Globals.GlobalsData.fullscreen
 	fps.button_pressed = Globals.GlobalsData.FPS
 	vsync.button_pressed = Globals.GlobalsData.vsync
-	anti_aliasing.button_pressed = Globals.GlobalsData.antialiasing
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(Globals.GlobalsData.volumen))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(Globals.GlobalsData.volumen_music))
 	volumen.value = Globals.GlobalsData.volumen
 	volumen_music.value = Globals.GlobalsData.volumen_music
 	time.value = Globals.GlobalsData.timer_disasters
 	quality.selected = Globals.GlobalsData.quality
+	anti_aliasing.selected = Globals.GlobalsData.antialiasing
+	resolutions.selected = Globals.GlobalsData.resolution
 
 
 
@@ -210,13 +207,6 @@ func _on_vsycn_toggled(toggled_on:bool):
 	ProjectSettings.set_setting("display/window/vsync/vsync_mode", toggled_on)
 	Globals.GlobalsData.save_file()
 
-
-func _on_antialiasing_toggled(toggled_on:bool):
-	Globals.GlobalsData.antialiasing = toggled_on
-	ProjectSettings.set_setting("rendering/anti_aliasing/screen_space_roughness_limiter/enabled", toggled_on)
-	Globals.GlobalsData.save_file()
-
-
 func _on_back_pressed():
 	main_menu.show()
 	Multiplayer.hide()
@@ -241,10 +231,10 @@ func _on_volumen_value_changed(value:float):
 	Globals.GlobalsData.save_file()
 
 func _on_resolutions_item_selected(index:int):
-	var size = resolution.get(resolutions.get_item_text(index))
+	Globals.GlobalsData.resolution = index
+	var size = resolutions_dic.get(resolutions.get_item_text(index))
 	DisplayServer.window_set_size(size)
 	get_viewport().set_size(size)
-	Globals.GlobalsData.resolution = size
 	Globals.GlobalsData.save_file()
 
 
@@ -301,3 +291,10 @@ func _on_back_singleplayer_pressed() -> void:
 	Settings.hide()
 	Multiplayer_list.hide()
 	play_menu.hide()
+
+
+func _on_antialiasing_item_selected(index: int) -> void:
+	Globals.GlobalsData.antialiasing = index
+	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", index)
+	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", index)
+	Globals.GlobalsData.save_file()

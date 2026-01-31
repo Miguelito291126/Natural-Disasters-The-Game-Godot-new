@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Natural Disasters Survival The Game"
-config/version="1.0.6.6.5"
+config/version="1.0.6.7"
 run/main_scene="res://Scenes/main.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://dcii8d8jnctvr"
@@ -218,5 +218,8 @@ down={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
+textures/decals/filter=2
+textures/light_projectors/filter=2

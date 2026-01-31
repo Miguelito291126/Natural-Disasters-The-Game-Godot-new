@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://c5cwvkmqc6da8" path="res://Scripts/pause_menu.gd" id="1_k0w1u"]
 [ext_resource type="Theme" uid="uid://cb8utilpq2brs" path="res://Resources/pause_and_menu_theme.tres" id="2_1och7"]
 
-[node name="Pause menu" type="CanvasLayer"]
+[node name="Pause menu" type="CanvasLayer" unique_id=1280216051]
 process_mode = 3
 layer = 5
 script = ExtResource("1_k0w1u")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=338158008]
 process_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,8 +17,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_1och7")
 
-[node name="Menu" type="VBoxContainer" parent="Panel"]
+[node name="Menu" type="VBoxContainer" parent="Panel" unique_id=1945670196]
 process_mode = 3
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -33,7 +34,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_1och7")
 
-[node name="Label" type="Label" parent="Panel/Menu"]
+[node name="Label" type="Label" parent="Panel/Menu" unique_id=463943313]
 layout_mode = 2
 theme = ExtResource("2_1och7")
 theme_override_font_sizes/font_size = 150
@@ -41,35 +42,34 @@ text = "Pause"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Return" type="Button" parent="Panel/Menu"]
+[node name="Return" type="Button" parent="Panel/Menu" unique_id=6948450]
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Return"
 
-[node name="Settings" type="Button" parent="Panel/Menu"]
+[node name="Settings" type="Button" parent="Panel/Menu" unique_id=1492032167]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Settings"
 
-[node name="Reset Player" type="Button" parent="Panel/Menu"]
+[node name="Reset Player" type="Button" parent="Panel/Menu" unique_id=1843001462]
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Reset Player"
 
-[node name="Exit" type="Button" parent="Panel/Menu"]
+[node name="Exit" type="Button" parent="Panel/Menu" unique_id=426038544]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Exit"
 
-[node name="Settings" type="VBoxContainer" parent="Panel"]
+[node name="Settings" type="VBoxContainer" parent="Panel" unique_id=627602816]
 process_mode = 3
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -84,52 +84,67 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_1och7")
 
-[node name="fps" type="CheckButton" parent="Panel/Settings"]
+[node name="fps" type="CheckButton" parent="Panel/Settings" unique_id=1317274352]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "FPS:"
 
-[node name="vsync" type="CheckButton" parent="Panel/Settings"]
+[node name="vsync" type="CheckButton" parent="Panel/Settings" unique_id=1338570578]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Vsync:"
 
-[node name="antialiasing" type="CheckButton" parent="Panel/Settings"]
-process_mode = 3
-layout_mode = 2
-size_flags_vertical = 3
-theme = ExtResource("2_1och7")
-text = "Antialiasing:"
-
-[node name="Fullscreen" type="CheckButton" parent="Panel/Settings"]
+[node name="Fullscreen" type="CheckButton" parent="Panel/Settings" unique_id=669924201]
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Fullscreen:"
 
-[node name="Resolutions Label" type="Label" parent="Panel/Settings"]
+[node name="Resolutions Label" type="Label" parent="Panel/Settings" unique_id=261014241]
 layout_mode = 2
 size_flags_vertical = 6
 theme = ExtResource("2_1och7")
 text = "Resolution:"
 
-[node name="resolutions" type="OptionButton" parent="Panel/Settings"]
+[node name="resolutions" type="OptionButton" parent="Panel/Settings" unique_id=1047698082]
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 
-[node name="quality Label" type="Label" parent="Panel/Settings"]
+[node name="antialiasing label" type="Label" parent="Panel/Settings" unique_id=767444434]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 6
+theme = ExtResource("2_1och7")
+text = "Antialiasing:"
+
+[node name="antialiasing" type="OptionButton" parent="Panel/Settings" unique_id=958514184]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("2_1och7")
+item_count = 4
+popup/item_0/text = "disabled"
+popup/item_0/id = 0
+popup/item_1/text = "x2"
+popup/item_1/id = 1
+popup/item_2/text = "x4"
+popup/item_2/id = 2
+popup/item_3/text = "x8"
+popup/item_3/id = 3
+
+[node name="quality Label" type="Label" parent="Panel/Settings" unique_id=1274673928]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 6
 theme = ExtResource("2_1och7")
 text = "quality:"
 
-[node name="quality" type="OptionButton" parent="Panel/Settings"]
+[node name="quality" type="OptionButton" parent="Panel/Settings" unique_id=80871999]
 layout_mode = 2
 size_flags_vertical = 3
 selected = 2
@@ -141,39 +156,39 @@ popup/item_1/id = 1
 popup/item_2/text = "High"
 popup/item_2/id = 2
 
-[node name="Volumen Label" type="Label" parent="Panel/Settings"]
+[node name="Volumen Label" type="Label" parent="Panel/Settings" unique_id=214059815]
 layout_mode = 2
 size_flags_vertical = 6
 theme = ExtResource("2_1och7")
 text = "Volumen:"
 
-[node name="Volumen" type="HSlider" parent="Panel/Settings"]
+[node name="Volumen" type="HSlider" parent="Panel/Settings" unique_id=39246278]
 layout_mode = 2
 size_flags_vertical = 2
 theme = ExtResource("2_1och7")
 max_value = 6.0
 step = 0.01
 
-[node name="Volumen Music Label2" type="Label" parent="Panel/Settings"]
+[node name="Volumen Music Label2" type="Label" parent="Panel/Settings" unique_id=1512523303]
 layout_mode = 2
 size_flags_vertical = 6
 theme = ExtResource("2_1och7")
 text = "Music Volumen:"
 
-[node name="Volumen Music" type="HSlider" parent="Panel/Settings"]
+[node name="Volumen Music" type="HSlider" parent="Panel/Settings" unique_id=1762926464]
 layout_mode = 2
 size_flags_vertical = 2
 theme = ExtResource("2_1och7")
 max_value = 6.0
 step = 0.01
 
-[node name="TIme label" type="Label" parent="Panel/Settings"]
+[node name="TIme label" type="Label" parent="Panel/Settings" unique_id=1534191919]
 layout_mode = 2
 size_flags_vertical = 6
 theme = ExtResource("2_1och7")
 text = "Time disaster/weather:"
 
-[node name="Time" type="HSlider" parent="Panel/Settings"]
+[node name="Time" type="HSlider" parent="Panel/Settings" unique_id=1291062064]
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_1och7")
@@ -181,7 +196,7 @@ min_value = 1.0
 max_value = 1000.0
 value = 100.0
 
-[node name="Back" type="Button" parent="Panel/Settings"]
+[node name="Back" type="Button" parent="Panel/Settings" unique_id=128683691]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 3
@@ -194,9 +209,9 @@ text = "Back"
 [connection signal="pressed" from="Panel/Menu/Exit" to="." method="_on_exit_pressed"]
 [connection signal="toggled" from="Panel/Settings/fps" to="." method="_on_fps_toggled"]
 [connection signal="toggled" from="Panel/Settings/vsync" to="." method="_on_vsync_toggled"]
-[connection signal="toggled" from="Panel/Settings/antialiasing" to="." method="_on_antialiasing_toggled"]
 [connection signal="toggled" from="Panel/Settings/Fullscreen" to="." method="_on_fullscreen_toggled"]
 [connection signal="item_selected" from="Panel/Settings/resolutions" to="." method="_on_resolutions_item_selected"]
+[connection signal="item_selected" from="Panel/Settings/antialiasing" to="." method="_on_antialiasing_item_selected"]
 [connection signal="item_selected" from="Panel/Settings/quality" to="." method="_on_option_button_item_selected"]
 [connection signal="value_changed" from="Panel/Settings/Volumen" to="." method="_on_volumen_value_changed"]
 [connection signal="value_changed" from="Panel/Settings/Volumen Music" to="." method="_on_volumen_music_value_changed"]

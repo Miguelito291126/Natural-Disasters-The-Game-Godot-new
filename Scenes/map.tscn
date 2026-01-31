@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://csivk4bmioako"]
+[gd_scene format=3 uid="uid://csivk4bmioako"]
 
 [ext_resource type="Script" uid="uid://qrldb3mvolox" path="res://Scripts/map.gd" id="1_xn4hm"]
 [ext_resource type="PackedScene" uid="uid://026kxaorsntg" path="res://Scenes/snow_decal.tscn" id="2_k63oc"]
@@ -137,39 +137,39 @@ size = Vector3(0, 100, 10000)
 [sub_resource type="BoxShape3D" id="BoxShape3D_t040d"]
 size = Vector3(10000, 100, 1)
 
-[node name="map" type="Node3D"]
+[node name="map" type="Node3D" unique_id=927242502]
 script = ExtResource("1_xn4hm")
 snow_decal_scene = ExtResource("2_k63oc")
 sand_decal_scene = ExtResource("3_j4oe2")
 
-[node name="MapSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MapSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1127749826]
 replication_config = SubResource("SceneReplicationConfig_8u7l0")
 
-[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=268137994]
 _spawnable_scenes = PackedStringArray("uid://b2g31vrdy6c1x")
 spawn_path = NodePath("..")
 
-[node name="DisastersSpawner" type="MultiplayerSpawner" parent="."]
+[node name="DisastersSpawner" type="MultiplayerSpawner" parent="." unique_id=937505983]
 _spawnable_scenes = PackedStringArray("uid://w8budjn2m22a", "uid://doi73cvnxims6", "uid://tjhhsh3ck07n", "uid://dni5hbhwlxmdi", "uid://d3gkmhq5kjhrj", "uid://qf81iinh5hke")
 spawn_path = NodePath("..")
 
-[node name="ObjectSpawn" type="MultiplayerSpawner" parent="."]
+[node name="ObjectSpawn" type="MultiplayerSpawner" parent="." unique_id=213698541]
 _spawnable_scenes = PackedStringArray("uid://bkfobjkkd58w0", "uid://cv8xwubw2paof")
 spawn_path = NodePath("..")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=535787648]
 environment = SubResource("Environment_cfhfe")
 script = ExtResource("3_575xv")
 
-[node name="Sun" type="DirectionalLight3D" parent="WorldEnvironment"]
+[node name="Sun" type="DirectionalLight3D" parent="WorldEnvironment" unique_id=1660688296]
 shadow_enabled = true
 
-[node name="Moon" type="DirectionalLight3D" parent="WorldEnvironment"]
+[node name="Moon" type="DirectionalLight3D" parent="WorldEnvironment" unique_id=1935824634]
 light_color = Color(0.686275, 0.686275, 0.686275, 1)
 light_energy = 0.2
 shadow_enabled = true
 
-[node name="HTerrain" type="Node3D" parent="."]
+[node name="HTerrain" type="Node3D" parent="." unique_id=2133601185]
 script = ExtResource("3_je8e7")
 _terrain_data = ExtResource("6_ipvnn")
 chunk_size = 32
@@ -188,7 +188,7 @@ shader_params/u_triplanar = null
 shader_params/u_tile_reduction = null
 metadata/_edit_group_ = true
 
-[node name="HTerrainDetailLayer" type="Node3D" parent="HTerrain"]
+[node name="HTerrainDetailLayer" type="Node3D" parent="HTerrain" unique_id=61324519]
 script = ExtResource("9_smrgu")
 layer_index = 1
 texture = ExtResource("10_ux663")
@@ -200,60 +200,60 @@ shader_params/u_instance_scale = null
 shader_params/u_roughness = null
 metadata/_editor_icon = ExtResource("10_lmmy2")
 
-[node name="Music" type="AudioStreamPlayer" parent="."]
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=588325393]
 stream = ExtResource("10_w1fny")
 autoplay = true
 bus = &"Music"
 
-[node name="FogVolume" type="FogVolume" parent="."]
+[node name="FogVolume" type="FogVolume" parent="." unique_id=1082317138]
 shape = 4
 material = SubResource("FogMaterial_w14ph")
 
-[node name="Spawn" type="Marker3D" parent="."]
+[node name="Spawn" type="Marker3D" parent="." unique_id=1541656284]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1201.83, 9.32904, 996.233)
 gizmo_extents = 2.9
 
-[node name="Hause" parent="." instance=ExtResource("11_8ni8s")]
+[node name="Hause" parent="." unique_id=1306325922 instance=ExtResource("11_8ni8s")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, -0.1644988, 1012.02)
 
-[node name="Chat" parent="." instance=ExtResource("14_x5dfk")]
+[node name="Chat" parent="." unique_id=298064630 instance=ExtResource("14_x5dfk")]
 
 [node name="Panel" parent="Chat" index="0"]
 offset_right = 384.0
 offset_bottom = 288.0
 
-[node name="Warning Hud" parent="." instance=ExtResource("15_fls3e")]
+[node name="Warning Hud" parent="." unique_id=1701625694 instance=ExtResource("15_fls3e")]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1535083665]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1902026613]
 shape = SubResource("BoxShape3D_b68bb")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D" unique_id=1251364612]
 shape = SubResource("BoxShape3D_t040d")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D" unique_id=803647279]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4095.09, 0, 0)
 shape = SubResource("BoxShape3D_b68bb")
 
-[node name="CollisionShape3D4" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="StaticBody3D" unique_id=1906414982]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4095.09, 0, 0)
 shape = SubResource("BoxShape3D_t040d")
 
-[node name="CollisionShape3D5" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="StaticBody3D" unique_id=1825732336]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4095.09, 0, 4095.09)
 shape = SubResource("BoxShape3D_b68bb")
 
-[node name="CollisionShape3D6" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="StaticBody3D" unique_id=1462072827]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4095.09, 0, 4095.09)
 shape = SubResource("BoxShape3D_t040d")
 
-[node name="CollisionShape3D7" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D7" type="CollisionShape3D" parent="StaticBody3D" unique_id=2108164614]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4095.09)
 shape = SubResource("BoxShape3D_b68bb")
 
-[node name="CollisionShape3D8" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D8" type="CollisionShape3D" parent="StaticBody3D" unique_id=1329714556]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4095.09)
 shape = SubResource("BoxShape3D_t040d")
 
