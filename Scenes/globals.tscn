@@ -73,7 +73,7 @@ properties/22/path = NodePath(".:gamemode")
 properties/22/spawn = true
 properties/22/replication_mode = 1
 
-[node name="Globals" type="Node" unique_id=372814838]
+[node name="globals" type="Node" unique_id=372814838]
 script = ExtResource("1_uq25s")
 
 [node name="GlobalsSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1992553815]

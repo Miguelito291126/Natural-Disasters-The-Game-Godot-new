@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dni5hbhwlxmdi"]
+[gd_scene format=3 uid="uid://dni5hbhwlxmdi"]
 
 [ext_resource type="Script" uid="uid://cce78i5qlkruq" path="res://Scripts/thunder.gd" id="1_ig5to"]
 [ext_resource type="Texture2D" uid="uid://dhwpuiof0nxhn" path="res://Sprites/kenney_particle_pack/spark_05.png" id="3_avm0v"]
@@ -84,10 +84,10 @@ properties/2/path = NodePath("..:scale")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
-[node name="Thunder" type="Node3D" groups=["Thunder"]]
+[node name="thunder" type="Node3D" unique_id=7050203 groups=["Thunder"]]
 script = ExtResource("1_ig5to")
 
-[node name="star" type="GPUParticles3D" parent="."]
+[node name="star" type="GPUParticles3D" parent="." unique_id=1001796651]
 material_override = SubResource("StandardMaterial3D_e6wr2")
 emitting = false
 amount = 1
@@ -97,7 +97,7 @@ visibility_aabb = AABB(-500, -499.988, -500, 1000, 1000, 1000)
 process_material = SubResource("ParticleProcessMaterial_xpfg1")
 draw_pass_1 = SubResource("QuadMesh_q3mvv")
 
-[node name="light" type="GPUParticles3D" parent="."]
+[node name="light" type="GPUParticles3D" parent="." unique_id=343570480]
 material_override = SubResource("StandardMaterial3D_ghvqt")
 emitting = false
 amount = 1
@@ -107,7 +107,7 @@ visibility_aabb = AABB(-10000, -10000, -10000, 20000, 20000, 20000)
 process_material = SubResource("ParticleProcessMaterial_1lfm6")
 draw_pass_1 = SubResource("QuadMesh_tdmw4")
 
-[node name="spark" type="GPUParticles3D" parent="."]
+[node name="spark" type="GPUParticles3D" parent="." unique_id=92820679]
 material_override = SubResource("StandardMaterial3D_jem84")
 emitting = false
 amount = 1
@@ -118,6 +118,6 @@ local_coords = true
 process_material = SubResource("ParticleProcessMaterial_fjbmq")
 draw_pass_1 = SubResource("QuadMesh_8jrdf")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=906978340]
 root_path = NodePath("../spark")
 replication_config = SubResource("SceneReplicationConfig_go6sb")
