@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://q6hkv3yre3tn"
-path="res://.godot/imported/Volcano.blend-46ce990f00783772ef2e103323477379.scn"
+path="res://.godot/imported/volcano.blend-dedd3b1daca394d5cc5ac736c4ef2c59.scn"
 
 [deps]
 
-source_file="res://Models/Blend Format/Volcano.blend"
-dest_files=["res://.godot/imported/Volcano.blend-46ce990f00783772ef2e103323477379.scn"]
+source_file="res://Models/Blend Format/volcano.blend"
+dest_files=["res://.godot/imported/volcano.blend-dedd3b1daca394d5cc5ac736c4ef2c59.scn"]
 
 [params]
 
@@ -56,6 +56,7 @@ blender/meshes/colors=false
 blender/meshes/uvs=true
 blender/meshes/normals=true
 blender/meshes/export_geometry_nodes_instances=false
+blender/meshes/gpu_instances=false
 blender/meshes/tangents=true
 blender/meshes/skins=2
 blender/meshes/export_bones_deforming_mesh_only=false

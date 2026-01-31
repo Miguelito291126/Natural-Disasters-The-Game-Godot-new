@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://ditwsydq4i21k"
-path="res://.godot/imported/Meteorite.blend-7e9376b0cc76ed7f9953ddda0dbe469f.scn"
+path="res://.godot/imported/meteorite.blend-bbd2b4f11f3222c0671b7254ec9ac3ef.scn"
 
 [deps]
 
-source_file="res://Models/Blend Format/Meteorite.blend"
-dest_files=["res://.godot/imported/Meteorite.blend-7e9376b0cc76ed7f9953ddda0dbe469f.scn"]
+source_file="res://Models/Blend Format/meteorite.blend"
+dest_files=["res://.godot/imported/meteorite.blend-bbd2b4f11f3222c0671b7254ec9ac3ef.scn"]
 
 [params]
 
@@ -48,6 +48,7 @@ blender/meshes/colors=false
 blender/meshes/uvs=true
 blender/meshes/normals=true
 blender/meshes/export_geometry_nodes_instances=false
+blender/meshes/gpu_instances=false
 blender/meshes/tangents=true
 blender/meshes/skins=2
 blender/meshes/export_bones_deforming_mesh_only=false

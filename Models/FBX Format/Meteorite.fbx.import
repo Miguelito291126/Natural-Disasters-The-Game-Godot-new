@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://3be8w2n25o4k"
-path="res://.godot/imported/Meteorite.fbx-28591eb218073390725681c5a83f2f91.scn"
+path="res://.godot/imported/meteorite.fbx-42d4a92611baafa405ee42d9c4331ded.scn"
 
 [deps]
 
-source_file="res://Models/FBX Format/Meteorite.fbx"
-dest_files=["res://.godot/imported/Meteorite.fbx-28591eb218073390725681c5a83f2f91.scn"]
+source_file="res://Models/FBX Format/meteorite.fbx"
+dest_files=["res://.godot/imported/meteorite.fbx-42d4a92611baafa405ee42d9c4331ded.scn"]
 
 [params]
 

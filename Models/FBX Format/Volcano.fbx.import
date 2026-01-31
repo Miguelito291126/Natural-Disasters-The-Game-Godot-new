@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dyo5vnu7ko8f4"
-path="res://.godot/imported/Volcano.fbx-e5a41923cc150d1504fdf23ca2ff1627.scn"
+path="res://.godot/imported/volcano.fbx-441f244724cca72bf63430a94e95ce33.scn"
 
 [deps]
 
-source_file="res://Models/FBX Format/Volcano.fbx"
-dest_files=["res://.godot/imported/Volcano.fbx-e5a41923cc150d1504fdf23ca2ff1627.scn"]
+source_file="res://Models/FBX Format/volcano.fbx"
+dest_files=["res://.godot/imported/volcano.fbx-441f244724cca72bf63430a94e95ce33.scn"]
 
 [params]
 

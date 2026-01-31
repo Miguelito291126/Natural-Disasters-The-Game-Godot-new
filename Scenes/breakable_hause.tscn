@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b4wxj3o8ub80a"]
 
-[ext_resource type="PackedScene" uid="uid://b410wmhh5ywm6" path="res://Models/Blend Format/breakable hause.blend" id="1_mrv3i"]
+[ext_resource type="PackedScene" uid="uid://b410wmhh5ywm6" path="res://Models/Blend Format/breakable_hause.blend" id="1_mrv3i"]
 [ext_resource type="Script" uid="uid://cyhpepnhku0um" path="res://Scripts/breakable_hause.gd" id="2_ouavs"]
 
 [node name="breakable hause" groups=["movable_objects"] instance=ExtResource("1_mrv3i")]
