@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cv8xwubw2paof"]
+[gd_scene format=3 uid="uid://cv8xwubw2paof"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_sbqb6"]
 
@@ -21,17 +21,17 @@ properties/4/path = NodePath(".:angular_velocity")
 properties/4/spawn = true
 properties/4/replication_mode = 1
 
-[node name="Sphere" type="RigidBody3D" groups=["Pickable", "movable_objects"]]
+[node name="sphere" type="RigidBody3D" unique_id=1369646732 groups=["Pickable", "movable_objects"]]
 collision_layer = 13
 collision_mask = 13
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1691739912]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 mesh = SubResource("SphereMesh_sbqb6")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=555818907]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 shape = SubResource("SphereShape3D_sbqb6")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1489578559]
 replication_config = SubResource("SceneReplicationConfig_sbqb6")

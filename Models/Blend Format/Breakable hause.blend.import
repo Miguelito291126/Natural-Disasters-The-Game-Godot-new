@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b410wmhh5ywm6"
-path="res://.godot/imported/Breakable hause.blend-08599cb14dd3d1b0d027cd782a8ead77.scn"
+path="res://.godot/imported/breakable hause.blend-b00bcfee785bcda66e6c3accc1b83a2e.scn"
 
 [deps]
 
-source_file="res://Models/Blend Format/Breakable hause.blend"
-dest_files=["res://.godot/imported/Breakable hause.blend-08599cb14dd3d1b0d027cd782a8ead77.scn"]
+source_file="res://Models/Blend Format/breakable hause.blend"
+dest_files=["res://.godot/imported/breakable hause.blend-b00bcfee785bcda66e6c3accc1b83a2e.scn"]
 
 [params]
 

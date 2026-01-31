@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dg75ymjinjgeu"]
+[gd_scene format=3 uid="uid://dg75ymjinjgeu"]
 
-[ext_resource type="Script" uid="uid://bpb7kal7xb8sg" path="res://Scripts/Death Menu.gd" id="1_ipdme"]
+[ext_resource type="Script" uid="uid://bpb7kal7xb8sg" path="res://Scripts/death_menu.gd" id="1_ipdme"]
 [ext_resource type="Theme" uid="uid://ctfcvmj6op0i5" path="res://Resources/Death_Screen_theme.tres" id="2_bsx7a"]
 
 [node name="Death Menu" type="CanvasLayer"]

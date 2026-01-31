@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://caxxag3apnaje"]
+[gd_scene format=3 uid="uid://caxxag3apnaje"]
 
-[ext_resource type="Script" uid="uid://cjvdvncmdurd8" path="res://Scripts/Players List Menu.gd" id="1_r0heg"]
+[ext_resource type="Script" uid="uid://cjvdvncmdurd8" path="res://Scripts/players_list_menu.gd" id="1_r0heg"]
 [ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="2_dqhul"]
 
 [node name="Players List Menu" type="CanvasLayer"]

@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bp412twicns7t"]
+[gd_scene format=3 uid="uid://bp412twicns7t"]
 
-[ext_resource type="Script" uid="uid://cijnuqyfrm6ys" path="res://Scripts/Globals.gd" id="1_uq25s"]
+[ext_resource type="Script" uid="uid://cijnuqyfrm6ys" path="res://Scripts/globals.gd" id="1_uq25s"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_i2lb3"]
 properties/0/path = NodePath(".:Humidity")
@@ -73,15 +73,15 @@ properties/22/path = NodePath(".:gamemode")
 properties/22/spawn = true
 properties/22/replication_mode = 1
 
-[node name="Globals" type="Node"]
+[node name="Globals" type="Node" unique_id=372814838]
 script = ExtResource("1_uq25s")
 
-[node name="GlobalsSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="GlobalsSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1992553815]
 replication_config = SubResource("SceneReplicationConfig_i2lb3")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=2095409841]
 
-[node name="Broadcast_Timer" type="Timer" parent="."]
+[node name="Broadcast_Timer" type="Timer" parent="." unique_id=1165576884]
 autostart = true
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

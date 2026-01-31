@@ -1,10 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5vb6ecxpf7g6"]
+[gd_scene format=3 uid="uid://b5vb6ecxpf7g6"]
 
 [ext_resource type="Script" uid="uid://bfy1kc7if7slg" path="res://Scripts/main.gd" id="1_kp8fp"]
 
-[node name="Main" type="Node3D"]
+[node name="main" type="Node3D" unique_id=669787320]
 script = ExtResource("1_kp8fp")
 
-[node name="MapSpawner" type="MultiplayerSpawner" parent="."]
+[node name="MapSpawner" type="MultiplayerSpawner" parent="." unique_id=1516034340]
 _spawnable_scenes = PackedStringArray("uid://csivk4bmioako")
 spawn_path = NodePath("..")

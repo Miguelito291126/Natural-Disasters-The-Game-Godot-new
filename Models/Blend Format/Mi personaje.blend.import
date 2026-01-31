@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://drr5fxvonndxc"
-path="res://.godot/imported/Mi personaje.blend-33495e3a43d4fbe32f183539e1523ad8.scn"
+path="res://.godot/imported/mi personaje.blend-818a48c4b052e1ac4a740d2677f3634c.scn"
 
 [deps]
 
-source_file="res://Models/Blend Format/Mi personaje.blend"
-dest_files=["res://.godot/imported/Mi personaje.blend-33495e3a43d4fbe32f183539e1523ad8.scn"]
+source_file="res://Models/Blend Format/mi personaje.blend"
+dest_files=["res://.godot/imported/mi personaje.blend-818a48c4b052e1ac4a740d2677f3634c.scn"]
 
 [params]
 
@@ -48,6 +48,7 @@ blender/meshes/colors=false
 blender/meshes/uvs=true
 blender/meshes/normals=true
 blender/meshes/export_geometry_nodes_instances=false
+blender/meshes/gpu_instances=false
 blender/meshes/tangents=true
 blender/meshes/skins=2
 blender/meshes/export_bones_deforming_mesh_only=false

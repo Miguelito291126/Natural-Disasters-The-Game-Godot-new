@@ -27,8 +27,8 @@ buses/default_bus_layout="uid://cswbjaci3cvx3"
 [autoload]
 
 Globals="*res://Scenes/globals.tscn"
-LoadScene="*res://Scripts/LoadScene.gd"
-UnloadScene="*res://Scripts/UnloadScene.gd"
+LoadScene="*res://Scripts/loadscene.gd"
+UnloadScene="*res://Scripts/unloadscene.gd"
 
 [display]
 

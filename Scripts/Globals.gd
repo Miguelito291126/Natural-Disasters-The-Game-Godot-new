@@ -91,7 +91,7 @@ var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 @onready var timer = $Timer
 @onready var broadcast_Timer = $Broadcast_Timer
 
-@export var room_list = {"name": "name", "players": 0}
+@export var room_list = {"name": "name", "players": int(0)}
 @export var broadcaster_ip = "192.168.1.255"
 @export var lisener_port = port + 1
 @export var broadcaster_port = port - 1

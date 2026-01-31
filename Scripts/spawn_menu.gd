@@ -15,7 +15,7 @@ var spawn_list: Array[String] = [
 				"res://Scenes/earthquake.tscn",
 				"res://Scenes/thunder.tscn",
 				"res://Scenes/cube.tscn",
-				"res://Scenes/Sphere.tscn",
+				"res://Scenes/sphere.tscn",
 				"res://Scenes/hause.tscn",
 				]
 

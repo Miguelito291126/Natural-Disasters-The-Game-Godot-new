@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cb10f2tpfo0qj"]
+[gd_scene format=3 uid="uid://cb10f2tpfo0qj"]
 
-[ext_resource type="Script" uid="uid://5ehetmrvktdi" path="res://Scripts/Warning Hud.gd" id="1_m0gel"]
+[ext_resource type="Script" uid="uid://5ehetmrvktdi" path="res://Scripts/warning_hud.gd" id="1_m0gel"]
 [ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="2_rer08"]
 
 [node name="Warning Hud" type="CanvasLayer"]

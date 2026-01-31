@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://qf81iinh5hke"]
 
-[ext_resource type="Script" uid="uid://v1omqd38x1jy" path="res://Scripts/Volcano.gd" id="1_3fq1s"]
+[ext_resource type="Script" uid="uid://v1omqd38x1jy" path="res://Scripts/volcano.gd" id="1_3fq1s"]
 [ext_resource type="PackedScene" uid="uid://q6hkv3yre3tn" path="res://Models/Blend Format/Volcano.blend" id="3_t7vbc"]
 [ext_resource type="Material" uid="uid://jeft7exqnaro" path="res://Resources/lava.tres" id="4_lfpic"]
 [ext_resource type="Material" uid="uid://diohginyx0ebc" path="res://Resources/volcano_model.tres" id="5_k2ra4"]

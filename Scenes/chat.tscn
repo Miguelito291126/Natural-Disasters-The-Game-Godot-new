@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://yrq2iuii7a14"]
+[gd_scene format=3 uid="uid://yrq2iuii7a14"]
 
-[ext_resource type="Script" uid="uid://v57w2n30luys" path="res://Scripts/Chat.gd" id="1_eifiy"]
+[ext_resource type="Script" uid="uid://v57w2n30luys" path="res://Scripts/chat.gd" id="1_eifiy"]
 [ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="2_cxjgb"]
 
 [node name="Chat" type="CanvasLayer"]
