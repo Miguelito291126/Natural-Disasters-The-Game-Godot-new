@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://by5atj83em8rl" path="res://Scripts/meteors.gd" id="1_bgiwl"]
 [ext_resource type="PackedScene" uid="uid://ditwsydq4i21k" path="res://Models/Blend Format/meteorite.blend" id="2_aq33g"]
-[ext_resource type="Material" uid="uid://dgt85ocipcy31" path="res://Resources/Meteor.tres" id="3_mekeu"]
+[ext_resource type="Material" uid="uid://dgt85ocipcy31" path="res://Materials/Models/Meteorite/Meteor.tres" id="3_mekeu"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_nfk2t"]
 radius = 1.17684
@@ -102,7 +102,7 @@ shape = SubResource("SphereShape3D_nfk2t")
 [node name="Meteorite" parent="." unique_id=442151971 instance=ExtResource("2_aq33g")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 
-[node name="meteor" parent="Meteorite" index="0"]
+[node name="meteor" parent="Meteorite" index="0" unique_id=461746619]
 surface_material_override/0 = ExtResource("3_mekeu")
 
 [node name="Smoke" type="GPUParticles3D" parent="." unique_id=1597378505]

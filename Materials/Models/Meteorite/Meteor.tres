@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dgt85ocipcy31"]
+
+[ext_resource type="Texture2D" uid="uid://bt57oybqsabyp" path="res://Textures/dry_riverbed_rock_nor_gl_4k.png" id="2_bpj6p"]
+
+[resource]
+albedo_color = Color(0.3953672, 0.39536718, 0.39536715, 1)
+normal_texture = ExtResource("2_bpj6p")

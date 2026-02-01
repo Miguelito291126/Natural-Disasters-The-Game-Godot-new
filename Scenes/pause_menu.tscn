@@ -16,116 +16,103 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_1och7")
+metadata/_edit_use_anchors_ = true
 
 [node name="Menu" type="VBoxContainer" parent="Panel" unique_id=1945670196]
 process_mode = 3
-visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -479.5
-offset_top = -421.0
-offset_right = 479.5
-offset_bottom = 421.0
+anchors_preset = -1
+anchor_left = 0.19765624
+anchor_top = 0.17546296
+anchor_right = 0.8023437
+anchor_bottom = 0.82453704
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_1och7")
+metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="Panel/Menu" unique_id=463943313]
 layout_mode = 2
 theme = ExtResource("2_1och7")
-theme_override_font_sizes/font_size = 150
+theme_override_font_sizes/font_size = 100
 text = "Pause"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Return" type="Button" parent="Panel/Menu" unique_id=6948450]
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Return"
 
 [node name="Settings" type="Button" parent="Panel/Menu" unique_id=1492032167]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Settings"
 
 [node name="Reset Player" type="Button" parent="Panel/Menu" unique_id=1843001462]
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Reset Player"
 
 [node name="Exit" type="Button" parent="Panel/Menu" unique_id=426038544]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Exit"
 
 [node name="Settings" type="VBoxContainer" parent="Panel" unique_id=627602816]
 process_mode = 3
+visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -487.5
-offset_top = -475.5
-offset_right = 487.5
-offset_bottom = 475.5
+anchors_preset = -1
+anchor_left = 0.12552084
+anchor_top = -0.010185185
+anchor_right = 0.8354167
+anchor_bottom = 0.99722224
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_1och7")
+alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="fps" type="CheckButton" parent="Panel/Settings" unique_id=1317274352]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "FPS:"
 
 [node name="vsync" type="CheckButton" parent="Panel/Settings" unique_id=1338570578]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Vsync:"
 
 [node name="Fullscreen" type="CheckButton" parent="Panel/Settings" unique_id=669924201]
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 text = "Fullscreen:"
 
 [node name="Resolutions Label" type="Label" parent="Panel/Settings" unique_id=261014241]
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Resolution:"
 
 [node name="resolutions" type="OptionButton" parent="Panel/Settings" unique_id=1047698082]
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 
 [node name="antialiasing label" type="Label" parent="Panel/Settings" unique_id=767444434]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Antialiasing:"
 
 [node name="antialiasing" type="OptionButton" parent="Panel/Settings" unique_id=958514184]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
 item_count = 4
 popup/item_0/text = "disabled"
@@ -137,16 +124,38 @@ popup/item_2/id = 2
 popup/item_3/text = "x8"
 popup/item_3/id = 3
 
+[node name="antitropic label" type="Label" parent="Panel/Settings" unique_id=1149537644]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("2_1och7")
+text = "Antitropic:"
+
+[node name="antitropic" type="OptionButton" parent="Panel/Settings" unique_id=1619545701]
+process_mode = 3
+layout_mode = 2
+theme = ExtResource("2_1och7")
+item_count = 5
+popup/item_0/text = "disabled"
+popup/item_0/id = 0
+popup/item_1/text = "x2"
+popup/item_1/id = 1
+popup/item_2/text = "x4"
+popup/item_2/id = 2
+popup/item_3/text = "x8"
+popup/item_3/id = 3
+popup/item_4/text = "x16"
+popup/item_4/id = 4
+
 [node name="quality Label" type="Label" parent="Panel/Settings" unique_id=1274673928]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "quality:"
 
 [node name="quality" type="OptionButton" parent="Panel/Settings" unique_id=80871999]
 layout_mode = 2
-size_flags_vertical = 3
 selected = 2
 item_count = 3
 popup/item_0/text = "Low"
@@ -158,39 +167,37 @@ popup/item_2/id = 2
 
 [node name="Volumen Label" type="Label" parent="Panel/Settings" unique_id=214059815]
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Volumen:"
 
 [node name="Volumen" type="HSlider" parent="Panel/Settings" unique_id=39246278]
 layout_mode = 2
-size_flags_vertical = 2
 theme = ExtResource("2_1och7")
 max_value = 6.0
 step = 0.01
 
 [node name="Volumen Music Label2" type="Label" parent="Panel/Settings" unique_id=1512523303]
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Music Volumen:"
 
 [node name="Volumen Music" type="HSlider" parent="Panel/Settings" unique_id=1762926464]
 layout_mode = 2
-size_flags_vertical = 2
 theme = ExtResource("2_1och7")
 max_value = 6.0
 step = 0.01
 
-[node name="TIme label" type="Label" parent="Panel/Settings" unique_id=1534191919]
+[node name="Time label" type="Label" parent="Panel/Settings" unique_id=1534191919]
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Time disaster/weather:"
 
 [node name="Time" type="HSlider" parent="Panel/Settings" unique_id=1291062064]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 min_value = 1.0
 max_value = 1000.0
@@ -199,8 +206,8 @@ value = 100.0
 [node name="Back" type="Button" parent="Panel/Settings" unique_id=128683691]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 3
 theme = ExtResource("2_1och7")
+theme_override_font_sizes/font_size = 45
 text = "Back"
 
 [connection signal="pressed" from="Panel/Menu/Return" to="." method="_on_return_pressed"]

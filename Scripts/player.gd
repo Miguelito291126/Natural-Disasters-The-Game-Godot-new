@@ -8,6 +8,7 @@ var SPEED = 0
 
 const SPEED_RUN = 25.0
 const SPEED_WALK = 15.0
+const SPEED_NOCLIP = 100.0
 const JUMP_VELOCITY =  14.0
 const SENSIBILITY = 0.02
 const LERP_VAL =  .15
@@ -24,7 +25,10 @@ var Max_temp = 44
 var Max_oxygen = 100
 var Max_bradiation = 100
 
-var fall_strength = 0
+@export var fall_strength = 0
+@export var fall_multiplier := 2.5
+@export var gravity_multiplier := 1.0
+
 
 var min_Hearth = 0
 var min_temp = 24
@@ -111,7 +115,7 @@ var camera_default_local_transform: Transform3D
 
 @export var character = "blue"
 var _last_applied_character := ""
-@export var player_materials = [preload("res://Resources/player blue.tres"), preload("res://Resources/player red.tres"), preload("res://Resources/player green.tres"), preload("res://Resources/player yellow.tres") ]
+@export var player_materials = [preload("res://Materials/player blue.tres"), preload("res://Materials/player red.tres"), preload("res://Materials/player green.tres"), preload("res://Materials/player yellow.tres") ]
 
 func _enter_tree() -> void:
 	player_id = name.to_int()
@@ -552,22 +556,24 @@ func _physics_process(delta):
 
 	# Add the gravity.
 	if not noclip:
-		# Física normal
 		if not is_on_floor():
 			if IsInWater or IsInLava:
 				velocity.y = Globals.gravity * delta * swim_factor
 			else:
-				velocity.y -= Globals.gravity * delta 
+				# Si está cayendo, aplica más gravedad
+				if velocity.y < 0:
+					velocity.y -= Globals.gravity * fall_multiplier * delta
+				else:
+					velocity.y -= Globals.gravity * gravity_multiplier * delta
+
 				fall_strength = velocity.y
 		else:
-			if IsInWater or IsInLava:
-				pass
-			else:
+			if not (IsInWater or IsInLava):
 				if fall_strength <= -90:
 					damage.rpc(50)
 	else:
-		# Gravedad desactivada
 		velocity.y = 0
+
 
 	# Handle jump.
 	if Input.is_action_just_pressed("Jump"):
@@ -595,6 +601,9 @@ func _physics_process(delta):
 	var direction = (head_node.transform.basis * input_vector).normalized()
 
 	if noclip:
+
+		SPEED = SPEED_NOCLIP
+
 		# Movimiento directo en noclip (vuelo libre)
 		var desired_velocity = direction * SPEED
 

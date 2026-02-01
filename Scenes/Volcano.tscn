@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://qf81iinh5hke"]
 
 [ext_resource type="Script" uid="uid://v1omqd38x1jy" path="res://Scripts/volcano.gd" id="1_3fq1s"]
+[ext_resource type="Material" uid="uid://jeft7exqnaro" path="res://Materials/Models/Volcano/lava.tres" id="3_m887n"]
 [ext_resource type="PackedScene" uid="uid://q6hkv3yre3tn" path="res://Models/Blend Format/volcano.blend" id="3_t7vbc"]
-[ext_resource type="Material" uid="uid://jeft7exqnaro" path="res://Resources/lava.tres" id="4_lfpic"]
-[ext_resource type="Material" uid="uid://diohginyx0ebc" path="res://Resources/volcano_model.tres" id="5_k2ra4"]
+[ext_resource type="Material" uid="uid://diohginyx0ebc" path="res://Materials/Models/Volcano/volcano_model.tres" id="4_3fq1s"]
 [ext_resource type="AudioStream" uid="uid://c6lbbct1aom2r" path="res://Sounds/disasters/nature/minivolcano_explosion.mp3" id="6_wqc32"]
 [ext_resource type="AudioStream" uid="uid://cm7i1jqvye8j2" path="res://Sounds/disasters/nature/volcano_idle.wav" id="7_exwvd"]
 
@@ -252,8 +252,8 @@ properties/16/replication_mode = 1
 radius = 40.4438
 
 [node name="volcano" type="StaticBody3D" unique_id=155383846 groups=["Volcano"]]
-collision_layer = 8
-collision_mask = 8
+collision_layer = 16
+collision_mask = 16
 script = ExtResource("1_3fq1s")
 
 [node name="Smoke" type="GPUParticles3D" parent="." unique_id=1448149535]
@@ -292,9 +292,9 @@ shape = SubResource("ConcavePolygonShape3D_l4up6")
 
 [node name="Volcano" parent="." unique_id=1395059966 instance=ExtResource("3_t7vbc")]
 
-[node name="volcano" parent="Volcano" index="0"]
-surface_material_override/0 = ExtResource("4_lfpic")
-surface_material_override/1 = ExtResource("5_k2ra4")
+[node name="volcano2" parent="Volcano" index="0" unique_id=1952238046]
+surface_material_override/0 = ExtResource("3_m887n")
+surface_material_override/1 = ExtResource("4_3fq1s")
 
 [node name="Erupt Sound" type="AudioStreamPlayer3D" parent="." unique_id=1161809023]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 318.367, 0)
@@ -324,11 +324,11 @@ shadow_enabled = true
 omni_range = 363.787
 
 [node name="Volcano_Area" type="Area3D" parent="." unique_id=1774524554 groups=["Volcano"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 315.6059, -5.73349)
 collision_layer = 8
 collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Volcano_Area" unique_id=1472593047]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 293.014, 0)
 shape = SubResource("SphereShape3D_lhoig")
 
 [editable path="Volcano"]

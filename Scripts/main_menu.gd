@@ -13,6 +13,7 @@ extends Control
 @onready var vsync = $Panel/Settings/vsync
 @onready var fps = $Panel/Settings/fps
 @onready var anti_aliasing = $Panel/Settings/antialiasing
+@onready var anti_tropic = $Panel/Settings/antitropic
 @onready var volumen = $Panel/Settings/Volumen
 @onready var volumen_music = $"Panel/Settings/Volumen Music"
 @onready var time = $Panel/Play/Time
@@ -119,6 +120,7 @@ func LoadGameScene():
 	quality.selected = Globals.GlobalsData.quality
 	anti_aliasing.selected = Globals.GlobalsData.antialiasing
 	resolutions.selected = Globals.GlobalsData.resolution
+	anti_tropic.selected = Globals.GlobalsData.antitropic
 
 
 
@@ -297,4 +299,10 @@ func _on_antialiasing_item_selected(index: int) -> void:
 	Globals.GlobalsData.antialiasing = index
 	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", index)
 	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", index)
+	Globals.GlobalsData.save_file()
+
+
+func _on_antitropic_item_selected(index: int) -> void:
+	Globals.GlobalsData.antitropic = index
+	ProjectSettings.set_setting("rendering/textures/default_filters/anisotropic_filtering_level", index)
 	Globals.GlobalsData.save_file()

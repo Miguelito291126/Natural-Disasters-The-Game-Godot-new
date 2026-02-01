@@ -3,9 +3,11 @@ extends Node3D
 # Variables para configurar el lanzamiento de bolas de fuego
 var fireball_scene = preload("res://Scenes/meteor.tscn")  # Escena de la bola de fuego
 var earthquake_scene = preload("res://Scenes/earthquake.tscn")
+
 @export var launch_interval = 5  # Intervalo de lanzamiento en segundos
 @export var launch_force = 50000  # Fuerza de lanzamiento de la bola de fuego
-@export var launch_radius = 10
+@export var launch_amount = 20  # Fuerza de lanzamiento de la bola de fuego
+
 @export var Lava_Level  = 125
 @export var Pressure = 0
 @export var IsGoingToErupt = false
@@ -60,7 +62,7 @@ func erupt():
 	erupt_sparks.emitting = true
 	erupt_smoke.emitting = true
 	erupt_sound.play()
-	_launch_fireball(20, 1)
+	_launch_fireball(launch_amount, launch_interval)
 
 	await await get_tree().create_timer(10).timeout
 
@@ -96,5 +98,5 @@ func _launch_fireball(range: int, time: int):
 		fireball.global_position = get_lava_level_position() # Posición inicial en el volcán
 		fireball.scale = Vector3(1,1,1)
 		fireball.is_volcano_rock = true
-		fireball.apply_impulse(get_lava_level_position(), launch_direction * launch_force)  # Aplicar fuerza para lanzar la bola de fuego
+		fireball.apply_impulse(launch_direction * launch_force, Vector3.UP)  # Aplicar fuerza para lanzar la bola de fuego
 		await get_tree().create_timer(time).timeout

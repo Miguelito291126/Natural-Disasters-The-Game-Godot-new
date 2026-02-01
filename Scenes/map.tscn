@@ -6,13 +6,6 @@
 [ext_resource type="Script" uid="uid://bea103amee2fs" path="res://Scripts/world_environment.gd" id="3_575xv"]
 [ext_resource type="Texture2D" uid="uid://p56xwtihxq22" path="res://Sprites/dark-black-texture-with-beautiful-stars-vector.jpg" id="3_bukha"]
 [ext_resource type="PackedScene" uid="uid://d1xsirclagru0" path="res://Scenes/sand_decal.tscn" id="3_j4oe2"]
-[ext_resource type="Script" uid="uid://uyjwx55t6exd" path="res://addons/zylann.hterrain/hterrain.gd" id="3_je8e7"]
-[ext_resource type="Script" uid="uid://bw4xc3evjuel3" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="5_sr3y7"]
-[ext_resource type="Resource" uid="uid://butsxhw35emxq" path="res://Data/data.hterrain" id="6_ipvnn"]
-[ext_resource type="Texture2D" uid="uid://iwbot60sbjqm" path="res://Textures/texture-grass-field.jpg" id="8_n5486"]
-[ext_resource type="Script" uid="uid://blswf5oy6pops" path="res://addons/zylann.hterrain/hterrain_detail_layer.gd" id="9_smrgu"]
-[ext_resource type="Texture2D" uid="uid://6jmdwj3vn6m0" path="res://addons/zylann.hterrain/tools/icons/icon_detail_layer_node.svg" id="10_lmmy2"]
-[ext_resource type="Texture2D" uid="uid://b8j13f56alvd7" path="res://Sprites/clipart974730.png" id="10_ux663"]
 [ext_resource type="AudioStream" uid="uid://debjmlamr7n2y" path="res://Sounds/music/natural disasters the game song.wav" id="10_w1fny"]
 [ext_resource type="PackedScene" uid="uid://ddlqooa2yb6y4" path="res://Scenes/hause.tscn" id="11_8ni8s"]
 [ext_resource type="PackedScene" uid="uid://yrq2iuii7a14" path="res://Scenes/chat.tscn" id="14_x5dfk"]
@@ -116,11 +109,6 @@ ssao_enabled = true
 sdfgi_enabled = true
 glow_enabled = true
 
-[sub_resource type="Resource" id="Resource_xkn0v"]
-script = ExtResource("5_sr3y7")
-mode = 0
-textures = [[ExtResource("8_n5486")], [null]]
-
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_hhy4h"]
 metadata/_preview_in_3d_space_ = true
 
@@ -130,6 +118,15 @@ noise = SubResource("FastNoiseLite_hhy4h")
 [sub_resource type="FogMaterial" id="FogMaterial_w14ph"]
 density = 0.05
 density_texture = SubResource("NoiseTexture3D_bq76v")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_olcgw"]
+albedo_color = Color(8.904189e-07, 0.587142, 1.1551381e-06, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dlo4w"]
+size = Vector3(10000, 0, 10000)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_olcgw"]
+data = PackedVector3Array(-5000, 0, 5000, 5000, 0, 5000, -5000, 0, 5000, 5000, 0, 5000, 5000, 0, 5000, -5000, 0, 5000, 5000, 0, -5000, -5000, 0, -5000, 5000, 0, -5000, -5000, 0, -5000, -5000, 0, -5000, 5000, 0, -5000, 5000, 0, 5000, 5000, 0, -5000, 5000, 0, 5000, 5000, 0, -5000, 5000, 0, -5000, 5000, 0, 5000, -5000, 0, -5000, -5000, 0, 5000, -5000, 0, -5000, -5000, 0, 5000, -5000, 0, 5000, -5000, 0, -5000, 5000, 0, 5000, -5000, 0, 5000, 5000, 0, -5000, -5000, 0, 5000, -5000, 0, -5000, 5000, 0, -5000, -5000, 0, 5000, 5000, 0, 5000, -5000, 0, -5000, 5000, 0, 5000, 5000, 0, -5000, -5000, 0, -5000)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b68bb"]
 size = Vector3(0, 100, 10000)
@@ -169,37 +166,6 @@ light_color = Color(0.686275, 0.686275, 0.686275, 1)
 light_energy = 0.2
 shadow_enabled = true
 
-[node name="HTerrain" type="Node3D" parent="." unique_id=2133601185]
-script = ExtResource("3_je8e7")
-_terrain_data = ExtResource("6_ipvnn")
-chunk_size = 32
-collision_enabled = true
-collision_layer = 1
-collision_mask = 1
-shader_type = "Classic4Lite"
-custom_shader = null
-custom_globalmap_shader = null
-texture_set = SubResource("Resource_xkn0v")
-render_layers = 2
-cast_shadow = 1
-shader_params/u_ground_uv_scale = 20
-shader_params/u_depth_blending = true
-shader_params/u_triplanar = null
-shader_params/u_tile_reduction = null
-metadata/_edit_group_ = true
-
-[node name="HTerrainDetailLayer" type="Node3D" parent="HTerrain" unique_id=61324519]
-script = ExtResource("9_smrgu")
-layer_index = 1
-texture = ExtResource("10_ux663")
-render_layers = 2
-shader_params/u_globalmap_tint_bottom = 0.0
-shader_params/u_globalmap_tint_top = null
-shader_params/u_bottom_ao = null
-shader_params/u_instance_scale = null
-shader_params/u_roughness = null
-metadata/_editor_icon = ExtResource("10_lmmy2")
-
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=588325393]
 stream = ExtResource("10_w1fny")
 autoplay = true
@@ -212,6 +178,17 @@ material = SubResource("FogMaterial_w14ph")
 [node name="Spawn" type="Marker3D" parent="." unique_id=1541656284]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1201.83, 9.32904, 996.233)
 gizmo_extents = 2.9
+
+[node name="ground" type="StaticBody3D" parent="." unique_id=1717456805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, 0.16407156, 1012.02)
+
+[node name="Mesh" type="MeshInstance3D" parent="ground" unique_id=889589910]
+material_override = SubResource("StandardMaterial3D_olcgw")
+mesh = SubResource("BoxMesh_dlo4w")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ground" unique_id=1270831502]
+shape = SubResource("ConcavePolygonShape3D_olcgw")
 
 [node name="Hause" parent="." unique_id=1306325922 instance=ExtResource("11_8ni8s")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, -0.1644988, 1012.02)

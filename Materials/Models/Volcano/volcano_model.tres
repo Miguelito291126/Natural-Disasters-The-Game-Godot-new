@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://diohginyx0ebc"]
+
+[ext_resource type="Texture2D" uid="uid://dnv0sugtplc16" path="res://Textures/volcanic_rock_tiles_nor_gl_4k.png" id="2_dsnj5"]
+
+[resource]
+albedo_color = Color(0.2949976, 0.12717065, 9.62615e-08, 1)
+normal_texture = ExtResource("2_dsnj5")

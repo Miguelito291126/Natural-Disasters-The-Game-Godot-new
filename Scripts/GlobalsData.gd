@@ -6,6 +6,7 @@ static var path = "user://GlobalsData.tres"
 @export var vsync = false
 @export var FPS = false
 @export var antialiasing = 0
+@export var antitropic = 0
 @export var volumen = 1
 @export var volumen_music = 1
 @export var timer_disasters = 60

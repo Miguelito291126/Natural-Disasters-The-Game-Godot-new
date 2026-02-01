@@ -208,9 +208,11 @@ down={
 [layer_names]
 
 3d_render/layer_2="terrain"
+3d_physics/layer_1="collision"
 3d_physics/layer_2="interactable"
 3d_physics/layer_3="water"
 3d_physics/layer_4="lava"
+3d_physics/layer_5="volcano"
 
 [physics]
 
@@ -221,5 +223,3 @@ down={
 textures/canvas_textures/default_texture_filter=0
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
-textures/decals/filter=2
-textures/light_projectors/filter=2

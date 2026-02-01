@@ -3,29 +3,27 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://17dpy0y5mqkk"
-path.s3tc="res://.godot/imported/Stylized_Lava_001_basecolor.png-d79f0b092c1a4a8a9a43d8c53aaaf503.s3tc.ctex"
-path.etc2="res://.godot/imported/Stylized_Lava_001_basecolor.png-d79f0b092c1a4a8a9a43d8c53aaaf503.etc2.ctex"
+path="res://.godot/imported/Stylized_Lava_001_basecolor.png-d79f0b092c1a4a8a9a43d8c53aaaf503.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://Textures/Stylized_Lava_001_basecolor.png"
-dest_files=["res://.godot/imported/Stylized_Lava_001_basecolor.png-d79f0b092c1a4a8a9a43d8c53aaaf503.s3tc.ctex", "res://.godot/imported/Stylized_Lava_001_basecolor.png-d79f0b092c1a4a8a9a43d8c53aaaf503.etc2.ctex"]
+dest_files=["res://.godot/imported/Stylized_Lava_001_basecolor.png-d79f0b092c1a4a8a9a43d8c53aaaf503.ctex"]
 
 [params]
 
-compress/mode=2
-compress/high_quality=false
+compress/mode=0
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

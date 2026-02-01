@@ -1,6 +1,4 @@
 extends Node3D
-
-@onready var terrain = $HTerrain
 @onready var worldenvironment = $WorldEnvironment
 @export var snow_decal_scene: PackedScene
 @export var sand_decal_scene: PackedScene
@@ -55,8 +53,6 @@ func _physics_process(_delta):
 
 	
 func _process(_delta):
-	terrain.ambient_wind = Globals.Wind_speed * _delta
-
 	if multiplayer.is_server():
 		if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
 			Globals.started = true
