@@ -26,8 +26,6 @@ var Max_oxygen = 100
 var Max_bradiation = 100
 
 @export var fall_strength = 0
-@export var fall_multiplier := 4.5
-@export var gravity_multiplier := 2.0
 
 
 var min_Hearth = 0
@@ -562,9 +560,9 @@ func _physics_process(delta):
 			else:
 				# Si está cayendo, aplica más gravedad
 				if velocity.y < 0:
-					velocity.y -= Globals.gravity * fall_multiplier * delta
+					velocity.y -= Globals.gravity * delta
 				else:
-					velocity.y -= Globals.gravity * gravity_multiplier * delta
+					velocity.y -= Globals.gravity * delta
 
 				fall_strength = velocity.y
 		else:
