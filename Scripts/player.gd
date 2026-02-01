@@ -26,8 +26,8 @@ var Max_oxygen = 100
 var Max_bradiation = 100
 
 @export var fall_strength = 0
-@export var fall_multiplier := 2.5
-@export var gravity_multiplier := 1.0
+@export var fall_multiplier := 4.5
+@export var gravity_multiplier := 2.0
 
 
 var min_Hearth = 0
@@ -667,14 +667,12 @@ func _physics_process(delta):
 func _noclip():
 	noclip = !noclip
 	if noclip:
-		self.set_collision_layer(0)
-		self.set_collision_mask(0)
+		capsule.disabled = true
 		velocity.y = 0
 		fall_strength = 0
 		Globals.print_role("Noclip activated")
 	else:
-		self.set_collision_layer(1)
-		self.set_collision_mask(1)
+		capsule.disabled = false
 		Globals.print_role("Noclip desactivated")
 
 

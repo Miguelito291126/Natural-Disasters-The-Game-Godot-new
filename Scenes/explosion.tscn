@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://doi73cvnxims6"]
+[gd_scene format=3 uid="uid://doi73cvnxims6"]
 
 [ext_resource type="Script" uid="uid://bb8hbryyl1ty0" path="res://Scripts/explosion.gd" id="1_o7s6l"]
 [ext_resource type="AudioStream" uid="uid://51sjjqi43ypi" path="res://Sounds/disasters/atmospheric/explosion_light9.mp3" id="3_i7oed"]
@@ -126,17 +126,19 @@ properties/2/path = NodePath(".:scale")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
-[node name="Explosion" type="Node3D" groups=["Explosion"]]
+[node name="Explosion" type="Node3D" unique_id=1040130816 groups=["Explosion"]]
 script = ExtResource("1_o7s6l")
 
-[node name="Area3D" type="Area3D" parent="." groups=["Explosion"]]
+[node name="Area3D" type="Area3D" parent="." unique_id=1903622450 groups=["Explosion"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0103197, 0.0393953, -0.0188904)
+collision_layer = 64
+collision_mask = 445
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1583832399]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 shape = SubResource("SphereShape3D_up542")
 
-[node name="Sparks" type="GPUParticles3D" parent="."]
+[node name="Sparks" type="GPUParticles3D" parent="." unique_id=979384527]
 emitting = false
 amount = 100
 one_shot = true
@@ -146,7 +148,7 @@ visibility_aabb = AABB(-86.465225, -87.08331, -85.70561, 175.09, 164.59006, 186.
 process_material = SubResource("ParticleProcessMaterial_k2xjm")
 draw_pass_1 = SubResource("CylinderMesh_14ogo")
 
-[node name="Sparks shock" type="GPUParticles3D" parent="."]
+[node name="Sparks shock" type="GPUParticles3D" parent="." unique_id=770607581]
 emitting = false
 amount = 100
 one_shot = true
@@ -156,7 +158,7 @@ visibility_aabb = AABB(-86.465225, -87.08331, -85.70561, 175.09, 164.59006, 186.
 process_material = SubResource("ParticleProcessMaterial_61lnk")
 draw_pass_1 = SubResource("CylinderMesh_48id1")
 
-[node name="Smoke shock" type="GPUParticles3D" parent="."]
+[node name="Smoke shock" type="GPUParticles3D" parent="." unique_id=4482515]
 emitting = false
 amount = 500
 one_shot = true
@@ -166,7 +168,7 @@ visibility_aabb = AABB(-290.31195, -5.9816675, -284.0811, 586.68677, 6.9816685, 
 process_material = SubResource("ParticleProcessMaterial_a801j")
 draw_pass_1 = SubResource("SphereMesh_h4yxj")
 
-[node name="Smoke" type="GPUParticles3D" parent="."]
+[node name="Smoke" type="GPUParticles3D" parent="." unique_id=1503559231]
 emitting = false
 amount = 500
 one_shot = true
@@ -176,14 +178,14 @@ visibility_aabb = AABB(-94.27803, -104.06677, -99.78231, 185.2327, 181.49661, 19
 process_material = SubResource("ParticleProcessMaterial_021c3")
 draw_pass_1 = SubResource("SphereMesh_fjw3j")
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=993132897]
 stream = ExtResource("3_i7oed")
 volume_db = 35.0
 max_db = 6.0
 autoplay = true
 max_distance = 4096.0
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1001214331]
 root_path = NodePath("../Sparks")
 replication_config = SubResource("SceneReplicationConfig_y34ue")
 

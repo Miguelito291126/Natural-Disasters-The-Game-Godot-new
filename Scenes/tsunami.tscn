@@ -1,10 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://d3gkmhq5kjhrj"]
+[gd_scene format=3 uid="uid://d3gkmhq5kjhrj"]
 
 [ext_resource type="Script" uid="uid://bxbolk17xluu5" path="res://Scripts/Tsunami.gd" id="1_6j28r"]
 [ext_resource type="PackedScene" uid="uid://bd5or0vi27grb" path="res://Models/FBX Format/tsunami.fbx" id="2_khnsg"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_6j28r"]
-size = Vector3(518.306, 80.2877, 34.6135)
+[sub_resource type="BoxShape3D" id="BoxShape3D_i8tii"]
+size = Vector3(519.11597, 83.803734, 35.138424)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p2o80"]
 properties/0/path = NodePath(".:position")
@@ -41,19 +41,19 @@ properties/10/path = NodePath(".:speed")
 properties/10/spawn = true
 properties/10/replication_mode = 1
 
-[node name="tsunami" type="Area3D" groups=["Tsunami"]]
+[node name="tsunami" type="Area3D" unique_id=556163490 groups=["Tsunami"]]
 collision_layer = 4
-collision_mask = 4
+collision_mask = 505
 script = ExtResource("1_6j28r")
 
-[node name="tsunami" parent="." instance=ExtResource("2_khnsg")]
+[node name="tsunami" parent="." unique_id=1862128648 instance=ExtResource("2_khnsg")]
 transform = Transform3D(-45.873, 0, -8.74228e-07, 0, 14.771, 0, 4.01034e-06, 0, -10, 0, 0, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(45.873, 0, 0, 0, 14.771, 0, 0, 0, 10, 0, 0, 0)
-shape = SubResource("BoxShape3D_6j28r")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1537712870]
+transform = Transform3D(-45.873, 0, -8.74228e-07, 0, 14.771, 0, 4.01034e-06, 0, -10, -1.3341312, -50.28087, 55.184975)
+shape = SubResource("BoxShape3D_i8tii")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=166102595]
 replication_config = SubResource("SceneReplicationConfig_p2o80")
 
 [editable path="tsunami"]

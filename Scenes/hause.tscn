@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://ddlqooa2yb6y4"]
+[gd_scene format=3 uid="uid://ddlqooa2yb6y4"]
 
 [ext_resource type="Script" uid="uid://dyv5tm53gs2fg" path="res://Scripts/hause.gd" id="1_m3vm1"]
 [ext_resource type="AudioStream" uid="uid://c4r72cwbqtbdx" path="res://Sounds/Door Open.mp3" id="2_51njh"]
@@ -57,79 +57,79 @@ properties/5/path = NodePath("hause:scale")
 properties/5/spawn = true
 properties/5/replication_mode = 1
 
-[node name="hause" type="StaticBody3D" node_paths=PackedStringArray("door_open_sound", "door_close_sound") groups=["Destrollable", "Hause"]]
-collision_layer = 13
-collision_mask = 13
+[node name="hause" type="StaticBody3D" unique_id=1707887295 node_paths=PackedStringArray("door_open_sound", "door_close_sound") groups=["Destrollable", "Hause"]]
+collision_layer = 128
+collision_mask = 381
 script = ExtResource("1_m3vm1")
 door_open_sound = NodePath("Open_door_sound")
 door_close_sound = NodePath("Close_door_sound")
 breakable_scale_factor = 3.5
 
-[node name="hause" parent="." instance=ExtResource("2_f6ooy")]
+[node name="hause" parent="." unique_id=1057886774 instance=ExtResource("2_f6ooy")]
 
-[node name="Area3D" type="Area3D" parent="." groups=["Destrollable", "Hause"]]
-collision_layer = 13
-collision_mask = 13
+[node name="Area3D" type="Area3D" parent="." unique_id=1775160864 groups=["Destrollable", "Hause"]]
+collision_layer = 128
+collision_mask = 381
 
-[node name="RoomCollision" type="CollisionShape3D" parent="Area3D"]
+[node name="RoomCollision" type="CollisionShape3D" parent="Area3D" unique_id=1771950419]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10032654, 13.068998, 0.56370926)
 shape = SubResource("BoxShape3D_bem26")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=141825840]
 transform = Transform3D(-3.3515175e-07, 0, 8, 0, 7.6673784, 0, -7.6673784, 0, -3.496911e-07, 0, 7.995949, 0)
 shape = SubResource("ConcavePolygonShape3D_gw74x")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1970691283]
 transform = Transform3D(-10.095551, 0, -0.0030199762, 0, -7.0874057, 0, 0.0033485324, 0, -9.10498, 0.015382134, 22.788954, -0.14665985)
 shape = SubResource("ConcavePolygonShape3D_f6ooy")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=125477790]
 transform = Transform3D(0.2601958, 0, -1.2534579e-07, 0, 2.4807258, 0, -1.1373519e-08, 0, -2.8675773, -8.188697, 7.8670607, 0.43902752)
 shape = SubResource("ConcavePolygonShape3D_ebnbr")
 
-[node name="CollisionShape3D4" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="." unique_id=2080510987]
 transform = Transform3D(0.2601958, 0, -1.2534579e-07, 0, 2.46359, 0, -1.1373519e-08, 0, -2.8675773, 7.755848, 7.976897, 0.35740557)
 shape = SubResource("ConcavePolygonShape3D_w1md4")
 
-[node name="CollisionShape3D5" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="." unique_id=1159212893]
 transform = Transform3D(-3.3515175e-07, 0, 8, 0, 7.6673784, 0, -7.6673784, 0, -3.496911e-07, 0, 7.995949, 0)
 shape = SubResource("ConcavePolygonShape3D_lrpuu")
 
-[node name="CollisionShape3D6" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="." unique_id=216545262]
 transform = Transform3D(-3.4351973e-07, 0, 8.108748, 0, 7.6673784, 0, -7.858815, 0, -3.5444464e-07, 0, 7.995949, 0)
 shape = SubResource("ConcavePolygonShape3D_gexj1")
 
-[node name="CollisionShape3D7" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D7" type="CollisionShape3D" parent="." unique_id=1633124300]
 transform = Transform3D(-3.4190424e-07, 0, 8, 0, 7.6673784, 0, -7.8218575, 0, -3.496911e-07, 0, 7.995949, 0)
 shape = SubResource("ConcavePolygonShape3D_j3bie")
 
-[node name="CollisionShape3D8" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D8" type="CollisionShape3D" parent="." unique_id=256152979]
 transform = Transform3D(-3.4148357e-07, 0, 8, 0, 7.6673784, 0, -7.8122334, 0, -3.496911e-07, 0, 7.995949, 0)
 shape = SubResource("ConcavePolygonShape3D_jl811")
 
-[node name="CollisionShape3D9" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D9" type="CollisionShape3D" parent="." unique_id=1756136044]
 transform = Transform3D(-3.3515175e-07, 0, 8, 0, 7.6673784, 0, -7.6673784, 0, -3.496911e-07, 0, 7.995949, 0)
 shape = SubResource("ConcavePolygonShape3D_ov3hg")
 
-[node name="DoorCollision" type="CollisionShape3D" parent="."]
+[node name="DoorCollision" type="CollisionShape3D" parent="." unique_id=1713999089]
 transform = Transform3D(1.1373519e-08, 1.796039e-06, 2.7984846, 0, 4.612154, -1.0897701e-06, 0.2601958, -7.850736e-14, -1.2232564e-07, 0.33729053, 5.0367084, -7.8443003)
 shape = SubResource("ConcavePolygonShape3D_1dm1i")
 
-[node name="Open_door_sound" type="AudioStreamPlayer3D" parent="."]
+[node name="Open_door_sound" type="AudioStreamPlayer3D" parent="." unique_id=1291511023]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.34773, -7.43001)
 stream = ExtResource("2_51njh")
 
-[node name="Close_door_sound" type="AudioStreamPlayer3D" parent="."]
+[node name="Close_door_sound" type="AudioStreamPlayer3D" parent="." unique_id=1907984563]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.34773, -7.43001)
 stream = ExtResource("2_51njh")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=937769020]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.282699, 0)
 light_energy = 5.0
 shadow_enabled = true
 omni_range = 31.011
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=652065289]
 replication_config = SubResource("SceneReplicationConfig_8npjq")
 
 [connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]

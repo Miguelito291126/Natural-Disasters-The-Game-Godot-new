@@ -208,15 +208,19 @@ down={
 [layer_names]
 
 3d_render/layer_2="terrain"
-3d_physics/layer_1="collision"
+3d_physics/layer_1="jugador"
 3d_physics/layer_2="interactable"
 3d_physics/layer_3="water"
 3d_physics/layer_4="lava"
 3d_physics/layer_5="volcano"
+3d_physics/layer_6="meteorite"
+3d_physics/layer_7="explosion"
+3d_physics/layer_8="objects"
+3d_physics/layer_9="terrain"
 
 [physics]
 
-3d/default_gravity=50.0
+3d/physics_engine="Jolt Physics"
 
 [rendering]
 

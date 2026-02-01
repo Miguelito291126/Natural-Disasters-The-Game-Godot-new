@@ -181,8 +181,11 @@ gizmo_extents = 2.9
 
 [node name="ground" type="StaticBody3D" parent="." unique_id=1717456805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, 0.16407156, 1012.02)
+collision_layer = 256
+collision_mask = 253
 
 [node name="Mesh" type="MeshInstance3D" parent="ground" unique_id=889589910]
+layers = 2
 material_override = SubResource("StandardMaterial3D_olcgw")
 mesh = SubResource("BoxMesh_dlo4w")
 skeleton = NodePath("../..")
@@ -203,6 +206,8 @@ offset_bottom = 288.0
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1535083665]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+collision_layer = 256
+collision_mask = 253
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1902026613]
 shape = SubResource("BoxShape3D_b68bb")
