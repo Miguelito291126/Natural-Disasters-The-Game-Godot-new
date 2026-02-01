@@ -49,7 +49,6 @@ func destroy():
 	var Broken_Hause = bokenhause.instantiate()
 	get_parent().add_child(Broken_Hause)
 	Broken_Hause.global_transform = hause_model.global_transform
-	Broken_Hause.scale *= breakable_scale_factor
 	destrolled = true
 	# Guardar path en Globals
 	Globals.add_destrolled_nodes(self.get_path())
