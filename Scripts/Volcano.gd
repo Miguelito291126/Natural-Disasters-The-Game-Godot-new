@@ -9,7 +9,8 @@ var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 @export var launch_interval = 5  # Intervalo de lanzamiento en segundos
 @export var launch_force = 50000  # Fuerza de lanzamiento de la bola de fuego
 @export var launch_amount = 20  # Fuerza de lanzamiento de la bola de fuego
-@export var launch_position = launch_marker.global_position
+
+var launch_position: Vector3
 
 @export var Lava_Level  = 125
 @export var Pressure = 0
@@ -25,6 +26,9 @@ var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 @onready var erupt_smoke = $"Erupt Smoke"
 @onready var erupt_sound = $"Erupt Sound"
 @onready var launch_marker: Marker3D = $launch_marker
+
+func _ready() -> void:
+	launch_position = launch_marker.global_position
 
 func check_pressure():
 	# Verifica si la presión del volcán es mayor o igual a 100

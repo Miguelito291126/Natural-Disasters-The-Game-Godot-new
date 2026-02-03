@@ -89,7 +89,7 @@ properties/5/path = NodePath(".:is_volcano_rock")
 properties/5/spawn = true
 properties/5/replication_mode = 1
 
-[node name="meteor" type="RigidBody3D" unique_id=988161167 groups=["Meteor", "movable_objects"]]
+[node name="meteor" type="RigidBody3D" unique_id=988161167 groups=["Meteor"]]
 collision_layer = 32
 collision_mask = 385
 can_sleep = false
