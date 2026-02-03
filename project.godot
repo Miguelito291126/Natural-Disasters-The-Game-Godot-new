@@ -57,7 +57,7 @@ Thunder=""
 Explosion=""
 Pickable=""
 movable_objects=""
-lava=""
+Lava_Area=""
 
 [importer_defaults]
 
@@ -231,4 +231,4 @@ down={
 textures/canvas_textures/default_texture_filter=0
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
-textures/default_filters/anisotropic_filtering_level=1
+textures/default_filters/anisotropic_filtering_level=16

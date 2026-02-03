@@ -18,6 +18,9 @@ func _physics_process(delta):
 	magnitude_modifier_increment(delta)
 	
 
+func _process(delta):
+	destroy_all_houses()
+
 func _ready() -> void:
 	PlayInitialSounds()
 	destroy_all_houses()

@@ -103,10 +103,10 @@ func _ready():
    
 
 func LoadGameScene():
+	addresolutions()
+
 	ip_text.text = Globals.ip
 	port_text.text = str(Globals.port)
-	
-	addresolutions()
 
 	_on_antialiasing_item_selected(Globals.GlobalsData.antialiasing)
 	_on_antitropic_item_selected(Globals.GlobalsData.antitropic)

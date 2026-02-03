@@ -78,6 +78,8 @@ func LoadGameScene():
 	_on_time_value_changed(Globals.GlobalsData.timer_disasters)
 	_on_option_button_item_selected(Globals.GlobalsData.quality)
 
+
+
 	fullscreen.button_pressed = Globals.GlobalsData.fullscreen
 	fps.button_pressed = Globals.GlobalsData.FPS
 	vsync.button_pressed = Globals.GlobalsData.vsync

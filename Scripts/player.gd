@@ -743,7 +743,7 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 		if damag > 0:
 			damage.rpc(damag)
 
-	elif area.is_in_group("Volcano"):
+	elif area.is_in_group("Lava_Area"):
 		IsInLava = true
 
 		# Obtener la altura de la lava desde el collider del volcán
