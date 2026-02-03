@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Natural Disasters Survival The Game"
-config/version="1.0.6.7.2"
+config/version="1.0.6.7.3"
 run/main_scene="res://Scenes/main.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://dcii8d8jnctvr"
@@ -37,6 +37,7 @@ window/size/viewport_height=1080
 window/stretch/mode="viewport"
 window/stretch/aspect="ignore"
 window/handheld/orientation=4
+window/vsync/vsync_mode=true
 
 [editor_plugins]
 
@@ -56,6 +57,7 @@ Thunder=""
 Explosion=""
 Pickable=""
 movable_objects=""
+lava=""
 
 [importer_defaults]
 
@@ -229,3 +231,4 @@ down={
 textures/canvas_textures/default_texture_filter=0
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
+textures/default_filters/anisotropic_filtering_level=1

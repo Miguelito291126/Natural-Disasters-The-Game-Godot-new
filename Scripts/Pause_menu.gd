@@ -24,7 +24,7 @@ var resolutions_dic = {
 	"2400x1080 ": Vector2i(2400, 1080 ),
 	"1920x1080": Vector2i(1920, 1080),
 	"1600x900": Vector2i(1600, 900),
-	"1440x1080": Vector2i(14400, 1080),
+	"1440x1080": Vector2i(1440, 1080),
 	"1440x900": Vector2i(1440, 900),
 	"1366x768": Vector2i(1366, 768),
 	"1360x768": Vector2i(1360, 768),
@@ -67,11 +67,20 @@ func _ready():
 func LoadGameScene():
 	addresolutions()
 
+	_on_antialiasing_item_selected(Globals.GlobalsData.antialiasing)
+	_on_antitropic_item_selected(Globals.GlobalsData.antitropic)
+	_on_vsycn_toggled(Globals.GlobalsData.vsync)
+	_on_volumen_value_changed(Globals.GlobalsData.volumen)
+	_on_volumen_music_value_changed(Globals.GlobalsData.volumen_music)
+	_on_resolutions_item_selected(Globals.GlobalsData.resolution)
+	_on_fullscreen_toggled(Globals.GlobalsData.fullscreen)
+	_on_fps_toggled(Globals.GlobalsData.FPS)
+	_on_time_value_changed(Globals.GlobalsData.timer_disasters)
+	_on_option_button_item_selected(Globals.GlobalsData.quality)
+
 	fullscreen.button_pressed = Globals.GlobalsData.fullscreen
 	fps.button_pressed = Globals.GlobalsData.FPS
 	vsync.button_pressed = Globals.GlobalsData.vsync
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(Globals.GlobalsData.volumen))
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(Globals.GlobalsData.volumen_music))
 	volumen.value = Globals.GlobalsData.volumen
 	volumen_music.value = Globals.GlobalsData.volumen_music
 	time.value = Globals.GlobalsData.timer_disasters
@@ -117,9 +126,14 @@ func _on_fps_toggled(toggled_on:bool):
 	Globals.GlobalsData.save_file()
 
 
-func _on_vsycn_toggled(toggled_on:bool):
+func _on_vsycn_toggled(toggled_on: bool):
 	Globals.GlobalsData.vsync = toggled_on
-	ProjectSettings.set_setting("display/window/vsync/vsync_mode", toggled_on)
+
+	if toggled_on:
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+	else:
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+
 	Globals.GlobalsData.save_file()
 
 func _on_back_pressed():
@@ -174,9 +188,6 @@ func _on_time_value_changed(value):
 	var player = _get_local_player()
 	if player == null or not player.admin_mode:
 		Globals.print_role("You dont have perms")
-		return
-
-	if not multiplayer.is_server():
 		return
 
 	if not Globals.started:
@@ -247,14 +258,31 @@ func _on_option_button_item_selected(index: int):
 	Globals.GlobalsData.quality = index
 	Globals.GlobalsData.save_file()
 
-
 func _on_antialiasing_item_selected(index: int) -> void:
 	Globals.GlobalsData.antialiasing = index
-	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", index)
-	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", index)
+
+	var viewport := get_viewport()
+
+	match index:
+		0: viewport.msaa_3d = Viewport.MSAA_DISABLED
+		1: viewport.msaa_3d = Viewport.MSAA_2X
+		2: viewport.msaa_3d = Viewport.MSAA_4X
+		3: viewport.msaa_3d = Viewport.MSAA_8X
+
 	Globals.GlobalsData.save_file()
+
+
 
 func _on_antitropic_item_selected(index: int) -> void:
 	Globals.GlobalsData.antitropic = index
-	ProjectSettings.set_setting("rendering/textures/default_filters/anisotropic_filtering_level", index)
+
+	var levels = [1, 2, 4, 8, 16]
+
+	if index >= 0 and index < levels.size():
+		ProjectSettings.set_setting(
+			"rendering/textures/default_filters/anisotropic_filtering_level",
+			levels[index]
+		)
+		ProjectSettings.save()
+
 	Globals.GlobalsData.save_file()
