@@ -253,7 +253,7 @@ radius = 40.4438
 
 [node name="volcano" type="StaticBody3D" unique_id=155383846 groups=["Volcano"]]
 collision_layer = 16
-collision_mask = 493
+collision_mask = 385
 script = ExtResource("1_3fq1s")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1387515441]
@@ -326,7 +326,7 @@ omni_range = 363.787
 [node name="Volcano_Area" type="Area3D" parent="." unique_id=1774524554 groups=["Volcano"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 315.6059, -5.73349)
 collision_layer = 8
-collision_mask = 501
+collision_mask = 385
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Volcano_Area" unique_id=1472593047]
 shape = SubResource("SphereShape3D_lhoig")

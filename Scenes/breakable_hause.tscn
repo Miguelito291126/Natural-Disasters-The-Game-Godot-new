@@ -8,260 +8,260 @@ script = ExtResource("2_ouavs")
 
 [node name="floor_cell" parent="." index="0" unique_id=1001527537 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="floor_cell_001" parent="." index="1" unique_id=1415682524 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="floor_cell_002" parent="." index="2" unique_id=639716867 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="floor_cell_003" parent="." index="3" unique_id=28333601 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="Roof_cell" parent="." index="4" unique_id=1879500714 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="Roof_cell_001" parent="." index="5" unique_id=1630780778 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="Roof_cell_002" parent="." index="6" unique_id=1597712783 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="Roof_cell_003" parent="." index="7" unique_id=1297640687 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="Roof_cell_004" parent="." index="8" unique_id=516068346 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="Roof_cell_005" parent="." index="9" unique_id=1690274033 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="door_cell" parent="." index="10" unique_id=1633044703 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="door_cell_001" parent="." index="11" unique_id=1754044486 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="door_cell_002" parent="." index="12" unique_id=1108520516 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="door_cell_003" parent="." index="13" unique_id=594944133 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="door_cell_004" parent="." index="14" unique_id=1690920098 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="door_cell_005" parent="." index="15" unique_id=1237718332 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="door_cell_006" parent="." index="16" unique_id=1737608297 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="door_cell_007" parent="." index="17" unique_id=1261817873 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_cell_001" parent="." index="18" unique_id=1466273041 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_cell_002" parent="." index="19" unique_id=952966721 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_cell_003" parent="." index="20" unique_id=1835272254 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_cell_004" parent="." index="21" unique_id=369508074 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_cell_005" parent="." index="22" unique_id=1602129022 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_cell_006" parent="." index="23" unique_id=194937887 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_cell_007" parent="." index="24" unique_id=341194101 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_001_cell" parent="." index="25" unique_id=1770855123 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_001_cell_001" parent="." index="26" unique_id=400870437 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_001_cell_002" parent="." index="27" unique_id=460198928 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_001_cell_003" parent="." index="28" unique_id=1709777348 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_001_cell_004" parent="." index="29" unique_id=1702270989 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_001_cell_005" parent="." index="30" unique_id=57258705 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_001_cell_006" parent="." index="31" unique_id=884764168 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="windows_001_cell_007" parent="." index="32" unique_id=1103206992 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_001_cell" parent="." index="33" unique_id=518860598 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_001_cell_001" parent="." index="34" unique_id=413754509 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_001_cell_002" parent="." index="35" unique_id=771172657 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_001_cell_003" parent="." index="36" unique_id=223074383 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_002_cell" parent="." index="37" unique_id=1106899059 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_002_cell_001" parent="." index="38" unique_id=911507760 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_002_cell_002" parent="." index="39" unique_id=100874456 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_002_cell_003" parent="." index="40" unique_id=26992809 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_003_cell" parent="." index="41" unique_id=1901871110 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_003_cell_001" parent="." index="42" unique_id=2039662361 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_003_cell_002" parent="." index="43" unique_id=1924256370 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_003_cell_003" parent="." index="44" unique_id=1809963402 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_003_cell_004" parent="." index="45" unique_id=115616513 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_003_cell_005" parent="." index="46" unique_id=1767757824 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_003_cell_006" parent="." index="47" unique_id=761544382 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_003_cell_007" parent="." index="48" unique_id=595046235 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_004_cell" parent="." index="49" unique_id=2119817092 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_004_cell_001" parent="." index="50" unique_id=1813551539 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_004_cell_002" parent="." index="51" unique_id=667098514 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_004_cell_003" parent="." index="52" unique_id=1444830230 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_004_cell_004" parent="." index="53" unique_id=1509717721 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_004_cell_005" parent="." index="54" unique_id=1468051570 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_004_cell_006" parent="." index="55" unique_id=1452692757 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_004_cell_007" parent="." index="56" unique_id=975903449 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_005_cell" parent="." index="57" unique_id=1035858194 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_005_cell_001" parent="." index="58" unique_id=2032315003 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_005_cell_002" parent="." index="59" unique_id=464137488 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_005_cell_003" parent="." index="60" unique_id=1133136844 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_005_cell_004" parent="." index="61" unique_id=2042873059 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_005_cell_005" parent="." index="62" unique_id=1022480298 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_005_cell_006" parent="." index="63" unique_id=927973847 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="wall_005_cell_007" parent="." index="64" unique_id=467964841 groups=["Pickable", "movable_objects"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021

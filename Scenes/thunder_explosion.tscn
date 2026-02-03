@@ -60,7 +60,7 @@ draw_pass_1 = SubResource("CylinderMesh_a801j")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1384145886 groups=["Explosion"]]
 collision_layer = 64
-collision_mask = 445
+collision_mask = 385
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2097094028]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)

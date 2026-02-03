@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Natural Disasters Survival The Game"
-config/version="1.0.6.7"
+config/version="1.0.6.7.2"
 run/main_scene="res://Scenes/main.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://dcii8d8jnctvr"
@@ -208,7 +208,7 @@ down={
 [layer_names]
 
 3d_render/layer_2="terrain"
-3d_physics/layer_1="jugador"
+3d_physics/layer_1="player"
 3d_physics/layer_2="interactable"
 3d_physics/layer_3="water"
 3d_physics/layer_4="lava"
@@ -217,6 +217,7 @@ down={
 3d_physics/layer_7="explosion"
 3d_physics/layer_8="objects"
 3d_physics/layer_9="terrain"
+3d_physics/layer_10="tornado"
 
 [physics]
 

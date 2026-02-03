@@ -59,7 +59,7 @@ properties/5/replication_mode = 1
 
 [node name="hause" type="StaticBody3D" unique_id=1707887295 node_paths=PackedStringArray("door_open_sound", "door_close_sound") groups=["Destrollable", "Hause"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 script = ExtResource("1_m3vm1")
 door_open_sound = NodePath("Open_door_sound")
 door_close_sound = NodePath("Close_door_sound")
@@ -69,7 +69,7 @@ breakable_scale_factor = 3.5
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1775160864 groups=["Destrollable", "Hause"]]
 collision_layer = 128
-collision_mask = 381
+collision_mask = 1021
 
 [node name="RoomCollision" type="CollisionShape3D" parent="Area3D" unique_id=1771950419]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10032654, 13.068998, 0.56370926)
