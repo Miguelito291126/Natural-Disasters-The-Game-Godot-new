@@ -48,7 +48,6 @@ enabled=PackedStringArray("res://addons/GPTIntegration/plugin.cfg", "res://addon
 player=""
 Meteor=""
 Volcano=""
-Tsunami=""
 Earthquake=""
 Hause=""
 Destrollable=""
@@ -58,6 +57,7 @@ Explosion=""
 Pickable=""
 movable_objects=""
 Lava_Area=""
+Water_Area=""
 
 [importer_defaults]
 

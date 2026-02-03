@@ -4,9 +4,12 @@ extends Node3D
 var fireball_scene = preload("res://Scenes/meteor.tscn")  # Escena de la bola de fuego
 var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 
+
+
 @export var launch_interval = 5  # Intervalo de lanzamiento en segundos
 @export var launch_force = 50000  # Fuerza de lanzamiento de la bola de fuego
 @export var launch_amount = 20  # Fuerza de lanzamiento de la bola de fuego
+@export var launch_position = launch_marker.global_position
 
 @export var Lava_Level  = 125
 @export var Pressure = 0
@@ -21,6 +24,7 @@ var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 @onready var erupt_sparks = $"Erupt Sparks"
 @onready var erupt_smoke = $"Erupt Smoke"
 @onready var erupt_sound = $"Erupt Sound"
+@onready var launch_marker: Marker3D = $launch_marker
 
 func check_pressure():
 	# Verifica si la presión del volcán es mayor o igual a 100
@@ -82,20 +86,14 @@ func erupt():
 		Globals.set_weather_and_disaster.rpc("Dust Storm")
 
 func _process(_delta: float) -> void:
-	volcano_area.global_position = get_lava_level_position()
 	check_pressure()
-
-
-
-func get_lava_level_position():
-	return Vector3(self.position.x, self.position.y + Lava_Level, self.position.z)
 
 func _launch_fireball(range: int, time: int):
 	for i in range:
 		var fireball = fireball_scene.instantiate()
 		var launch_direction = Vector3(randi_range(-1,1), 1, randi_range(-1,1)).normalized()  # Dirección hacia arriba
 		get_parent().add_child(fireball, true)  # Agregar la bola de fuego como hijo del volcán primero
-		fireball.global_position = get_lava_level_position() # Posición inicial en el volcán
+		fireball.global_position = launch_position # Posición inicial en el volcán
 		fireball.scale = Vector3(1,1,1)
 		fireball.is_volcano_rock = true
 		fireball.apply_impulse(launch_direction * launch_force, Vector3.UP)  # Aplicar fuerza para lanzar la bola de fuego

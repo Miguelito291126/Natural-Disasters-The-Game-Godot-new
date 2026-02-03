@@ -715,7 +715,7 @@ func _on_area_3d_body_entered(body:Node3D):
 
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
-	if body.is_in_group("Tsunami"):
+	if body.is_in_group("Water_Area"):
 		IsInWater = false
 		IsUnderWater = false
 
@@ -780,7 +780,7 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 			if camera_node:
 				IsUnderLava = true
 
-	elif area.is_in_group("Tsunami"):
+	elif area.is_in_group("Water_Area"):
 		IsInWater = true
 		
 		# Obtener la altura del agua desde el collider del tsunami
@@ -818,13 +818,13 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 				IsUnderWater = true
 
 func _on_area_3d_area_exited(area: Area3D) -> void:
-	if area.is_in_group("Volcano"):
+	if area.is_in_group("Lava_Area"):
 		IsInLava = false
 		IsUnderLava = false
 			
-	elif area.is_in_group("Tsunami"):
+	elif area.is_in_group("Water_Area"):
 		IsInWater = false
-		IsUnderWater = false  # ← Añade esto
+		IsUnderWater = false
 
 
 @rpc("any_peer", "call_local")

@@ -323,8 +323,8 @@ light_energy = 1000.0
 shadow_enabled = true
 omni_range = 363.787
 
-[node name="Volcano_Area" type="Area3D" parent="." unique_id=1774524554 groups=["Volcano", "lava"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 315.6059, -5.73349)
+[node name="Volcano_Area" type="Area3D" parent="." unique_id=1774524554 groups=["Lava_Area", "Volcano"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 301.8597, 0)
 collision_layer = 8
 collision_mask = 385
 
