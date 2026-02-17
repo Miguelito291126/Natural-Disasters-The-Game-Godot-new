@@ -1,13 +1,13 @@
 extends Area3D
 
-var movement_speed = 10
-var movement_radius = 50
+@export var movement_speed = 10
+@export var movement_radius = 50
 
-var ray_length = 1000
-var ground_height = 0
+@export var ray_length = 1000
+@export var ground_height = 0
 
-var tornado_strength = 100
-var radius = 10
+@export var tornado_strength = 100
+@export var radius = 10
 
 
 @onready var ray_cast = $RayCast

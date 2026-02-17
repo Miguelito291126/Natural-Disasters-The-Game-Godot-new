@@ -337,9 +337,9 @@ func _on_antitropic_item_selected(index: int) -> void:
 			"rendering/textures/default_filters/anisotropic_filtering_level",
 			levels[index]
 		)
-		ProjectSettings.save()
 
 	Globals.GlobalsData.save_file()
+
 
 
 
