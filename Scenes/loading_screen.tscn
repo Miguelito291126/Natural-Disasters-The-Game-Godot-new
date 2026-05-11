@@ -1,6 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://daheu4r7g53ps"]
+[gd_scene format=3 uid="uid://daheu4r7g53ps"]
 
-[ext_resource type="Script" uid="uid://bhqhxhn4v2cs2" path="res://Scripts/loading_screen.gd" id="1_f6j85"]
+[ext_resource type="Script" uid="uid://bhqhxhn4v2cs2" path="res://Scripts/loading_screen.gd" id="1_0t5xw"]
 [ext_resource type="Theme" uid="uid://cb8utilpq2brs" path="res://Resources/pause_and_menu_theme.tres" id="2_hioyu"]
 
 [sub_resource type="Animation" id="Animation_fabrc"]
@@ -69,19 +69,17 @@ _data = {
 &"fade_out": SubResource("Animation_a31nl")
 }
 
-[node name="loading screen" type="CanvasLayer"]
+[node name="loading screen" type="CanvasLayer" unique_id=1785595712]
 process_mode = 3
 layer = 3
-script = ExtResource("1_f6j85")
+script = ExtResource("1_0t5xw")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1004719936]
 process_mode = 3
-libraries = {
-&"": SubResource("AnimationLibrary_0hyq3")
-}
-autoplay = "fade_in"
+libraries/ = SubResource("AnimationLibrary_0hyq3")
+autoplay = &"fade_in"
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=578168221]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 15
@@ -91,7 +89,7 @@ grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="Panel" type="Panel" parent="Control"]
+[node name="Panel" type="Panel" parent="Control" unique_id=1410255830]
 process_mode = 3
 layout_mode = 1
 anchors_preset = 15
@@ -101,7 +99,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_hioyu")
 
-[node name="ProgressBar" type="ProgressBar" parent="Control"]
+[node name="ProgressBar" type="ProgressBar" parent="Control" unique_id=19822859]
 process_mode = 3
 layout_mode = 1
 anchors_preset = 14

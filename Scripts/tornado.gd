@@ -1,49 +1,37 @@
 extends Area3D
 
-@export var movement_speed = 10
-@export var movement_radius = 50
+class_name Tornado
 
-@export var ray_length = 1000
-@export var ground_height = 0
+@export var movement_speed: float = 10.0
+@export var movement_radius: float = 50.0
+@export var ray_length: float = 1000.0
+@export var tornado_strength: float = 100.0
+@export var radius: float = 10.0
 
-@export var tornado_strength = 100
-@export var radius = 10
+var ground_height: float = 0.0
+@onready var ray_cast: RayCast3D = $RayCast
 
-
-@onready var ray_cast = $RayCast
-
-func _ready():
+func _ready() -> void:
 	ray_cast.target_position = Vector3(0, -ray_length, 0)
 	ray_cast.force_raycast_update()
-	set_process(true)
 
-func _process(delta):
+func _process(delta: float) -> void:
 	if ray_cast.is_colliding():
 		ground_height = ray_cast.get_collision_point().y
-		global_position.y = ground_height  # Mantener el tornado a la altura del suelo
-	
+		global_position.y = ground_height
 
-	# Genera una nueva posición aleatoria dentro del radio de movimiento
-	var new_position = Vector3(randi_range(-movement_radius, movement_radius),
-								0,
-								randi_range(-movement_radius, movement_radius))
-	
-	# Aplica movimiento hacia la nueva posición
-	var direction = (new_position - global_position).normalized()
+	var new_pos = Vector3(randf_range(-movement_radius, movement_radius), 0, randf_range(-movement_radius, movement_radius))
+	var direction = (new_pos - global_position).normalized()
 	translate(direction * movement_speed * delta)
 
-
-func _physics_process(_delta):
+func _physics_process(_delta: float) -> void:
 	for body in get_overlapping_bodies():
-		if body.is_in_group("movable_objects") and body.is_class("RigidBody3D"):
-			var direction = (body.global_position - global_position).normalized()
-			var perpendicular_direction = Vector3(-direction.z, 0, direction.x)  # Dirección perpendicular al vector hacia el tornado
-			var force = perpendicular_direction * tornado_strength
+		var direction = (body.global_position - global_position).normalized()
+		var perpendicular = Vector3(-direction.z, 0, direction.x)
+		var force = perpendicular * tornado_strength
+		
+		if body.is_in_group("movable_objects") and body is RigidBody3D:
 			body.apply_central_impulse(force)
 			body.freeze = false
-		elif body.is_in_group("player"):
-			var direction = (body.global_position - global_position).normalized()
-			var perpendicular_direction = Vector3(-direction.z, 0, direction.x)  # Dirección perpendicular al vector hacia el tornado
-			var force = perpendicular_direction * tornado_strength
-			body.velocity = force
-
+		elif body.is_in_group("player") and body.has_method("apply_disasters_push"):
+			body.apply_disasters_push(force)

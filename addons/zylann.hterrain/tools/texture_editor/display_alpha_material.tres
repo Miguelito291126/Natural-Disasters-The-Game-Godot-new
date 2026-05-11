@@ -1,3 +1,9 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:8b302f397d79a2f8a0d896c5a93cfe1bbf385abe463260f3400b42ddfc185272
-size 233
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://addons/zylann.hterrain/tools/texture_editor/display_alpha.gdshader" type="Shader" id=1]
+
+[resource]
+
+render_priority = 0
+shader = ExtResource( 1 )
+

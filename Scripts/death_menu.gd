@@ -1,4 +1,5 @@
 extends CanvasLayer
+class_name  DeathMenu
 
 func _ready():
 	self.hide()

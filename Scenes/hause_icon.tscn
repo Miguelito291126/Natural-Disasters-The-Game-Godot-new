@@ -1,12 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://d3nqv2bmoyl5d"]
+[gd_scene format=3 uid="uid://d3nqv2bmoyl5d"]
 
-[ext_resource type="PackedScene" uid="uid://hiq4h8n7r78k" path="res://Scenes/hause.tscn" id="1_0ct46"]
+[ext_resource type="PackedScene" uid="uid://tnp2kd6nh30i" path="res://Models/Blend Format/hause.blend" id="1_bwkkq"]
 
-[node name="hause_icon" type="SubViewport"]
-size = Vector2i(128, 128)
+[node name="hause_icon" type="SubViewport" unique_id=17624937]
 render_target_update_mode = 4
 
-[node name="Hause" parent="." instance=ExtResource("1_0ct46")]
+[node name="hause" parent="." unique_id=19145514 instance=ExtResource("1_bwkkq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -13.820971, -49.580124)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, 5.8674, 9.75251, -22.7652)
+[node name="Camera3D" type="Camera3D" parent="." unique_id=290018607]
+current = true
+
+[editable path="hause"]

@@ -1,17 +1,17 @@
 [gd_scene format=3 uid="uid://yrq2iuii7a14"]
 
-[ext_resource type="Script" uid="uid://v57w2n30luys" path="res://Scripts/chat.gd" id="1_eifiy"]
+[ext_resource type="Script" uid="uid://v57w2n30luys" path="res://Scripts/CHat.gd" id="1_eifiy"]
 [ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="2_cxjgb"]
 
-[node name="Chat" type="CanvasLayer"]
+[node name="Chat" type="CanvasLayer" unique_id=972501856]
 process_mode = 3
 script = ExtResource("1_eifiy")
 
-[node name="Panel" type="VBoxContainer" parent="."]
+[node name="Panel" type="VBoxContainer" parent="." unique_id=1208603095]
 offset_right = 535.0
 offset_bottom = 359.0
 
-[node name="TextEdit" type="TextEdit" parent="Panel"]
+[node name="TextEdit" type="TextEdit" parent="Panel" unique_id=462251791]
 process_mode = 3
 auto_translate_mode = 1
 layout_mode = 2
@@ -21,10 +21,10 @@ theme = ExtResource("2_cxjgb")
 editable = false
 metadata/_edit_use_anchors_ = true
 
-[node name="Panel2" type="HBoxContainer" parent="Panel"]
+[node name="Panel2" type="HBoxContainer" parent="Panel" unique_id=1406440331]
 layout_mode = 2
 
-[node name="LineEdit" type="LineEdit" parent="Panel/Panel2"]
+[node name="LineEdit" type="LineEdit" parent="Panel/Panel2" unique_id=1721919234]
 process_mode = 3
 auto_translate_mode = 1
 layout_mode = 2
@@ -32,7 +32,7 @@ size_flags_horizontal = 3
 theme = ExtResource("2_cxjgb")
 metadata/_edit_use_anchors_ = true
 
-[node name="Button" type="Button" parent="Panel/Panel2"]
+[node name="Button" type="Button" parent="Panel/Panel2" unique_id=1103449251]
 process_mode = 3
 auto_translate_mode = 1
 layout_mode = 2
@@ -40,6 +40,6 @@ theme = ExtResource("2_cxjgb")
 text = "Enter"
 metadata/_edit_use_anchors_ = true
 
-[connection signal="focus_entered" from="Panel/Panel2/LineEdit" to="." method="_on_line_edit_focus_entered"]
-[connection signal="focus_exited" from="Panel/Panel2/LineEdit" to="." method="_on_line_edit_focus_exited"]
-[connection signal="pressed" from="Panel/Panel2/Button" to="." method="_on_button_pressed"]
+[connection signal="focus_entered" from="Panel/Panel2/LineEdit" to="." method="_OnLineEditFocusEntered"]
+[connection signal="focus_exited" from="Panel/Panel2/LineEdit" to="." method="_OnLineEditFocusExited"]
+[connection signal="pressed" from="Panel/Panel2/Button" to="." method="_OnButtonPressed"]

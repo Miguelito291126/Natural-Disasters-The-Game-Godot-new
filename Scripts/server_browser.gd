@@ -1,46 +1,57 @@
-extends Panel
+extends ScrollContainer
+class_name ServerBrowser
 
-@onready var list = $List
-var serverinfo = preload("res://Scenes/server_info.tscn") 
-
-const TIMEOUT = 3.0
+@onready var list: VBoxContainer = $List
+@export var server_info_scene: PackedScene = preload("res://Scenes/server_info.tscn")
+const TIMEOUT: float = 3.0
 
 func _ready() -> void:
 	Globals.server_browser = self
+	
+	# Conectar señales de Steam (GodotSteam usa señales en minúsculas usualmente)
+	if Steam.has_signal("lobby_match_list"):
+		Steam.lobby_match_list.connect(_on_steam_lobbies_received)
 
-func _process(_delta: float) -> void:
-	# 1) Eliminar servidores que llevan demasiado sin actualizar
-	var now = Time.get_unix_time_from_system()
-	Reload(now)
+	# Timer para refrescar automáticamente
+	var clean_timer = Timer.new()
+	clean_timer.wait_time = 5.0
+	clean_timer.autostart = true
+	clean_timer.timeout.connect(refresh_server_list)
+	add_child(clean_timer)
+	
+	refresh_server_list()
 
-	if Globals.lisener.get_available_packet_count() > 0:
-		var server_ip = Globals.lisener.get_packet_ip()
-		var server_port = Globals.lisener.get_packet_port()
-		var bytes = Globals.lisener.get_packet()
-		var data = bytes.get_string_from_ascii()
-		var room_list = JSON.parse_string(data)
+func refresh_server_list() -> void:
+	# Limpiar lista visual
+	for n in list.get_children():
+		n.queue_free()
 
-		for i in list.get_children():
-			if i.name == room_list.name:
-				i.get_node("Name").text = room_list.name + " - "
-				i.get_node("Players").text = str(room_list.players) + " - "
-				i.server_ip = server_ip
-				i.server_port = str(server_port)
-				i.last_seen = now
-				return
+	if Globals.use_steam:
+		print("Buscando lobbies en Steam...")
+		# Filtros de Steam
+		Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_WORLDWIDE)
+		Steam.addRequestLobbyListStringFilter("game_id", "natural_disaster_game", Steam.LOBBY_COMPARISON_EQUAL)
+		Steam.requestLobbyList()
 
-		var currentinfo = serverinfo.instantiate()
-		currentinfo.name = room_list.name
-		currentinfo.get_node("Name").text = room_list.name + " - "
-		currentinfo.get_node("Players").text = str(room_list.players) + " - "
-		currentinfo.server_ip = server_ip
-		currentinfo.server_port = str(server_port)
-		currentinfo.last_seen = now
-		list.add_child(currentinfo, true)
+func _on_steam_lobbies_received(lobbies: Array) -> void:
+	print("Se encontraron %d lobbies de Steam." % lobbies.size())
 
-func Reload(now):
-	for i in list.get_children():
-		if i is HBoxContainer:
-			if now - i.last_seen > TIMEOUT:
-				Globals.print_role("Removing inactive server:" + i.name)
-				i.queue_free()
+	for lobby_id in lobbies:
+		var current_info = server_info_scene.instantiate()
+		
+		# Extraer datos del lobby usando el ID
+		var lobby_name = Steam.getLobbyData(lobby_id, "name")
+		var host_id = Steam.getLobbyData(lobby_id, "host_id")
+		var players = Steam.getLobbyData(lobby_id, "players_count")
+		var port = Steam.getLobbyData(lobby_id, "port")
+		
+		# Configurar el nodo visual (asegúrate de que los nombres coincidan en tu escena server_info)
+		current_info.get_node("Name").text = str(lobby_name) + " (Steam) - "
+		current_info.get_node("Players").text = str(players) + " / 4 - "
+
+		# Guardamos los datos en el script del item de la lista
+		current_info.lobby_id = lobby_id
+		current_info.host_id = host_id
+		current_info.server_port = port
+
+		list.add_child(current_info)

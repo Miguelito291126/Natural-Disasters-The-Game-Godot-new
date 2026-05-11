@@ -1,4 +1,5 @@
 extends WorldEnvironment
+class_name MapEnvironment
 
 @onready var Sun = $Sun
 @onready var Moon = $Moon
@@ -12,7 +13,7 @@ var sun_angle = -90 # Ángulo inicial del sol
 var moon_angle = 90
 var interpolation_speed = 1.0
 
-var GlobalsData: DataResource = DataResource.load_file()
+var globals_data: DataResource = DataResource.load_file()
 
 
 @export var ingame_speed = 1

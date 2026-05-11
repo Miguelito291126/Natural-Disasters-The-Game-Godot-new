@@ -1,6 +1,8 @@
 extends Node3D
+class_name Thunder
 
 var explosion_scene = preload("res://Scenes/thunder_explosion.tscn")
+
 @onready var spark = $spark
 @onready var light = $light
 @onready var star = $star

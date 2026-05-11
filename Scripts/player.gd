@@ -1,4 +1,5 @@
 extends CharacterBody3D
+class_name Player
 
 @export var player_id: int = 1
 @export var username: String = "Player"

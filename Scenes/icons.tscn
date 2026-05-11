@@ -1,61 +1,94 @@
 [gd_scene format=3 uid="uid://dtvwojq6fi0t3"]
 
-[ext_resource type="Script" uid="uid://b2mphc12crvb1" path="res://Scripts/icons.gd" id="1_i50jd"]
 [ext_resource type="PackedScene" uid="uid://d3nqv2bmoyl5d" path="res://Scenes/hause_icon.tscn" id="1_pr3mh"]
+[ext_resource type="Script" uid="uid://ci4wb6ver4r4d" path="res://Scripts/icons.gd" id="1_x88sg"]
+[ext_resource type="PackedScene" uid="uid://ckdea844fk6n8" path="res://Scenes/thunder_icon.tscn" id="2_b3472"]
 [ext_resource type="PackedScene" uid="uid://cdx02sb4y5ufy" path="res://Scenes/meteor_icon.tscn" id="3_r5dmu"]
 [ext_resource type="PackedScene" uid="uid://bee1orklhwhkv" path="res://Scenes/volcano_icon.tscn" id="4_mq4qj"]
+[ext_resource type="PackedScene" uid="uid://dcko7ka6gmgdu" path="res://Scenes/sphere_icon.tscn" id="4_x88sg"]
 [ext_resource type="PackedScene" uid="uid://do2ex857ey0an" path="res://Scenes/tsunami_icon.tscn" id="5_3a1ay"]
 [ext_resource type="PackedScene" uid="uid://cyak6rqj5y661" path="res://Scenes/tornado_icon.tscn" id="6_x88sg"]
-[ext_resource type="PackedScene" uid="uid://bgj3reef73qvg" path="res://Scenes/earthquake_icon.tscn" id="7_x88sg"]
+[ext_resource type="Shader" uid="uid://4lxdfdreyjat" path="res://clouds.gdshader" id="8_tc6ya"]
+[ext_resource type="PackedScene" uid="uid://bjb8o43uwwct" path="res://Scenes/cube_icon.tscn" id="8_y8qm4"]
+[ext_resource type="Texture2D" uid="uid://p56xwtihxq22" path="res://Sprites/dark-black-texture-with-beautiful-stars-vector.jpg" id="9_y8qm4"]
 
-[node name="icons" type="Node"]
-script = ExtResource("1_i50jd")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b3472"]
+shader = ExtResource("8_tc6ya")
+shader_parameter/day_top_color = Color(0.1, 0.6, 1, 1)
+shader_parameter/day_bottom_color = Color(0.4, 0.8, 1, 1)
+shader_parameter/sunset_top_color = Color(0.7, 0.75, 1, 1)
+shader_parameter/sunset_bottom_color = Color(1, 0.5, 0.7, 1)
+shader_parameter/night_top_color = Color(0.02, 0, 0.04, 1)
+shader_parameter/night_bottom_color = Color(0.1, 0, 0.2, 1)
+shader_parameter/horizon_color = Color(0, 0.7, 0.8, 1)
+shader_parameter/horizon_blur = 0.05
+shader_parameter/sun_color = Color(10, 8, 1, 1)
+shader_parameter/sun_sunset_color = Color(10, 0, 0, 1)
+shader_parameter/sun_size = 0.2
+shader_parameter/sun_blur = 10.0
+shader_parameter/moon_color = Color(1, 0.95, 0.7, 1)
+shader_parameter/moon_size = 0.06
+shader_parameter/moon_blur = 0.1
+shader_parameter/clouds_edge_color = Color(0.8, 0.8, 0.98, 1)
+shader_parameter/clouds_top_color = Color(1, 1, 1, 1)
+shader_parameter/clouds_middle_color = Color(0.92, 0.92, 0.98, 1)
+shader_parameter/clouds_bottom_color = Color(0.83, 0.83, 0.94, 1)
+shader_parameter/clouds_speed = 2.0
+shader_parameter/clouds_direction = 0.2
+shader_parameter/clouds_scale = 1.0
+shader_parameter/clouds_cutoff = 0.3
+shader_parameter/clouds_fuzziness = 0.5
+shader_parameter/clouds_weight = 0.0
+shader_parameter/clouds_blur = 0.25
+shader_parameter/stars_texture = ExtResource("9_y8qm4")
+shader_parameter/stars_speed = 1.0
+shader_parameter/overwritten_time = 0.0
 
-[node name="volcano_icon" parent="." instance=ExtResource("4_mq4qj")]
+[sub_resource type="Sky" id="Sky_86aew"]
+sky_material = SubResource("ShaderMaterial_b3472")
 
-[node name="Volcano" parent="volcano_icon" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2755.23, 0, -5033.24)
+[sub_resource type="Environment" id="Environment_nklhb"]
+background_mode = 2
+sky = SubResource("Sky_86aew")
 
-[node name="Camera3D" parent="volcano_icon" index="1"]
-transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, -2513.32, 224.774, -5729.69)
+[node name="icons" type="Node" unique_id=92965686]
+script = ExtResource("1_x88sg")
 
-[node name="tornado_icon" parent="." instance=ExtResource("6_x88sg")]
+[node name="thunder_icon" parent="." unique_id=634388402 instance=ExtResource("2_b3472")]
+size = Vector2i(128, 128)
 
-[node name="Tornado" parent="tornado_icon" index="0"]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 3243.93)
+[node name="meteor_icon" parent="." unique_id=720432337 instance=ExtResource("3_r5dmu")]
+size = Vector2i(128, 128)
 
-[node name="Camera3D" parent="tornado_icon" index="1"]
-transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, 64.8581, 64.32, 3114.65)
+[node name="hause_icon" parent="." unique_id=17624937 instance=ExtResource("1_pr3mh")]
+size = Vector2i(128, 128)
 
-[node name="tsunami_icon" parent="." instance=ExtResource("5_3a1ay")]
+[node name="sphere_icon" parent="." unique_id=12656304 instance=ExtResource("4_x88sg")]
+size = Vector2i(128, 128)
 
-[node name="tsunami" parent="tsunami_icon" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12391.4, 0, -3570.97)
+[node name="tornado_icon" parent="." unique_id=1906804105 instance=ExtResource("6_x88sg")]
+size = Vector2i(128, 128)
 
-[node name="Camera3D" parent="tsunami_icon" index="1"]
-transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, 12633.3, 224.774, -5246.8)
+[node name="tsunami_icon" parent="." unique_id=1066297144 instance=ExtResource("5_3a1ay")]
+size = Vector2i(128, 128)
 
-[node name="meteor_icon" parent="." instance=ExtResource("3_r5dmu")]
+[node name="volcano_icon" parent="." unique_id=2117860562 instance=ExtResource("4_mq4qj")]
+size = Vector2i(128, 128)
 
-[node name="Camera3D" parent="meteor_icon" index="0"]
-transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, -121.119, 1456.25, 1387.67)
+[node name="cube_icon" parent="." unique_id=189394947 instance=ExtResource("8_y8qm4")]
+size = Vector2i(128, 128)
 
-[node name="Meteor" parent="meteor_icon" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -123.807, 1456.25, 1396.83)
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=130693838]
+environment = SubResource("Environment_nklhb")
 
-[node name="hause_icon" parent="." instance=ExtResource("1_pr3mh")]
-
-[node name="earthquake_icon" parent="." instance=ExtResource("7_x88sg")]
-
-[node name="Earthquake" parent="earthquake_icon" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2218.49, 0, -61948.1)
-
-[node name="Camera3D" parent="earthquake_icon" index="1"]
-transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, -1976.58, 224.774, -62644.5)
-
-[editable path="volcano_icon"]
-[editable path="tornado_icon"]
-[editable path="tsunami_icon"]
-[editable path="meteor_icon"]
-[editable path="hause_icon"]
-[editable path="earthquake_icon"]
+[node name="Sun" type="DirectionalLight3D" parent="WorldEnvironment" unique_id=1799305485]
+transform = Transform3D(1, 0, 0, 0, 0.45709792, 0.8894164, 0, -0.8894164, 0.45709792, 0, 0, 0)
+layers = 3
+light_energy = 2.0
+shadow_enabled = true
+shadow_blur = 0.1
+directional_shadow_split_1 = 0.01
+directional_shadow_split_2 = 0.04
+directional_shadow_split_3 = 0.15
+directional_shadow_blend_splits = true
+directional_shadow_max_distance = 5000.0

@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://caxxag3apnaje"]
 
-[ext_resource type="Script" uid="uid://cjvdvncmdurd8" path="res://Scripts/players_list_menu.gd" id="1_r0heg"]
+[ext_resource type="Script" uid="uid://bpb7kal7xb8sg" path="res://Scripts/death_menu.gd" id="1_r0heg"]
 [ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="2_dqhul"]
 
-[node name="Players List Menu" type="CanvasLayer"]
+[node name="Players List Menu" type="CanvasLayer" unique_id=455170831]
 process_mode = 3
 layer = 3
 script = ExtResource("1_r0heg")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1254422848]
 offset_left = 738.0
 offset_top = 288.0
 offset_right = 1192.0
@@ -16,7 +16,7 @@ offset_bottom = 803.0
 mouse_filter = 2
 theme = ExtResource("2_dqhul")
 
-[node name="List" type="VBoxContainer" parent="Panel"]
+[node name="List" type="VBoxContainer" parent="Panel" unique_id=1490639903]
 layout_mode = 1
 offset_right = 225.5
 offset_bottom = 23.0
@@ -25,14 +25,14 @@ mouse_filter = 2
 theme = ExtResource("2_dqhul")
 alignment = 1
 
-[node name="Info" type="HBoxContainer" parent="Panel/List"]
+[node name="Info" type="HBoxContainer" parent="Panel/List" unique_id=1722299077]
 layout_mode = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="Panel/List/Info"]
+[node name="Label" type="Label" parent="Panel/List/Info" unique_id=671652874]
 layout_mode = 2
 text = "Name"
 
-[node name="Label2" type="Label" parent="Panel/List/Info"]
+[node name="Label2" type="Label" parent="Panel/List/Info" unique_id=691946903]
 layout_mode = 2
 text = "- Points"

@@ -1,4 +1,5 @@
 extends CanvasLayer
+class_name Hud
 
 @onready var player = get_parent()
 var NextHeartSoundTime = Time.get_unix_time_from_system()
@@ -42,12 +43,12 @@ func _process(_delta):
 
 	animation_player.speed_scale = freq
 
-	if Globals.GlobalsData.FPS:
+	if Globals.globals_data.FPS:
 		fps.visible = true
 	else:
 		fps.visible = false
 
-	label.text = "Temperature: " + str(snapped(Globals.Temperature, 0.1)) + "ºC\n" + "Humidity: " + str(round(Globals.Humidity)) + "%\n" + "Wind Direction: " + str(round(Globals.convert_VectorToAngle(Globals.Wind_Direction))) + "º\n" + "Wind Speed: " + str(round(Globals.Wind_speed)) + "km/s\n" + "Body Hearth: " + str(round(player.hearth)) + "%\n" + "Body Temperature: " + str(snapped(player.body_temperature, 0.1)) + "ºC\n" + "Body Oxygen: " + str(round(player.body_oxygen))  + "%\n" + "Local Wind Speed: " + str(round(player.body_wind)) + "km/s\n"
+	label.text = "Temperature: " + str(snapped(Globals.Temperature, 0.1)) + "ºC\n" + "humidity: " + str(round(Globals.humidity)) + "%\n" + "Wind Direction: " + str(round(Globals.convert_VectorToAngle(Globals.Wind_Direction))) + "º\n" + "Wind Speed: " + str(round(Globals.Wind_speed)) + "km/s\n" + "Body Hearth: " + str(round(player.hearth)) + "%\n" + "Body Temperature: " + str(snapped(player.body_temperature, 0.1)) + "ºC\n" + "Body oxygen: " + str(round(player.body_oxygen))  + "%\n" + "Local Wind Speed: " + str(round(player.body_wind)) + "km/s\n"
 	fps.text = "FPS: " + str(Engine.get_frames_per_second())
 
 	if Time.get_unix_time_from_system() >= NextHeartSoundTime:

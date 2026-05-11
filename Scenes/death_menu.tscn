@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://dg75ymjinjgeu"]
 
-[ext_resource type="Script" uid="uid://bpb7kal7xb8sg" path="res://Scripts/death_menu.gd" id="1_ipdme"]
+[ext_resource type="Script" uid="uid://c5cwvkmqc6da8" path="res://Scripts/Pause_menu.gd" id="1_ipdme"]
 [ext_resource type="Theme" uid="uid://ctfcvmj6op0i5" path="res://Resources/Death_Screen_theme.tres" id="2_bsx7a"]
 
-[node name="Death Menu" type="CanvasLayer"]
+[node name="Death Menu" type="CanvasLayer" unique_id=1323871140]
 process_mode = 3
 layer = 5
 script = ExtResource("1_ipdme")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=145274031]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -16,7 +16,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_bsx7a")
 
-[node name="Buttons" type="VBoxContainer" parent="Panel"]
+[node name="Buttons" type="VBoxContainer" parent="Panel" unique_id=1209922334]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -31,7 +31,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_bsx7a")
 
-[node name="Label" type="Label" parent="Panel/Buttons"]
+[node name="Label" type="Label" parent="Panel/Buttons" unique_id=537508067]
 layout_mode = 2
 theme = ExtResource("2_bsx7a")
 text = "You Death
@@ -39,19 +39,19 @@ you want to continue?"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Continue" type="Button" parent="Panel/Buttons"]
+[node name="Continue" type="Button" parent="Panel/Buttons" unique_id=1085346481]
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_bsx7a")
 text = "Continue
 "
 
-[node name="Exit" type="Button" parent="Panel/Buttons"]
+[node name="Exit" type="Button" parent="Panel/Buttons" unique_id=1323464668]
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_bsx7a")
 text = "Exit
 "
 
-[connection signal="pressed" from="Panel/Buttons/Continue" to="." method="_on_return_pressed"]
-[connection signal="pressed" from="Panel/Buttons/Exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="Panel/Buttons/Continue" to="." method="_OnReturnPressed"]
+[connection signal="pressed" from="Panel/Buttons/Exit" to="." method="_OnExitPressed"]

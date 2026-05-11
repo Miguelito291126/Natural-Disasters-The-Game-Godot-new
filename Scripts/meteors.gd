@@ -1,22 +1,27 @@
 extends RigidBody3D
 
-var explosion_scene = preload("res://Scenes/explosion.tscn")
-@export var rand_num = randi_range(1,50)
-@export var is_volcano_rock = false
+class_name Meteors
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	# Solo mover hacia arriba si NO es una roca del volcán
+@export var explosion_scene: PackedScene = preload("res://Scenes/explosion.tscn")
+@export var is_volcano_rock: bool = false
+
+func _ready() -> void:
 	if not is_volcano_rock:
-		self.global_position += Vector3(0, 1000, 0)
+		global_position += Vector3(0, 1000, 0)
 
+func _on_body_entered(body: Node) -> void:
+	if body == self: return
 
-func _on_body_entered(body):
-	if body == self:
-		return
+	if multiplayer.is_server():
+		spawn_explosion.call_deferred()
+	
+	queue_free()
+
+func spawn_explosion() -> void:
+	if not explosion_scene: return
 
 	var explosion_node = explosion_scene.instantiate()
-	explosion_node.global_position = self.global_position
-	explosion_node.get_node("Area3D/CollisionShape3D").shape.radius = rand_num
+	explosion_node.top_level = true
 	get_parent().add_child(explosion_node, true)
-	self.queue_free()
+	
+	explosion_node.global_position = global_position

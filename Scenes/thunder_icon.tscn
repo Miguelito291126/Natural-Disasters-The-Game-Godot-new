@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://ckdea844fk6n8"]
+
+[ext_resource type="PackedScene" uid="uid://dni5hbhwlxmdi" path="res://Scenes/thunder.tscn" id="1_6smq5"]
+
+[node name="thunder_icon" type="SubViewport" unique_id=634388402]
+render_target_update_mode = 4
+
+[node name="thunder" parent="." unique_id=7050203 instance=ExtResource("1_6smq5")]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=403830746]
+current = true
+
+[editable path="thunder"]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ddlqooa2yb6y4"]
 
-[ext_resource type="Script" uid="uid://dyv5tm53gs2fg" path="res://Scripts/hause.gd" id="1_m3vm1"]
+[ext_resource type="Script" uid="uid://dyv5tm53gs2fg" path="res://Scripts/hause.gd" id="1_gw74x"]
 [ext_resource type="AudioStream" uid="uid://c4r72cwbqtbdx" path="res://Sounds/Door Open.mp3" id="2_51njh"]
 [ext_resource type="PackedScene" uid="uid://tnp2kd6nh30i" path="res://Models/Blend Format/hause.blend" id="2_f6ooy"]
 
@@ -60,10 +60,9 @@ properties/5/replication_mode = 1
 [node name="hause" type="StaticBody3D" unique_id=1707887295 node_paths=PackedStringArray("door_open_sound", "door_close_sound") groups=["Destrollable", "Hause"]]
 collision_layer = 128
 collision_mask = 1021
-script = ExtResource("1_m3vm1")
+script = ExtResource("1_gw74x")
 door_open_sound = NodePath("Open_door_sound")
 door_close_sound = NodePath("Close_door_sound")
-breakable_scale_factor = 3.5
 
 [node name="hause" parent="." unique_id=1057886774 instance=ExtResource("2_f6ooy")]
 
@@ -132,7 +131,7 @@ omni_range = 31.011
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=652065289]
 replication_config = SubResource("SceneReplicationConfig_8npjq")
 
-[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
-[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="area_entered" from="Area3D" to="." method="_OnArea3dAreaEntered"]
+[connection signal="body_entered" from="Area3D" to="." method="_OnArea3dBodyEntered"]
 
 [editable path="hause"]

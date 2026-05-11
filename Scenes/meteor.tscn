@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c6xgmy3mkckea"]
 
-[ext_resource type="Script" uid="uid://by5atj83em8rl" path="res://Scripts/meteors.gd" id="1_bgiwl"]
+[ext_resource type="Script" uid="uid://rhwfexadree5" path="res://Scripts/meteors.gd" id="1_bgiwl"]
 [ext_resource type="PackedScene" uid="uid://ditwsydq4i21k" path="res://Models/Blend Format/meteorite.blend" id="2_aq33g"]
 [ext_resource type="Material" uid="uid://dgt85ocipcy31" path="res://Materials/Models/Meteorite/Meteor.tres" id="3_mekeu"]
 
@@ -82,12 +82,9 @@ properties/2/replication_mode = 1
 properties/3/path = NodePath(".:rotation")
 properties/3/spawn = true
 properties/3/replication_mode = 1
-properties/4/path = NodePath(".:rand_num")
+properties/4/path = NodePath(".:is_volcano_rock")
 properties/4/spawn = true
 properties/4/replication_mode = 1
-properties/5/path = NodePath(".:is_volcano_rock")
-properties/5/spawn = true
-properties/5/replication_mode = 1
 
 [node name="meteor" type="RigidBody3D" unique_id=988161167 groups=["Meteor"]]
 collision_layer = 32
@@ -101,10 +98,9 @@ script = ExtResource("1_bgiwl")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1511882317]
 shape = SubResource("SphereShape3D_nfk2t")
 
-[node name="Meteorite" parent="." unique_id=442151971 instance=ExtResource("2_aq33g")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+[node name="meteorite" parent="." unique_id=16066522 instance=ExtResource("2_aq33g")]
 
-[node name="meteor" parent="Meteorite" index="0" unique_id=461746619]
+[node name="meteor" parent="meteorite" index="0" unique_id=1813242975]
 surface_material_override/0 = ExtResource("3_mekeu")
 
 [node name="Smoke" type="GPUParticles3D" parent="." unique_id=1597378505]
@@ -116,7 +112,6 @@ process_material = SubResource("ParticleProcessMaterial_yqud3")
 draw_pass_1 = SubResource("SphereMesh_hqrhf")
 
 [node name="Fire" type="GPUParticles3D" parent="." unique_id=322415375]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0336982, 2.38419e-07, -0.00724411)
 amount = 500
 randomness = 1.0
 visibility_aabb = AABB(-3.8072925, -3.7815475, -3.932142, 7.5510683, 12.348292, 7.7622595)
@@ -131,6 +126,6 @@ light_color = Color(1, 0.458824, 0, 1)
 light_energy = 1000.0
 shadow_enabled = true
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="." to="." method="_OnBodyEntered"]
 
-[editable path="Meteorite"]
+[editable path="meteorite"]

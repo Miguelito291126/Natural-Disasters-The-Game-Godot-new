@@ -1,13 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://do2ex857ey0an"]
+[gd_scene format=3 uid="uid://do2ex857ey0an"]
 
-[ext_resource type="PackedScene" uid="uid://d3gkmhq5kjhrj" path="res://Scenes/tsunami.tscn" id="1_gk5hb"]
+[ext_resource type="PackedScene" uid="uid://bd5or0vi27grb" path="res://Models/FBX Format/tsunami.fbx" id="1_gk5hb"]
 
-[node name="tsunami_icon" type="SubViewport"]
-size = Vector2i(128, 128)
+[node name="tsunami_icon" type="SubViewport" unique_id=1066297144]
 render_target_update_mode = 4
 
-[node name="tsunami" parent="." instance=ExtResource("1_gk5hb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.52588e-05, 0, -0.00012207)
+[node name="tsunami2" parent="." unique_id=83774514 instance=ExtResource("1_gk5hb")]
+transform = Transform3D(-45.873, 0, -1.509958e-06, 0, 14.771, 0, 6.9266307e-06, 0, -10, 0, 0, -1111.9912)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, 241.913, 224.774, -1675.83)
+[node name="tsunami" parent="tsunami2" index="0" unique_id=1309673029]
+transform = Transform3D(1, 0, -3.5527137e-15, 0, 1.0000001, 0, 5.684342e-14, 0, 1, -2.5894133e-06, 0, 78.66719)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=571111503]
+current = true
+
+[editable path="tsunami2"]

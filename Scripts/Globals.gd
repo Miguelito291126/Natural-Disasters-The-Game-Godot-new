@@ -1,84 +1,87 @@
 extends Node
 
-
 signal current_weather_and_disaster_changed(new_disaster: String)
-
 
 #Editor
 var version = ProjectSettings.get_setting("application/config/version")
 var gamename = ProjectSettings.get_setting("application/config/name")
-var credits = "Miguelito2911"
+var credits: String = "Miguel Jimenez"
 
 #Network
 @export var ip: String
+@export var public_ip: String
+@export var local_ip: String
 @export var port: int = 5555
 @export var points: int
 @export var username: String = "Player"
-@export var players_conected: Array[Node]
-var multiplayerpeer
+@export var players_conected: Array # Array de nodos Player
+@export var is_steam_running: bool = false
+@export var use_steam: bool = false
+@export var lobby_id: int = 0
+@export var steam_id: int = 0
 
+var multiplayer_peer: MultiplayerPeer
 
 #Globals Weather
-@export var Temperature: float = 23
-@export var pressure: float = 10000
-@export var oxygen: float  = 100
-@export var bradiation: float = 0
-@export var Humidity: float = 25
-@export var Wind_Direction: Vector3 = Vector3(1,0,0)
-@export var Wind_speed: float = 0
-@export var is_raining: bool = false
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-
-#Globals Time
-@export var time: float = 0.0
-@export var time_left: float = 0.0
-@export var Day: int = 0
-@export var Hour: int = 0
-@export var Minute: int = 00
-
-#Globals Weather target
-@export var Temperature_target: float = 23
-@export var pressure_target: float = 10000
-@export var oxygen_target: float = 100
-@export var bradiation_target: float = 0
-@export var Humidity_target: float = 25
-@export var Wind_Direction_target: Vector3 = Vector3(1,0,0)
-@export var Wind_speed_target: float = 0
-
-#Globals Weather original
-@export var Temperature_original: float = 23
-@export var pressure_original: float = 10000
-@export var oxygen_original: float = 100
-@export var bradiation_original: float = 0
-@export var Humidity_original: float = 25
-@export var Wind_Direction_original: Vector3 = Vector3(1,0,0)
-@export var Wind_speed_original: float = 0
-
-@export var seconds = Time.get_unix_time_from_system()
-
-@export var main: Node3D
-@export var main_menu: Control
-@export var map: Node3D
-@export var server_browser: Control
-@export var local_player: CharacterBody3D
-
-@export var bounding_radius_areas = {}
-
-@export var node_group = "Destrollable"
-@export var destrolled_node: Array
-
-@export var started = false
-@export var gamemode = "survival"
-@export var GlobalsData: DataResource = DataResource.load_file()
-
-var current_weather_and_disaster = "Original":
+@export var temperature: float = 23.0
+@export var pressure: float = 10000.0
+@export var oxygen: float = 100.0
+@export var bradiation: float = 0.0
+@export var humidity: float = 25.0
+@export var wind_direction: Vector3 = Vector3(1.0, 0.0, 0.0)
+@export var wind_speed: float = 0.0
+@export var current_weather_and_disaster: String = "_original":
 	set(value):
 		if current_weather_and_disaster != value:
 			current_weather_and_disaster = value
 			current_weather_and_disaster_changed.emit(value)
 
-		
-@export var current_weather_and_disaster_int = 0
+var _weather_names: PackedStringArray = ["Meteor", "Tornado", "Volcano", "Tsunami", "Earthquake", "Thunder"]
+
+#Globals Time
+@export var time: float = 0.0
+@export var time_left: float = 0.0
+@export var day: int = 0
+@export var hour: int = 0
+@export var minute: int = 00
+
+#Globals Weather _target
+@export var temperature_target: float = 23.0
+@export var pressure_target: float = 10000.0
+@export var oxygen_target: float = 100.0
+@export var bradiation_target: float = 0.0
+@export var humidity_target: float = 25.0
+@export var wind_direction_target: Vector3 = Vector3(1.0, 0.0, 0.0)
+@export var wind_speed_target: float = 0.0
+
+#Globals Weather _original
+@export var temperature_original: float = 23.0
+@export var pressure_original: float = 10000.0
+@export var oxygen_original: float = 100.0
+@export var bradiation_original: float = 0.0
+@export var humidity_original: float = 25.0
+@export var wind_direction_original: Vector3 = Vector3(1.0, 0.0, 0.0)
+@export var wind_speed_original: float = 0.0
+
+@export var seconds = Time.get_unix_time_from_system()
+
+@export var bounding_radius_areas: Dictionary
+
+@export var node_group: String = "Destrollable"
+@export var destrolled_node: Array
+
+@export var started: bool = false
+@export var gamemode = "survival"
+
+var map: Map 
+var local_player: Player # Asignar el nodo del jugador local aquí
+var globals_data: DataResource = DataResource.load_file()  # Suponiendo que es un recurso de datos
+var main_menu: MainMenu
+var main: Main
+var server_browser: ServerBrowser
+
+@onready var timer: Timer = $Timer		
+@export var current_weather_and_disaster_id = 0
 
 var player_scene = preload("res://Scenes/player.tscn")
 var thunderstorm_scene = preload("res://Scenes/thunder.tscn")
@@ -88,15 +91,7 @@ var tsunami_scene = preload("res://Scenes/tsunami.tscn")
 var volcano_scene = preload("res://Scenes/volcano.tscn")
 var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 
-@onready var timer = $Timer
-@onready var broadcast_Timer = $Broadcast_Timer
-
 @export var room_list = {"name": "name", "players": int(0)}
-@export var broadcaster_ip = "192.168.1.255"
-@export var lisener_port = port + 1
-@export var broadcaster_port = port - 1
-var broadcaster: PacketPeerUDP
-var lisener: PacketPeerUDP
 
 @export var is_chat_open = false
 @export var is_pause_menu_open = false
@@ -105,6 +100,9 @@ var lisener: PacketPeerUDP
 @export var	character: String = "blue"
 @export var	avalible_characters = ["blue", "red", "green", "yellow"]
 @export var assigned_character: Dictionary
+
+@export var private_mode: bool
+@export var is_dedicated_server: bool = OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args()
 
 func convert_MetoSU(metres):
 	return (metres * 39.37) / 0.75
@@ -216,7 +214,7 @@ func vec2_to_vec3(vector):
 
 func is_something_blocking_wind(entity):
 	var start_pos = entity.global_position
-	var end_pos = start_pos - (Wind_Direction * 300)
+	var end_pos = start_pos - (wind_direction * 300)
 	var space_state = _get_direct_space_state(entity)
 	if space_state == null:
 		# Sin información del mundo, no asumimos bloqueo
@@ -237,7 +235,7 @@ func calcule_bounding_radius(entity):
 			var mesh = child.mesh
 			var aabb = mesh.get_aabb()
 			
-			# Obtener los 8 vértices de la AABB original
+			# Obtener los 8 vértices de la AABB _original
 			var vertices = [
 				aabb.position,
 				aabb.position + Vector3(aabb.size.x, 0, 0),
@@ -293,14 +291,14 @@ func wind(object):
 			return
 	
 		# Calcular la velocidad del viento local
-		var local_wind = Wind_speed
+		var local_wind = wind_speed
 		if not is_outdoor(object) or is_something_blocking_wind(object):
 			local_wind = 0
 
 		object.body_wind = local_wind
 		
 		# Calcular la velocidad del viento y la fricción
-		var wind_vel = Wind_Direction * local_wind 
+		var wind_vel = wind_direction * local_wind 
 		# Verificar si está al aire libre y no hay obstáculos que bloqueen el viento
 		if is_outdoor(object) and not is_something_blocking_wind(object) and local_wind >= 30:
 			var delta_velocity = wind_vel - object.velocity
@@ -308,7 +306,7 @@ func wind(object):
 
 	elif object.is_in_group("movable_objects") and object.is_class("RigidBody3D"):
 		if is_instance_valid(object) and is_outdoor(object) and not is_something_blocking_wind(object):
-			var wind_vel = Wind_Direction * Wind_speed
+			var wind_vel = wind_direction * wind_speed
 			var delta_velocity = wind_vel - object.linear_velocity
 			
 			# Aplica fuerza en vez de modificar directamente la velocidad
@@ -317,7 +315,7 @@ func wind(object):
 	elif object.is_in_group("movable_objects") and object.is_class("StaticBody3D"):
 		if is_instance_valid(object):
 			if object.is_in_group("Destrollable") or object.is_in_group("Hause"):
-				if Wind_speed > 100:
+				if wind_speed > 100:
 					object.destroy.rpc()
 
 			
@@ -430,28 +428,39 @@ func print_role(msg: String):
 
 
 
-func Play_MultiplayerServer():
-	multiplayerpeer = ENetMultiplayerPeer.new()
-	var error = multiplayerpeer.create_server(port)
-	if error == OK:
-		multiplayer.multiplayer_peer = multiplayerpeer
-		if multiplayer.is_server():
-			if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
-				print_role("Dedicated server init")
+func Play_MultiplayerServer(port: int):
+	if use_steam:
+		multiplayer_peer = ENetMultiplayerPeer.new()
+		var error = multiplayer_peer.create_server(port)
+		if error == OK:
+			multiplayer.multiplayer_peer = multiplayer_peer
+			if multiplayer.is_server():
+				if not private_mode:
+					setup_upnp(port)
 
-				await get_tree().create_timer(2).timeout
+				if Globals.is_dedicated_server:
+					print_role("Dedicated server init")
+					await get_tree().create_timer(2).timeout
+					LoadScene.load_scene(main_menu, "map")
+				else:
+					print_role("Server init")
+					LoadScene.load_scene(main_menu, "map")
+		else:
+			print_role("Fatal Error in server")
 
-				SetUpBroadcast(username)
-				LoadScene.load_scene(main_menu, "map")
-			else:
-				print_role("Server init")
-				SetUpBroadcast(username)
-				LoadScene.load_scene(main_menu, "map")
 	else:
-		print_role("Fatal Error in server")
+		if not is_steam_running:
+			printerr("[STEAM] Steam no está iniciado. No se puede crear el lobby.")
+			return
+
+		print("[STEAM] Creando lobby...")
+		# Tipos de lobby: 0 = Private, 1 = Friends Only, 2 = Public, 3 = Invisible
+		Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, 4) # Máximo 4 jugadores
+
+
 
 @rpc("any_peer")
-func request_pick_object(player_path: NodePath, target_path: NodePath) -> void:
+func request_pick_object(player_path: NodePath, _target_path: NodePath) -> void:
 	# Solo el servidor debe ejecutar esta lógica
 	if not multiplayer.is_server():
 		return
@@ -459,31 +468,22 @@ func request_pick_object(player_path: NodePath, target_path: NodePath) -> void:
 	var root := get_tree().get_root()
 
 	var player := root.get_node_or_null(player_path)
-	var target := root.get_node_or_null(target_path)
+	var _target := root.get_node_or_null(_target_path)
 
-	if player == null or target == null:
+	if player == null or _target == null:
 		return
 
-	if not target.is_in_group("Pickable"):
+	if not _target.is_in_group("Pickable"):
 		return
 
 	# Colocar el objeto en la mano del jugador
-	target.global_position = player.hand_node.global_position
-	target.global_rotation = player.hand_node.global_rotation
-	target.collision_layer = 2
+	_target.global_position = player.hand_node.global_position
+	_target.global_rotation = player.hand_node.global_rotation
+	_target.collision_layer = 2
 
-	if target is RigidBody3D:
-		target.linear_velocity = Vector3(0.1, 3, 0.1)
+	if _target is RigidBody3D:
+		_target.linear_velocity = Vector3(0.1, 3, 0.1)
 
-func Play_MultiplayerClient():
-	multiplayerpeer = ENetMultiplayerPeer.new()
-	var error = multiplayerpeer.create_client(ip, port)
-	if error == OK:
-		multiplayer.multiplayer_peer = multiplayerpeer
-		if not multiplayer.is_server():
-			print_role("Client Init")
-	else:
-		print_role("Fatal Error in client")
 
 func MultiplayerConnectionFailed():
 	print_role("Client disconected")
@@ -492,10 +492,8 @@ func MultiplayerConnectionFailed():
 	assigned_character.clear()
 	destrolled_node.clear()
 
-	CloseUp()
-	
-	multiplayerpeer = OfflineMultiplayerPeer.new()
-	multiplayer.multiplayer_peer = multiplayerpeer
+	multiplayer_peer = OfflineMultiplayerPeer.new()
+	multiplayer.multiplayer_peer = multiplayer_peer
 
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 
@@ -555,11 +553,9 @@ func MultiplayerServerDisconnected():
 	players_conected.clear()
 	assigned_character.clear()
 	destrolled_node.clear()
-
-	CloseUp()
 	
-	multiplayerpeer = OfflineMultiplayerPeer.new()
-	multiplayer.multiplayer_peer = multiplayerpeer
+	multiplayer_peer = OfflineMultiplayerPeer.new()
+	multiplayer.multiplayer_peer = multiplayer_peer
 
 	LoadScene.load_scene(map, "res://Scenes/main_menu.tscn")
 
@@ -575,13 +571,12 @@ func _exit_tree() -> void:
 	multiplayer.connected_to_server.disconnect(MultiplayerConnectionServerSucess)
 	multiplayer.connection_failed.disconnect(MultiplayerConnectionFailed)
 
-	Globals.Temperature_target = Globals.Temperature_original
-	Globals.Humidity_target = Globals.Humidity_original
+	Globals.temperature_target = Globals.temperature_original
+	Globals.humidity_target = Globals.humidity_original
 	Globals.pressure_target = Globals.pressure_original
-	Globals.Wind_Direction_target = Globals.Wind_Direction_original
-	Globals.Wind_speed_target = Globals.Wind_speed_original
-
-	CloseUp()
+	Globals.wind_direction_target = Globals.wind_direction_original
+	Globals.wind_speed_target = Globals.wind_speed_original
+	
 
 
 
@@ -593,19 +588,19 @@ func _process(_delta):
 		return
 
 	time_left = timer.time_left
-	Temperature = clamp(Temperature, -275.5, 275.5)
-	Humidity = clamp(Humidity, 0, 100)
+	temperature = clamp(temperature, -275.5, 275.5)
+	humidity = clamp(humidity, 0, 100)
 	bradiation = clamp(bradiation, 0, 100)
 	pressure = clamp(pressure , 0, 100000)
 	oxygen = clamp(oxygen, 0, 100)
 
-	Temperature = lerp(Temperature, Temperature_target, 0.005)
-	Humidity = lerp(Humidity, Humidity_target, 0.005)
+	temperature = lerp(temperature, temperature_target, 0.005)
+	humidity = lerp(humidity, humidity_target, 0.005)
 	bradiation = lerp(bradiation, bradiation_target, 0.005)
 	pressure = lerp(pressure, pressure_target, 0.005)
 	oxygen = lerp(oxygen, oxygen_target, 0.005)
-	Wind_Direction = lerp(Wind_Direction, Wind_Direction_target, 0.005)
-	Wind_speed = lerp(Wind_speed, Wind_speed_target, 0.005)
+	wind_direction = lerp(wind_direction, wind_direction_target, 0.005)
+	wind_speed = lerp(wind_speed, wind_speed_target, 0.005)
 
 
 func _ready():
@@ -615,11 +610,51 @@ func _ready():
 	multiplayer.connected_to_server.connect(MultiplayerConnectionServerSucess)
 	multiplayer.connection_failed.connect(MultiplayerConnectionFailed)
 
-	multiplayerpeer = OfflineMultiplayerPeer.new()
-	multiplayer.multiplayer_peer = multiplayerpeer
-	
+	multiplayer_peer = OfflineMultiplayerPeer.new()
+	multiplayer.multiplayer_peer = multiplayer_peer
 
+	steam_init()
+	fetch_local_ip()
+	fetch_public_ip()
+	
+func steam_init():
+	var steam_init = Steam.steamInit()
+	if steam_init:
+		print_role("[STEAM] Steam inicializado correctamente.")
+		is_steam_running = true
+		use_steam = true
+		steam_id = Steam.getSteamID()
+		username = Steam.getPersonaName()
+		username = username # Usar el nombre de Steam por defecto
+
+		Steam.lobby_created.connect(_on_lobby_created)
+		Steam.lobby_joined.connect(_on_lobby_joined)
+	else:
+		print_role("[STEAM] Error al inicializar Steam")
+		is_steam_running = false
+		use_steam = false
+
+# Esta función se llama cuando Steam confirma que entramos al lobby
+func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, response: int) -> void:
+	if response == 1: # 1 = Success
+		lobby_id = lobby_id
+		var owner_id = Steam.getLobbyOwner(lobby_id)
 		
+		# En una arquitectura P2P con Steam, aquí obtendrías la IP del dueño
+		# o usarías el ID de Steam para conectar via SteamNetworking.
+		# Si usas IP directa (como en tu C# original):
+		var target_ip = Steam.getLobbyData(lobby_id, "ip")
+		
+		multiplayer_peer = SteamMultiplayerPeer.new()
+		var error = multiplayer_peer.create_client(target_ip, port)
+		
+		if error != OK:
+			printerr("[NETWORK] Error al conectar el cliente: %s" % error)
+			return
+			
+		multiplayer.multiplayer_peer = multiplayer_peer
+		print("[NETWORK] Conectando a %s..." % target_ip)
+
 func MultiplayerPlayerSpawner(peer_id: int = 1):
 	if not multiplayer.is_server():
 		return
@@ -642,7 +677,7 @@ func MultiplayerPlayerSpawner(peer_id: int = 1):
 			sync_assigned_character(assigned_character)  
 			sync_player_list.rpc()
 			sync_destrolled_nodes.rpc_id(peer_id, destrolled_node) # envia al cliente
-			set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_int)
+			set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_id)
 		else:
 			print_role("No se pudo asignar personaje al jugador con id: " + str(peer_id))
 		
@@ -651,7 +686,52 @@ func MultiplayerPlayerSpawner(peer_id: int = 1):
 		sync_assigned_character(assigned_character)  
 		sync_player_list.rpc()     
 		sync_destrolled_nodes.rpc_id(peer_id, destrolled_node)                           # broadcast
-		print_role("No se pudo añadir al jugador con el id: " + str(peer_id))	
+		print_role("No se pudo añadir al jugador con el id: " + str(peer_id))
+
+func Play_MultiplayerClient(ip: String, port: int):
+	multiplayer_peer = ENetMultiplayerPeer.new()
+	var error = multiplayer_peer.create_client(ip, port)
+	if error == OK:
+		multiplayer.multiplayer_peer = multiplayer_peer
+		if not multiplayer.is_server():
+			print_role("Client Init")
+	else:
+		print_role("Fatal Error in client")
+
+
+func Play_MultiplayerClientSteam(target_lobby_id: int) -> void:
+	if not is_steam_running: return
+	
+	print("[STEAM] Intentando unirse al lobby: %s" % str(target_lobby_id))
+	Steam.joinLobby(target_lobby_id)
+
+
+func _on_lobby_created(connect_id: int, lobby_id: int) -> void:
+	if connect_id == 1:
+		lobby_id = lobby_id
+		print("[STEAM] Lobby creado exitosamente. ID: %s" % str(lobby_id))
+		
+		# Configurar datos del lobby para que aparezca en el Browser
+		Steam.setLobbyData(lobby_id, "name", str(username))
+		Steam.setLobbyData(lobby_id, "game_id", "natural_disaster_game")
+		Steam.setLobbyData(lobby_id, "players_count", "1")
+		Steam.setLobbyData(lobby_id, "host_id", str(steam_id))
+		Steam.setLobbyData(lobby_id, "port", str(port))
+		
+		# Crear el servidor de Godot
+		multiplayer_peer = SteamMultiplayerPeer.new()
+		var error = multiplayer_peer.create_host(port)
+		
+		if error != OK:
+			printerr("[NETWORK] Error al crear el servidor ENet: %s" % error)
+			return
+			
+		multiplayer.multiplayer_peer = multiplayer_peer
+		print("[NETWORK] Servidor iniciado en el puerto: %d" % port)
+		
+		# Cambiar a la escena del mapa
+		LoadScene.load_scene(main_menu, "map")
+		
 
 
 func MultiplayerPlayerRemover(peer_id: int = 1):
@@ -691,96 +771,34 @@ func sync_weather_and_disaster():
 		set_weather_and_disaster.rpc(random_weather_and_disaster)
 
 @rpc("authority", "call_local")
-func set_weather_and_disaster(weather_and_disaster_index):
-	match weather_and_disaster_index:
-		0:
-			current_weather_and_disaster = "Sun"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		1:
-			current_weather_and_disaster = "Cloud"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		2:
-			current_weather_and_disaster = "Raining"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		3:
-			current_weather_and_disaster = "Storm"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		4:
-			current_weather_and_disaster = "Thunderstorm"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		5:
-			current_weather_and_disaster = "Tsunami"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		6:
-			current_weather_and_disaster = "Meteors shower"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		7:
-			current_weather_and_disaster = "Volcano"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		8:
-			current_weather_and_disaster = "Tornado"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		9:
-			current_weather_and_disaster = "Acid rain"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		10:
-			current_weather_and_disaster = "Earthquake"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		11:
-			current_weather_and_disaster = "Sand Storm"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		12:
-			current_weather_and_disaster = "blizzard"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		13:
-			current_weather_and_disaster = "Dust Storm"
-			current_weather_and_disaster_int = weather_and_disaster_index
-		"Sun":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 0
-		"Cloud":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 1
-		"Raining":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 2
-		"Storm":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 3
-		"Thunderstorm":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 4
-		"Tsunami":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 5
-		"Meteors shower":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 6
-		"Volcano":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 7
-		"Tornado":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 8
-		"Acid rain":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 9
-		"Earthquake":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 10
+func set_weather_and_disaster(name: String = "", index: int = -1) -> void:
+	# Por defecto, asumimos que no se encontró
+	current_weather_and_disaster = "Original"
+	current_weather_and_disaster_id = -1
 
-		"Sand Storm":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 11
-		"blizzard":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 12
-		"Dust Storm":
-			current_weather_and_disaster = weather_and_disaster_index
-			current_weather_and_disaster_int = 12
-		_:
-			current_weather_and_disaster = "Original"
-			current_weather_and_disaster_int = -1
+	# Caso A: Si recibimos un número (int)
+	if name == "" and index >= 0:
+		var idx: int = index
+		if idx >= 0 and idx < _weather_names.size():
+			current_weather_and_disaster = _weather_names[idx]
+			current_weather_and_disaster_id = idx
+			
+	# Caso B: Si recibimos un texto (string)
+	elif name != "" and index == -1:
+		# En GDScript usamos 'find' para buscar el índice en un array
+		var idx: int = Array(_weather_names).find(name)
+		
+		if idx != -1:
+			current_weather_and_disaster = name
+			current_weather_and_disaster_id = idx
+	
+	# Caso C: Otros casos (asignación directa)
+	else:
+		current_weather_and_disaster = name
+		current_weather_and_disaster_id = index
+	
+	# Opcional: Emitir una señal o imprimir el cambio
+	print("Clima cambiado a: ", current_weather_and_disaster, " (ID: ", current_weather_and_disaster_id, ")")
 
 
 @rpc("any_peer", "call_local")
@@ -808,7 +826,7 @@ func close_conection():
 
 	# Si está conectado → cerrar conexión
 	peer.close()
-	multiplayerpeer.close()
+	multiplayer_peer.close()
 
 
 
@@ -849,49 +867,36 @@ func remove_all_destrolled_nodes():
 	for i in destrolled_node:
 		remove_destrolled_nodes(i)
 
-func SetUpLisener():
-	lisener = PacketPeerUDP.new()
-	var ok = lisener.bind(lisener_port)
-	if ok == OK:
-		print_role("Lisener port %s binded!!" % lisener_port)
-		if server_browser != null:
-			server_browser.get_parent().get_node("Label").text = "Lisener port %s binded!!" % lisener_port
-	else:
-		print_role("Lisener port %s FAILED!!" % lisener_port)
-		if server_browser != null:
-			server_browser.get_parent().get_node("Label").text = "Lisener port %s FAILED!!" % lisener_port
+func setup_upnp(port: int) -> void:
+	# UPNP queries take some time.
+	var upnp = UPNP.new()
+	var err = upnp.discover()
 
-	
-func CloseUp():
-	if lisener != null:
-		lisener.close()
+	if err != OK:
+		push_error(str(err))
+		return
 
-	if broadcaster != null:
-		broadcaster.close()
+	if upnp.get_gateway() and upnp.get_gateway().is_valid_gateway():
+		upnp.add_port_mapping(port, port, ProjectSettings.get_setting("application/config/name"), "UDP")
+		upnp.add_port_mapping(port, port, ProjectSettings.get_setting("application/config/name"), "TCP")
+		public_ip = upnp.query_external_address()
 
-	if broadcast_Timer != null:
-		broadcast_Timer.stop()
+func fetch_local_ip() -> void:
+	for ip in IP.get_local_addresses():
+		# Filtramos para IPs de red local comunes
+		if ip.begins_with("192.168.") or ip.begins_with("10."):
+			local_ip = ip
+			print("IP Local detectada: ", local_ip)
+			break
 
-func SetUpBroadcast(Name):
-	room_list.name = Name
-	room_list.players = players_conected.size()
+func fetch_public_ip() -> void:
+	# UPNP queries take some time.
+	var upnp = UPNP.new()
+	var err = upnp.discover()
 
-	broadcaster = PacketPeerUDP.new()
-	broadcaster.set_broadcast_enabled(true)
-	broadcaster.set_dest_address(broadcaster_ip, lisener_port)
+	if err != OK:
+		push_error(str(err))
+		return
 
-	var ok = broadcaster.bind(broadcaster_port)
-	if ok == OK:
-		print_role("Broadcaster port %s binded!!" % broadcaster_port)
-	else:
-		print_role("Broadcaster port %s FAILED!!" % broadcaster_port)
-
-	if broadcast_Timer != null:
-		broadcast_Timer.start()
-
-func _on_broadcast_timer_timeout() -> void:
-	room_list.players = players_conected.size()
-	var data = JSON.stringify(room_list)
-	var packet = data.to_ascii_buffer()
-	if broadcaster != null:
-		broadcaster.put_packet(packet)
+	if upnp.get_gateway() and upnp.get_gateway().is_valid_gateway():
+		public_ip = upnp.query_external_address()

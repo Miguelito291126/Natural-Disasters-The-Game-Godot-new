@@ -1,4 +1,5 @@
 extends Camera3D
+class_name Camera
 
 # Variables para el efecto de sacudida de pantalla
 var shake_duration = 0.5

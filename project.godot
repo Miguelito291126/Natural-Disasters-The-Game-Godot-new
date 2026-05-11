@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Natural Disasters Survival The Game"
-config/version="1.0.6.7.4"
+config/version="1.0.6.9"
 run/main_scene="res://Scenes/main.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://dcii8d8jnctvr"
@@ -26,9 +26,9 @@ buses/default_bus_layout="uid://cswbjaci3cvx3"
 
 [autoload]
 
-Globals="*res://Scenes/globals.tscn"
-LoadScene="*res://Scripts/loadscene.gd"
-UnloadScene="*res://Scripts/unloadscene.gd"
+Globals="*uid://bp412twicns7t"
+UnloadScene="*uid://cw0l3e6rs04ys"
+LoadScene="*uid://cct074vh466n2"
 
 [display]
 
@@ -39,9 +39,13 @@ window/stretch/aspect="ignore"
 window/handheld/orientation=4
 window/vsync/vsync_mode=true
 
+[dotnet]
+
+project/assembly_name="Natural Disasters Survival The Game CShard Version"
+
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/GPTIntegration/plugin.cfg", "res://addons/destruction/plugin.cfg", "res://addons/zylann.hterrain/plugin.cfg")
+enabled=PackedStringArray("res://addons/GPTIntegration/plugin.cfg", "res://addons/destruction/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/godotsteam/plugin.cfg", "res://addons/zylann.hterrain/plugin.cfg")
 
 [global_group]
 
@@ -209,6 +213,7 @@ down={
 
 [layer_names]
 
+3d_render/layer_1="main"
 3d_render/layer_2="terrain"
 3d_physics/layer_1="player"
 3d_physics/layer_2="interactable"
@@ -220,10 +225,10 @@ down={
 3d_physics/layer_8="objects"
 3d_physics/layer_9="terrain"
 3d_physics/layer_10="tornado"
+3d_physics/layer_11="RayCast"
 
 [physics]
 
-3d/physics_engine="Jolt Physics"
 3d/default_gravity=98.0
 
 [rendering]
@@ -231,4 +236,17 @@ down={
 textures/canvas_textures/default_texture_filter=0
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
+lights_and_shadows/directional_shadow/size=8192
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=3
 textures/default_filters/anisotropic_filtering_level=16
+lights_and_shadows/positional_shadow/atlas_size=8192
+textures/directional_shadow/soft_shadow_filter_quality=3
+textures/positional_shadow/soft_shadow_filter_quality=3
+
+[steam]
+
+multiplayer_peer/max_channels=4
+initialization/app_id=480
+initialization/initialize_on_startup=false
+initialization/embed_callbacks=false

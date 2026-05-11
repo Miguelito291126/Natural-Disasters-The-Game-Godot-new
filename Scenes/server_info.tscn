@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cky6cojrdcbmo"]
+[gd_scene format=3 uid="uid://cky6cojrdcbmo"]
 
 [ext_resource type="Theme" uid="uid://cb8utilpq2brs" path="res://Resources/pause_and_menu_theme.tres" id="1_o1shl"]
 [ext_resource type="Script" uid="uid://cfrby37chhlil" path="res://Scripts/server_info.gd" id="2_14t2t"]
 
-[node name="Server_info" type="HBoxContainer"]
+[node name="Server_info" type="HBoxContainer" unique_id=1946030596]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 137.0
@@ -13,17 +13,17 @@ theme = ExtResource("1_o1shl")
 alignment = 1
 script = ExtResource("2_14t2t")
 
-[node name="Name" type="Label" parent="."]
+[node name="Name" type="Label" parent="." unique_id=2055103638]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "4vt4v / "
 
-[node name="Players" type="Label" parent="."]
+[node name="Players" type="Label" parent="." unique_id=1583282961]
 layout_mode = 2
 text = "0 / "
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." unique_id=1137988732]
 layout_mode = 2
 text = "Join"
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Button" to="." method="_OnButtonPressed"]

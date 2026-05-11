@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://rc1qao5f1s2s"]
+[gd_scene format=3 uid="uid://rc1qao5f1s2s"]
 
-[ext_resource type="Texture2D" uid="uid://decohak1f44nw" path="res://Icons/hause_icon.png" id="1_hsfu5"]
+[ext_resource type="Texture2D" uid="uid://decohak1f44nw" path="res://icons/hause_icon.png" id="1_hsfu5"]
 
 [node name="Entity" type="VBoxContainer"]
 

@@ -1,30 +1,34 @@
 extends Control
+class_name MainMenu
 
-@onready var main_menu = $Panel/Menu
-@onready var tittle = $Panel/Menu/HBoxContainer/Title
-@onready var Multiplayer = $Panel/Multiplayer
-@onready var Multiplayer_list = $Panel/Multiplayer_list
-@onready var Settings = $Panel/Settings
-@onready var play_menu = $Panel/Play
-@onready var username = $Panel/Multiplayer/username
-@onready var ip_text = $Panel/Multiplayer/ip
-@onready var port_text = $Panel/Multiplayer/port
-@onready var fullscreen = $Panel/Settings/Fullscreen
-@onready var vsync = $Panel/Settings/vsync
-@onready var fps = $Panel/Settings/fps
-@onready var anti_aliasing = $Panel/Settings/antialiasing
-@onready var anti_tropic = $Panel/Settings/antitropic
-@onready var volumen = $Panel/Settings/Volumen
-@onready var volumen_music = $"Panel/Settings/Volumen Music"
+# Nodos de la UI
+@onready var main_menu: Control = $"Panel/Main_Menu"
+@onready var tittle: Label = $Panel/Main_Menu/HBoxContainer/Title
+@onready var multiplayer_menu: Control = $Panel/multiplayer_menu
+@onready var multiplayer_menu_list: Control = $Panel/multiplayer_menu_list
+@onready var settings: Control = $Panel/Settings
+@onready var play_menu: Control = $Panel/Play
+@onready var username: LineEdit = $Panel/multiplayer_menu/Username
+@onready var username2: LineEdit = $Panel/multiplayer_menu_list/Username
+@onready var ip_text: LineEdit = $Panel/multiplayer_menu/Ip
+@onready var port_text: LineEdit = $Panel/multiplayer_menu/Port
+@onready var port_text2: LineEdit = $Panel/multiplayer_menu_list/Port
+@onready var fullscreen: CheckButton = $Panel/Settings/Fullscreen
+@onready var vsync: CheckButton = $Panel/Settings/Vsync
+@onready var fps: CheckButton = $Panel/Settings/Fps
+@onready var anti_aliasing: OptionButton = $Panel/Settings/Antialiasing
+@onready var anti_tropic: OptionButton = $Panel/Settings/Antitropic
+@onready var volumen: HSlider = $Panel/Settings/Volumen
+@onready var volumen_music: HSlider = $Panel/Settings/VolumenMusic
+@onready var quality: OptionButton = $Panel/Settings/Quality
+@onready var error_text: Label = $Panel/multiplayer_menu/error
+@onready var error_text2: Label = $Panel/multiplayer_menu_list/error
+@onready var resolutions: OptionButton = $Panel/Settings/Resolutions
+@onready var version: Label = $Panel/Version
+@onready var credits: Label = $Panel/Credits
 @onready var time = $Panel/Play/Time
-@onready var quality = $Panel/Settings/quality
 @onready var music = $Music
-@onready var error_text = $Panel/Multiplayer/Label
-@onready var resolutions = $Panel/Settings/resolutions
-@onready var version = $Panel/Version
-@onready var credits = $Panel/Credits
-
-var multiplayer_mode = false
+var multiplayer_mode: bool = false
 
 var resolutions_dic: Dictionary = {
 	"2400x1080 ": Vector2i(2400, 1080 ),
@@ -48,7 +52,7 @@ var resolutions_dic: Dictionary = {
 }
 
 func addresolutions():
-	var current_resolution = Globals.GlobalsData.resolution
+	resolutions.clear()
 	var index = 0
 	
 	for r in resolutions_dic:
@@ -59,14 +63,10 @@ func addresolutions():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Globals.main_menu = self
+	if Globals.main_menu:
+		Globals.main_menu = self
 
-	main_menu.show()
-	tittle.show()
-	Multiplayer.hide()
-	Settings.hide()
-	Multiplayer_list.hide()
-	play_menu.hide()
+	_on_back_pressed()
 
 	version.text = "V" + Globals.version
 	tittle.text = Globals.gamename
@@ -74,9 +74,8 @@ func _ready():
 	
 
 	LoadGameScene()
-	Globals.SetUpLisener()
 
-	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
+	if Globals.is_dedicated_server:
 		Globals.print_role("Starting server...")
 
 		var args = OS.get_cmdline_user_args()
@@ -86,8 +85,6 @@ func _ready():
 				"--port", "port", "-p", "p":
 					if i + 1 < args.size():
 						Globals.port = args[i + 1].to_int()
-						Globals.lisener_port = Globals.port + 1
-						Globals.broadcaster_port = Globals.port - 1
 
 				"--gamemode", "gamemode", "-g", "g":
 					if i + 1 < args.size():
@@ -99,8 +96,10 @@ func _ready():
 		
 		await get_tree().create_timer(2).timeout
 
-		Globals.hostwithport(Globals.port)
-   
+
+		Globals.Play_MultiplayerServer(Globals.port)
+
+
 
 func LoadGameScene():
 	addresolutions()
@@ -108,28 +107,32 @@ func LoadGameScene():
 	ip_text.text = Globals.ip
 	port_text.text = str(Globals.port)
 
-	_on_antialiasing_item_selected(Globals.GlobalsData.antialiasing)
-	_on_antitropic_item_selected(Globals.GlobalsData.antitropic)
-	_on_vsycn_toggled(Globals.GlobalsData.vsync)
-	_on_volumen_value_changed(Globals.GlobalsData.volumen)
-	_on_volumen_music_value_changed(Globals.GlobalsData.volumen_music)
-	_on_resolutions_item_selected(Globals.GlobalsData.resolution)
-	_on_fullscreen_toggled(Globals.GlobalsData.fullscreen)
-	_on_fps_toggled(Globals.GlobalsData.FPS)
+	_on_antialiasing_item_selected(Globals.globals_data.antialiasing)
+	_on_antitropic_item_selected(Globals.globals_data.antitropic)
+	_on_vsycn_toggled(Globals.globals_data.vsync)
+	_on_volumen_value_changed(Globals.globals_data.volumen)
+	_on_volumen_music_value_changed(Globals.globals_data.volumen_music)
+	_on_resolutions_item_selected(Globals.globals_data.resolution)
+	_on_fullscreen_toggled(Globals.globals_data.fullscreen)
+	_on_fps_toggled(Globals.globals_data.FPS)
 	_on_username_text_changed(Globals.username)
-	_on_h_slider_2_value_changed(Globals.GlobalsData.timer_disasters)
-	_on_option_button_item_selected(Globals.GlobalsData.quality)
+	_on_time_value_changed(Globals.globals_data.timer_disasters)
+	_on_quality_item_selected(Globals.globals_data.quality)
 
-	fullscreen.button_pressed = Globals.GlobalsData.fullscreen
-	fps.button_pressed = Globals.GlobalsData.FPS
-	vsync.button_pressed = Globals.GlobalsData.vsync
-	volumen.value = Globals.GlobalsData.volumen
-	volumen_music.value = Globals.GlobalsData.volumen_music
-	time.value = Globals.GlobalsData.timer_disasters
-	quality.selected = Globals.GlobalsData.quality
-	anti_aliasing.selected = Globals.GlobalsData.antialiasing
-	resolutions.selected = Globals.GlobalsData.resolution
-	anti_tropic.selected = Globals.GlobalsData.antitropic
+	fullscreen.button_pressed = Globals.globals_data.fullscreen
+	fps.button_pressed = Globals.globals_data.FPS
+	vsync.button_pressed = Globals.globals_data.vsync
+	volumen.value = Globals.globals_data.volumen
+	volumen_music.value = Globals.globals_data.volumen_music
+	time.value = Globals.globals_data.timer_disasters
+	quality.selected = Globals.globals_data.quality
+	anti_aliasing.selected = Globals.globals_data.antialiasing
+	resolutions.selected = Globals.globals_data.resolution
+	anti_tropic.selected = Globals.globals_data.antitropic
+	username.text = Globals.username
+	username2.text = Globals.username
+	port_text.text = str(Globals.port)
+	port_text2.text = str(Globals.port)
 
 
 
@@ -151,14 +154,11 @@ func _on_ip_text_changed(new_text:String):
 
 func _on_port_text_changed(new_text:String):
 	Globals.port = int(new_text)
-	Globals.lisener_port = int(new_text) + 1
-	Globals.broadcaster_port = int(new_text) - 1
-	Globals.SetUpLisener()
 
 
 func _on_join_pressed():
-	if Globals.username.length() < 10 and Globals.username.length() >= 1:
-		Globals.Play_MultiplayerClient()
+	if Globals.username.length() >= 1:
+		Globals.Play_MultiplayerClient(Globals.ip, Globals.port)
 	else:
 		error_text.visible = true
 		await get_tree().create_timer(2).timeout
@@ -166,32 +166,46 @@ func _on_join_pressed():
 
 
 func _on_host_pressed():
-	multiplayer_mode = true
-	main_menu.hide()
-	Multiplayer.hide()
-	Settings.hide()
-	Multiplayer_list.hide()
-	play_menu.show()
+	if Globals.username.length() >= 1:
+		multiplayer_mode = true
+		main_menu.hide()
+		multiplayer_menu.hide()
+		settings.hide()
+		multiplayer_menu_list.hide()
+		play_menu.show()
+	else:
+		error_text.visible = true
+		await get_tree().create_timer(2).timeout
+		error_text.visible = false
 
 
 func _on_multiplayer_pressed():
 	main_menu.hide()
-	Multiplayer.show()
-	Settings.hide()
-	Multiplayer_list.hide()
+	settings.hide()
 	play_menu.hide()
 
+	if Globals.use_steam:
+		multiplayer_menu_list.show()
+	else:
+		multiplayer_menu.show()
+
 func _on_sandbox_pressed() -> void:
+	if Globals.username.length() < 1:
+		return
+
 	Globals.gamemode = "sandbox"
 	if multiplayer_mode:
-		Globals.Play_MultiplayerServer()
+		Globals.Play_MultiplayerServer(Globals.port)
 	else:
 		LoadScene.load_scene(self, "map")
 
 func _on_survival_pressed():
+	if Globals.username.length() < 1:
+		return
+	
 	Globals.gamemode = "survival"
 	if multiplayer_mode:
-		Globals.Play_MultiplayerServer()
+		Globals.Play_MultiplayerServer(Globals.port)
 	else:
 		LoadScene.load_scene(self, "map")
 
@@ -199,9 +213,9 @@ func _on_survival_pressed():
 
 func _on_settings_pressed():
 	main_menu.hide()
-	Multiplayer.hide()
-	Settings.show()
-	Multiplayer_list.hide()
+	multiplayer_menu.hide()
+	settings.show()
+	multiplayer_menu_list.hide()
 	play_menu.hide()
 
 
@@ -211,50 +225,50 @@ func _on_exit_pressed():
 
 
 func _on_fps_toggled(toggled_on:bool):
-	Globals.GlobalsData.FPS = toggled_on
-	Globals.GlobalsData.save_file()
+	if Globals.globals_data:
+		Globals.globals_data.FPS = toggled_on
+		Globals.globals_data.save_file()
 
 
 func _on_vsycn_toggled(toggled_on: bool):
-	Globals.GlobalsData.vsync = toggled_on
+	
 
 	if toggled_on:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
 	else:
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 
-	Globals.GlobalsData.save_file()
-
-
-func _on_back_pressed():
-	main_menu.show()
-	Multiplayer.hide()
-	Settings.hide()
-	Multiplayer_list.hide()
-	play_menu.hide()
-
+	if Globals.globals_data:
+		Globals.globals_data.vsync = toggled_on
+		Globals.globals_data.save_file()
 
 func _on_username_text_changed(new_text:String):
 	Globals.username = new_text
-	Globals.GlobalsData.save_file()
+
+	if Globals.globals_data:
+		Globals.globals_data.save_file()
 
 
-func _on_h_slider_2_value_changed(value):
-	Globals.GlobalsData.timer_disasters = value
-	Globals.GlobalsData.save_file()
+func _on_time_value_changed(value):
+	if Globals.globals_data:
+		Globals.globals_data.timer_disasters = value
+		Globals.globals_data.save_file()
 
 
 func _on_volumen_value_changed(value:float):
-	Globals.GlobalsData.volumen = value
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
-	Globals.GlobalsData.save_file()
+	if Globals.globals_data:
+		Globals.globals_data.volumen = value
+		Globals.globals_data.save_file()
 
-func _on_resolutions_item_selected(index:int):
-	Globals.GlobalsData.resolution = index
-	var size = resolutions_dic.get(resolutions.get_item_text(index))
-	DisplayServer.window_set_size(size)
-	get_viewport().set_size(size)
-	Globals.GlobalsData.save_file()
+func _on_resolutions_item_selected(index: int) -> void:
+	var res_name = resolutions.get_item_text(index)
+	var size = resolutions_dic[res_name]
+	get_window().size = size
+	# Guardar en globals_data si existe
+	if Globals.globals_data:
+		Globals.globals_data.resolution = index
+		Globals.globals_data.save_file()
 
 
 func _on_fullscreen_toggled(toggled_on:bool):
@@ -262,73 +276,57 @@ func _on_fullscreen_toggled(toggled_on:bool):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-	Globals.GlobalsData.fullscreen = toggled_on
-	Globals.GlobalsData.save_file()
+
+	if Globals.globals_data:
+		Globals.globals_data.fullscreen = toggled_on
+		Globals.globals_data.save_file()
 
 
 func _on_singleplayer_pressed():
 	multiplayer_mode = false
 	main_menu.hide()
-	Multiplayer.hide()
-	Settings.hide()
-	Multiplayer_list.hide()
+	multiplayer_menu.hide()
+	settings.hide()
+	multiplayer_menu_list.hide()
 	play_menu.show()
 
 
 
 func _on_volumen_music_value_changed(value):
-	Globals.GlobalsData.volumen_music = value
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(value))
-	Globals.GlobalsData.save_file()
+	if Globals.globals_data:
+		Globals.globals_data.volumen_music = value
+		Globals.globals_data.save_file()
 
 
-func _on_option_button_item_selected(index: int):
-	Globals.GlobalsData.quality = index
-	Globals.GlobalsData.save_file()
+func _on_quality_item_selected(index: int) -> void:
+	if Globals.globals_data:
+		Globals.globals_data.quality = index
+		Globals.globals_data.save_file()
 
-
-func _on_multiplayer_list_pressed() -> void:
-	main_menu.hide()
-	Multiplayer.hide()
-	Settings.hide()
-	Multiplayer_list.show()
-	play_menu.hide()
-
-
-
-func _on_back_multiplayer_pressed() -> void:
-	main_menu.hide()
-	Multiplayer.show()
-	Settings.hide()
-	Multiplayer_list.hide()
-	play_menu.hide()
-
-
-func _on_back_singleplayer_pressed() -> void:
+func _on_back_pressed() -> void:
 	main_menu.show()
-	Multiplayer.hide()
-	Settings.hide()
-	Multiplayer_list.hide()
+	multiplayer_menu.hide()
+	settings.hide()
+	multiplayer_menu_list.hide()
 	play_menu.hide()
-
 
 func _on_antialiasing_item_selected(index: int) -> void:
-	Globals.GlobalsData.antialiasing = index
-
-	var viewport := get_viewport()
-
+	var vp = get_viewport()
 	match index:
-		0: viewport.msaa_3d = Viewport.MSAA_DISABLED
-		1: viewport.msaa_3d = Viewport.MSAA_2X
-		2: viewport.msaa_3d = Viewport.MSAA_4X
-		3: viewport.msaa_3d = Viewport.MSAA_8X
-
-	Globals.GlobalsData.save_file()
+		0: vp.msaa_3d = Viewport.MSAA_DISABLED
+		1: vp.msaa_3d = Viewport.MSAA_2X
+		2: vp.msaa_3d = Viewport.MSAA_4X
+		3: vp.msaa_3d = Viewport.MSAA_8X
+	
+	if Globals.globals_data:
+		Globals.globals_data.antialiasing = index
+		Globals.globals_data.save_file()
 
 
 
 func _on_antitropic_item_selected(index: int) -> void:
-	Globals.GlobalsData.antitropic = index
+	
 
 	var levels = [1, 2, 4, 8, 16]
 
@@ -338,8 +336,9 @@ func _on_antitropic_item_selected(index: int) -> void:
 			levels[index]
 		)
 
-	Globals.GlobalsData.save_file()
+	if Globals.globals_data:
+		Globals.globals_data.antitropic = index
+		Globals.globals_data.save_file()
 
-
-
-
+func _on_private_check_toggled(toggled_on: bool) -> void:
+	Globals.private_mode = toggled_on

@@ -1,12 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://cdx02sb4y5ufy"]
+[gd_scene format=3 uid="uid://cdx02sb4y5ufy"]
 
-[ext_resource type="PackedScene" uid="uid://c6xgmy3mkckea" path="res://Scenes/meteor.tscn" id="1_kb3fv"]
+[ext_resource type="PackedScene" uid="uid://ditwsydq4i21k" path="res://Models/Blend Format/meteorite.blend" id="1_jlbkw"]
+[ext_resource type="Material" uid="uid://dgt85ocipcy31" path="res://Materials/Models/Meteorite/Meteor.tres" id="2_dhvrv"]
 
-[node name="meteor_icon" type="SubViewport"]
-size = Vector2i(128, 128)
+[node name="meteor_icon" type="SubViewport" unique_id=720432337]
 render_target_update_mode = 4
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, 2.68808, 0, -9.15405)
+[node name="meteorite" parent="." unique_id=16066522 instance=ExtResource("1_jlbkw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.3508806)
 
-[node name="Meteor" parent="." instance=ExtResource("1_kb3fv")]
+[node name="meteor" parent="meteorite" index="0" unique_id=1813242975]
+surface_material_override/0 = ExtResource("2_dhvrv")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1825649008]
+current = true
+
+[editable path="meteorite"]

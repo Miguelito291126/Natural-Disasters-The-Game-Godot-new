@@ -1,6 +1,7 @@
-class_name DataResource extends Resource
+class_name DataResource 
+extends Resource
 
-static var path = "user://GlobalsData.tres"
+static var path = "user://globals_data.tres"
 
 #Globals Settings
 @export var vsync = false

@@ -1,12 +1,21 @@
 [gd_scene format=3 uid="uid://bee1orklhwhkv"]
 
-[ext_resource type="PackedScene" uid="uid://qf81iinh5hke" path="res://Scenes/volcano.tscn" id="1_2k4t8"]
+[ext_resource type="PackedScene" uid="uid://q6hkv3yre3tn" path="res://Models/Blend Format/volcano.blend" id="1_hk5kd"]
+[ext_resource type="Material" uid="uid://jeft7exqnaro" path="res://Materials/Models/Volcano/lava.tres" id="2_5jirj"]
+[ext_resource type="Material" uid="uid://diohginyx0ebc" path="res://Materials/Models/Volcano/volcano_model.tres" id="3_ckpch"]
 
-[node name="volcano_icon" type="SubViewport"]
-size = Vector2i(128, 128)
+[node name="volcano_icon" type="SubViewport" unique_id=2117860562]
 render_target_update_mode = 4
 
-[node name="Volcano" parent="." instance=ExtResource("1_2k4t8")]
+[node name="Volcano2" parent="." unique_id=1912079393 instance=ExtResource("1_hk5kd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -462.76093)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, 241.913, 224.774, -696.453)
+[node name="volcano2" parent="Volcano2" index="0" unique_id=155792859]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -181.8266, 0)
+surface_material_override/0 = ExtResource("2_5jirj")
+surface_material_override/1 = ExtResource("3_ckpch")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1504073081]
+current = true
+
+[editable path="Volcano2"]

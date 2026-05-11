@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://qf81iinh5hke"]
 
-[ext_resource type="Script" uid="uid://v1omqd38x1jy" path="res://Scripts/volcano.gd" id="1_3fq1s"]
+[ext_resource type="Script" uid="uid://v1omqd38x1jy" path="res://Scripts/Volcano.gd" id="1_m887n"]
 [ext_resource type="Material" uid="uid://jeft7exqnaro" path="res://Materials/Models/Volcano/lava.tres" id="3_m887n"]
 [ext_resource type="PackedScene" uid="uid://q6hkv3yre3tn" path="res://Models/Blend Format/volcano.blend" id="3_t7vbc"]
 [ext_resource type="Material" uid="uid://diohginyx0ebc" path="res://Materials/Models/Volcano/volcano_model.tres" id="4_3fq1s"]
@@ -90,46 +90,34 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:Lava_Level")
+tracks/0/path = NodePath(".:Pressure")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [125]
+"values": [0]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath(".:Pressure")
+tracks/1/path = NodePath(".:IsGoingToErupt")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0]
+"values": [false]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath(".:IsGoingToErupt")
+tracks/2/path = NodePath(".:IsPressureLeaking")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath(".:IsPressureLeaking")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -143,46 +131,34 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:Lava_Level")
+tracks/0/path = NodePath(".:Pressure")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 126.7, 300),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [125, 250, 125]
+"values": [0, 100, 0]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath(".:Pressure")
+tracks/1/path = NodePath(".:IsGoingToErupt")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 126.7, 300),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [0, 100, 0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:IsGoingToErupt")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0, 300),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [false, false]
 }
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath(".:IsPressureLeaking")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:IsPressureLeaking")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
 "times": PackedFloat32Array(0, 300),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
@@ -235,18 +211,15 @@ properties/11/replication_mode = 1
 properties/12/path = NodePath(".:Pressure")
 properties/12/spawn = true
 properties/12/replication_mode = 1
-properties/13/path = NodePath(".:Lava_Level")
+properties/13/path = NodePath("launch_marker:position")
 properties/13/spawn = true
 properties/13/replication_mode = 1
-properties/14/path = NodePath(".:launch_radius")
+properties/14/path = NodePath("launch_marker:rotation")
 properties/14/spawn = true
 properties/14/replication_mode = 1
-properties/15/path = NodePath(".:launch_force")
+properties/15/path = NodePath("launch_marker:scale")
 properties/15/spawn = true
 properties/15/replication_mode = 1
-properties/16/path = NodePath(".:launch_interval")
-properties/16/spawn = true
-properties/16/replication_mode = 1
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lhoig"]
 radius = 53.759
@@ -254,7 +227,7 @@ radius = 53.759
 [node name="volcano" type="StaticBody3D" unique_id=155383846 groups=["Volcano"]]
 collision_layer = 16
 collision_mask = 385
-script = ExtResource("1_3fq1s")
+script = ExtResource("1_m887n")
 
 [node name="launch_marker" type="Marker3D" parent="." unique_id=1547638632]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2641163, 372.7893, -15.118576)
@@ -295,7 +268,7 @@ draw_pass_1 = SubResource("SphereMesh_exwvd")
 
 [node name="Volcano" parent="." unique_id=1395059966 instance=ExtResource("3_t7vbc")]
 
-[node name="volcano2" parent="Volcano" index="0" unique_id=1952238046]
+[node name="volcano2" parent="Volcano" index="0" unique_id=155792859]
 surface_material_override/0 = ExtResource("3_m887n")
 surface_material_override/1 = ExtResource("4_3fq1s")
 

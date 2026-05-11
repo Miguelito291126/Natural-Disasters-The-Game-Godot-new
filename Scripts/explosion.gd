@@ -1,4 +1,5 @@
 extends Node3D
+class_name Explosion
 
 var explosion_force = 100
 var explosion_damage = 100

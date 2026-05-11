@@ -1,10 +1,8 @@
 [gd_scene format=3 uid="uid://d3gkmhq5kjhrj"]
 
-[ext_resource type="Script" uid="uid://bxbolk17xluu5" path="res://Scripts/Tsunami.gd" id="1_6j28r"]
+[ext_resource type="Script" uid="uid://bxbolk17xluu5" path="res://Scripts/Tsunami.gd" id="1_i8tii"]
 [ext_resource type="PackedScene" uid="uid://bd5or0vi27grb" path="res://Models/FBX Format/tsunami.fbx" id="2_khnsg"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_i8tii"]
-size = Vector3(519.11597, 71.493546, 16.566282)
+[ext_resource type="AudioStream" uid="uid://c5020mm4706uj" path="res://Sounds/disasters/tsunami/idle.wav" id="3_1yabw"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p2o80"]
 properties/0/path = NodePath(".:position")
@@ -25,35 +23,28 @@ properties/4/replication_mode = 1
 properties/5/path = NodePath("tsunami:scale")
 properties/5/spawn = true
 properties/5/replication_mode = 1
-properties/6/path = NodePath(".:direction")
-properties/6/spawn = true
-properties/6/replication_mode = 1
-properties/7/path = NodePath(".:total_distance")
-properties/7/spawn = true
-properties/7/replication_mode = 1
-properties/8/path = NodePath(".:distance_traveled")
-properties/8/spawn = true
-properties/8/replication_mode = 1
-properties/9/path = NodePath(".:tsunami_strength")
-properties/9/spawn = true
-properties/9/replication_mode = 1
-properties/10/path = NodePath(".:speed")
-properties/10/spawn = true
-properties/10/replication_mode = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i8tii"]
+size = Vector3(519.11597, 83.803734, 22.275574)
 
 [node name="tsunami" type="Area3D" unique_id=556163490 groups=["Water_Area"]]
 collision_layer = 4
 collision_mask = 385
-script = ExtResource("1_6j28r")
+script = ExtResource("1_i8tii")
 
 [node name="tsunami" parent="." unique_id=1862128648 instance=ExtResource("2_khnsg")]
-transform = Transform3D(-45.873, 0, -8.74228e-07, 0, 14.771, 0, 4.01034e-06, 0, -10, 0, 0, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1537712870]
-transform = Transform3D(-45.873, 0, -8.74228e-07, 0, 14.771, 0, 4.01034e-06, 0, -10, -1.3341393, -141.19775, -37.675735)
-shape = SubResource("BoxShape3D_i8tii")
+transform = Transform3D(-45.873, 0, -1.509958e-06, 0, 14.771, 0, 6.9266307e-06, 0, -10, 0, 0, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=166102595]
 replication_config = SubResource("SceneReplicationConfig_p2o80")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1565870814]
+transform = Transform3D(-45.873, 0, -1.509958e-06, 0, 14.771, 0, 6.9266307e-06, 0, -10, -1.3341374, -50.28087, -9.129278)
+shape = SubResource("BoxShape3D_i8tii")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=543140352]
+stream = ExtResource("3_1yabw")
+autoplay = true
+max_distance = 50000.0
 
 [editable path="tsunami"]

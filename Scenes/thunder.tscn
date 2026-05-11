@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dni5hbhwlxmdi"]
 
-[ext_resource type="Script" uid="uid://cce78i5qlkruq" path="res://Scripts/thunder.gd" id="1_ig5to"]
+[ext_resource type="Script" uid="uid://725vci8yy67e" path="res://Scripts/thunder.gd" id="1_8feml"]
 [ext_resource type="Texture2D" uid="uid://dhwpuiof0nxhn" path="res://Sprites/kenney_particle_pack/spark_05.png" id="3_avm0v"]
 [ext_resource type="Texture2D" uid="uid://kq40l8aspg2k" path="res://Sprites/kenney_particle_pack/light_03.png" id="4_r770o"]
 [ext_resource type="Texture2D" uid="uid://bmpv20xa7w4u5" path="res://Sprites/kenney_particle_pack/flare_01.png" id="5_w6hi2"]
@@ -85,7 +85,7 @@ properties/2/spawn = true
 properties/2/replication_mode = 1
 
 [node name="thunder" type="Node3D" unique_id=7050203 groups=["Thunder"]]
-script = ExtResource("1_ig5to")
+script = ExtResource("1_8feml")
 
 [node name="star" type="GPUParticles3D" parent="." unique_id=1001796651]
 material_override = SubResource("StandardMaterial3D_e6wr2")
@@ -121,3 +121,7 @@ draw_pass_1 = SubResource("QuadMesh_8jrdf")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=906978340]
 root_path = NodePath("../spark")
 replication_config = SubResource("SceneReplicationConfig_go6sb")
+
+[connection signal="finished" from="star" to="." method="_OnSparkFinished"]
+[connection signal="finished" from="light" to="." method="_OnSparkFinished"]
+[connection signal="finished" from="spark" to="." method="_OnSparkFinished"]

@@ -1,3 +1,9 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e9f2d2d1ed84f48d6f9ec0bc537b0e65191125fa640744e2e54aa68de5115214
-size 212
+[gd_resource type="AudioBusLayout" format=3 uid="uid://cswbjaci3cvx3"]
+
+[resource]
+bus/1/name = &"Music"
+bus/1/solo = false
+bus/1/mute = false
+bus/1/bypass_fx = false
+bus/1/volume_db = 0.0
+bus/1/send = &"Master"

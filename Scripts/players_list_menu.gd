@@ -1,4 +1,5 @@
 extends CanvasLayer
+class_name PlayerListMenu
 
 @onready var list = $Panel/List
 var player_info = preload("res://Scenes/player_info.tscn")

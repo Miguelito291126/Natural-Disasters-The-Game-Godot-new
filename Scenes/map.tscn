@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://csivk4bmioako"]
 
-[ext_resource type="Script" uid="uid://qrldb3mvolox" path="res://Scripts/map.gd" id="1_xn4hm"]
-[ext_resource type="PackedScene" uid="uid://026kxaorsntg" path="res://Scenes/snow_decal.tscn" id="2_k63oc"]
+[ext_resource type="Script" uid="uid://bxvyg04dewhw7" path="res://Scripts/map.gd" id="1_6q3n4"]
+[ext_resource type="PackedScene" uid="uid://026kxaorsntg" path="res://Scenes/snow_decal.tscn" id="2_olcgw"]
 [ext_resource type="Shader" uid="uid://4lxdfdreyjat" path="res://clouds.gdshader" id="2_sc6k1"]
-[ext_resource type="Script" uid="uid://bea103amee2fs" path="res://Scripts/world_environment.gd" id="3_575xv"]
 [ext_resource type="Texture2D" uid="uid://p56xwtihxq22" path="res://Sprites/dark-black-texture-with-beautiful-stars-vector.jpg" id="3_bukha"]
-[ext_resource type="PackedScene" uid="uid://d1xsirclagru0" path="res://Scenes/sand_decal.tscn" id="3_j4oe2"]
+[ext_resource type="PackedScene" uid="uid://d1xsirclagru0" path="res://Scenes/sand_decal.tscn" id="3_dlo4w"]
+[ext_resource type="Script" uid="uid://bea103amee2fs" path="res://Scripts/world_environment.gd" id="4_4c2oa"]
 [ext_resource type="AudioStream" uid="uid://debjmlamr7n2y" path="res://Sounds/music/natural disasters the game song.wav" id="10_w1fny"]
 [ext_resource type="PackedScene" uid="uid://ddlqooa2yb6y4" path="res://Scenes/hause.tscn" id="11_8ni8s"]
 [ext_resource type="PackedScene" uid="uid://yrq2iuii7a14" path="res://Scenes/chat.tscn" id="14_x5dfk"]
@@ -18,73 +18,73 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath("FogVolume:layers")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath("HTerrain:position")
+properties/2/path = NodePath("WorldEnvironment/Sun:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath("HTerrain:rotation")
+properties/3/path = NodePath("WorldEnvironment/Sun:scale")
 properties/3/spawn = true
 properties/3/replication_mode = 1
-properties/4/path = NodePath("HTerrain:scale")
+properties/4/path = NodePath("WorldEnvironment/Sun:position")
 properties/4/spawn = true
 properties/4/replication_mode = 1
-properties/5/path = NodePath("WorldEnvironment/Sun:rotation")
+properties/5/path = NodePath("WorldEnvironment/Moon:rotation")
 properties/5/spawn = true
 properties/5/replication_mode = 1
-properties/6/path = NodePath("WorldEnvironment/Sun:scale")
+properties/6/path = NodePath("WorldEnvironment/Moon:position")
 properties/6/spawn = true
 properties/6/replication_mode = 1
-properties/7/path = NodePath("WorldEnvironment/Sun:position")
+properties/7/path = NodePath("WorldEnvironment/Moon:scale")
 properties/7/spawn = true
 properties/7/replication_mode = 1
-properties/8/path = NodePath("WorldEnvironment/Moon:rotation")
+properties/8/path = NodePath("Warning Hud/Panel/Label:text")
 properties/8/spawn = true
 properties/8/replication_mode = 1
-properties/9/path = NodePath("WorldEnvironment/Moon:position")
+properties/9/path = NodePath("Chat:visible")
 properties/9/spawn = true
 properties/9/replication_mode = 1
-properties/10/path = NodePath("WorldEnvironment/Moon:scale")
+properties/10/path = NodePath("Warning Hud:visible")
 properties/10/spawn = true
 properties/10/replication_mode = 1
-properties/11/path = NodePath("Warning Hud/Panel/Label:text")
+properties/11/path = NodePath("Chat/Panel/TextEdit:text")
 properties/11/spawn = true
 properties/11/replication_mode = 1
-properties/12/path = NodePath("Chat:visible")
+properties/12/path = NodePath("Chat/Panel/TextEdit:scroll_vertical")
 properties/12/spawn = true
 properties/12/replication_mode = 1
-properties/13/path = NodePath("Warning Hud:visible")
+properties/13/path = NodePath("Chat/Panel/TextEdit:scroll_horizontal")
 properties/13/spawn = true
 properties/13/replication_mode = 1
-properties/14/path = NodePath("Chat/Panel/TextEdit:text")
+properties/14/path = NodePath("Chat/Panel/TextEdit:scroll_v_scroll_speed")
 properties/14/spawn = true
 properties/14/replication_mode = 1
-properties/15/path = NodePath("Chat/Panel/TextEdit:scroll_vertical")
+properties/15/path = NodePath(".:position")
 properties/15/spawn = true
 properties/15/replication_mode = 1
-properties/16/path = NodePath("Chat/Panel/TextEdit:scroll_horizontal")
+properties/16/path = NodePath(".:rotation")
 properties/16/spawn = true
 properties/16/replication_mode = 1
-properties/17/path = NodePath("Chat/Panel/TextEdit:scroll_v_scroll_speed")
+properties/17/path = NodePath(".:scale")
 properties/17/spawn = true
 properties/17/replication_mode = 1
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ihtyg"]
 shader = ExtResource("2_sc6k1")
-shader_parameter/day_top_color = Color(0, 0.556863, 1, 1)
-shader_parameter/day_bottom_color = Color(0, 0.686275, 1, 1)
-shader_parameter/sunset_top_color = Color(0.47, 0, 0.47, 1)
-shader_parameter/sunset_bottom_color = Color(0.61, 0.315167, 0, 1)
-shader_parameter/night_top_color = Color(0, 0, 0, 1)
-shader_parameter/night_bottom_color = Color(0, 0, 0, 1)
+shader_parameter/day_top_color = Color(0.1, 0.6, 1, 1)
+shader_parameter/day_bottom_color = Color(0.4, 0.8, 1, 1)
+shader_parameter/sunset_top_color = Color(0.7, 0.75, 1, 1)
+shader_parameter/sunset_bottom_color = Color(1, 0.5, 0.7, 1)
+shader_parameter/night_top_color = Color(0.02, 0, 0.04, 1)
+shader_parameter/night_bottom_color = Color(0.1, 0, 0.2, 1)
 shader_parameter/horizon_color = Color(0, 0.7, 0.8, 1)
 shader_parameter/horizon_blur = 0.05
 shader_parameter/sun_color = Color(10, 8, 1, 1)
 shader_parameter/sun_sunset_color = Color(10, 0, 0, 1)
-shader_parameter/sun_size = 0.065
-shader_parameter/sun_blur = 0.01
-shader_parameter/moon_color = Color(0.560955, 0.560955, 0.560955, 1)
-shader_parameter/moon_size = 0.065
+shader_parameter/sun_size = 0.2
+shader_parameter/sun_blur = 10.0
+shader_parameter/moon_color = Color(1, 0.95, 0.7, 1)
+shader_parameter/moon_size = 0.06
 shader_parameter/moon_blur = 0.1
-shader_parameter/clouds_edge_color = Color(0, 0.0274998, 0.55, 1)
+shader_parameter/clouds_edge_color = Color(0.8, 0.8, 0.98, 1)
 shader_parameter/clouds_top_color = Color(1, 1, 1, 1)
 shader_parameter/clouds_middle_color = Color(0.92, 0.92, 0.98, 1)
 shader_parameter/clouds_bottom_color = Color(0.83, 0.83, 0.94, 1)
@@ -105,9 +105,6 @@ sky_material = SubResource("ShaderMaterial_ihtyg")
 [sub_resource type="Environment" id="Environment_cfhfe"]
 background_mode = 2
 sky = SubResource("Sky_lk1p6")
-ssao_enabled = true
-sdfgi_enabled = true
-glow_enabled = true
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_hhy4h"]
 metadata/_preview_in_3d_space_ = true
@@ -135,9 +132,9 @@ size = Vector3(0, 100, 10000)
 size = Vector3(10000, 100, 1)
 
 [node name="map" type="Node3D" unique_id=927242502]
-script = ExtResource("1_xn4hm")
-snow_decal_scene = ExtResource("2_k63oc")
-sand_decal_scene = ExtResource("3_j4oe2")
+script = ExtResource("1_6q3n4")
+SnowDecalScene = ExtResource("2_olcgw")
+SandDecalScene = ExtResource("3_dlo4w")
 
 [node name="MapSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1127749826]
 replication_config = SubResource("SceneReplicationConfig_8u7l0")
@@ -147,24 +144,43 @@ _spawnable_scenes = PackedStringArray("uid://b2g31vrdy6c1x")
 spawn_path = NodePath("..")
 
 [node name="DisastersSpawner" type="MultiplayerSpawner" parent="." unique_id=937505983]
-_spawnable_scenes = PackedStringArray("uid://w8budjn2m22a", "uid://doi73cvnxims6", "uid://tjhhsh3ck07n", "uid://dni5hbhwlxmdi", "uid://d3gkmhq5kjhrj", "uid://qf81iinh5hke")
+_spawnable_scenes = PackedStringArray("uid://w8budjn2m22a", "uid://doi73cvnxims6", "uid://tjhhsh3ck07n", "uid://dni5hbhwlxmdi", "uid://d3gkmhq5kjhrj", "uid://qf81iinh5hke", "uid://dn3bvjtj17h4k")
 spawn_path = NodePath("..")
 
 [node name="ObjectSpawn" type="MultiplayerSpawner" parent="." unique_id=213698541]
-_spawnable_scenes = PackedStringArray("uid://bkfobjkkd58w0", "uid://cv8xwubw2paof")
+_spawnable_scenes = PackedStringArray("uid://bkfobjkkd58w0", "uid://cv8xwubw2paof", "uid://ddlqooa2yb6y4", "uid://b4wxj3o8ub80a")
 spawn_path = NodePath("..")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=535787648]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=535787648 node_paths=PackedStringArray("Sun", "Moon")]
 environment = SubResource("Environment_cfhfe")
-script = ExtResource("3_575xv")
+script = ExtResource("4_4c2oa")
+Sun = NodePath("Sun")
+Moon = NodePath("Moon")
 
 [node name="Sun" type="DirectionalLight3D" parent="WorldEnvironment" unique_id=1660688296]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+layers = 3
+light_energy = 2.0
 shadow_enabled = true
+shadow_blur = 0.1
+directional_shadow_split_1 = 0.01
+directional_shadow_split_2 = 0.04
+directional_shadow_split_3 = 0.15
+directional_shadow_blend_splits = true
+directional_shadow_max_distance = 5000.0
 
 [node name="Moon" type="DirectionalLight3D" parent="WorldEnvironment" unique_id=1935824634]
-light_color = Color(0.686275, 0.686275, 0.686275, 1)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+layers = 3
+light_color = Color(0.90588236, 0.9529412, 1, 1)
 light_energy = 0.2
 shadow_enabled = true
+shadow_blur = 0.1
+directional_shadow_split_1 = 0.01
+directional_shadow_split_2 = 0.04
+directional_shadow_split_3 = 0.15
+directional_shadow_blend_splits = true
+directional_shadow_max_distance = 5000.0
 
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=588325393]
 stream = ExtResource("10_w1fny")
@@ -182,10 +198,10 @@ gizmo_extents = 2.9
 [node name="ground" type="StaticBody3D" parent="." unique_id=1717456805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, 0.16407156, 1012.02)
 collision_layer = 256
-collision_mask = 253
+collision_mask = 765
 
 [node name="Mesh" type="MeshInstance3D" parent="ground" unique_id=889589910]
-layers = 2
+layers = 3
 material_override = SubResource("StandardMaterial3D_olcgw")
 mesh = SubResource("BoxMesh_dlo4w")
 skeleton = NodePath("../..")
@@ -194,11 +210,11 @@ skeleton = NodePath("../..")
 shape = SubResource("ConcavePolygonShape3D_olcgw")
 
 [node name="Hause" parent="." unique_id=1306325922 instance=ExtResource("11_8ni8s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, -0.1644988, 1012.02)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1184.2, -0.08534193, 1012.02)
 
 [node name="Chat" parent="." unique_id=298064630 instance=ExtResource("14_x5dfk")]
 
-[node name="Panel" parent="Chat" index="0"]
+[node name="Panel" parent="Chat" index="0" unique_id=1208603095]
 offset_right = 384.0
 offset_bottom = 288.0
 

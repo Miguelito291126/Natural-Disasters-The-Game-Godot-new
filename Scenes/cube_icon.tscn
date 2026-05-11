@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bjb8o43uwwct"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_jekka"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jekka"]
+
+[node name="cube_icon" type="SubViewport" unique_id=17624937]
+render_target_update_mode = 4
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=994054791]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, -10.669931)
+mesh = SubResource("BoxMesh_jekka")
+surface_material_override/0 = SubResource("StandardMaterial3D_jekka")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=290018607]
+current = true

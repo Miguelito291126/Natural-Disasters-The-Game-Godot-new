@@ -1,4 +1,5 @@
 extends StaticBody3D
+class_name Hause
 
 @onready var door = $hause/pivot
 @onready var door_collision_shape = $DoorCollision

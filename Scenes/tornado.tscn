@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://tjhhsh3ck07n"]
 
-[ext_resource type="Script" uid="uid://j204yflrwws4" path="res://Scripts/tornado.gd" id="1_yllgf"]
+[ext_resource type="Script" uid="uid://bfw4scdeodorw" path="res://Scripts/tornado.gd" id="1_lw5ai"]
 [ext_resource type="ArrayMesh" uid="uid://di8x2d8t2vsw6" path="res://Models/obj/tornado.obj" id="2_lw5ai"]
 [ext_resource type="ArrayMesh" uid="uid://b0ei05ejws20x" path="res://Models/obj/tornado_wave.obj" id="5_13pl0"]
 
@@ -368,8 +368,7 @@ properties/2/replication_mode = 1
 [node name="tornado" type="Area3D" unique_id=1862314929 groups=["Tornado"]]
 collision_layer = 512
 collision_mask = 385
-script = ExtResource("1_yllgf")
-movement_speed = 30
+script = ExtResource("1_lw5ai")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1324664238]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.7146, 245.99384, 18.315674)
