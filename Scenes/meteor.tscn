@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c6xgmy3mkckea"]
 
-[ext_resource type="Script" uid="uid://rhwfexadree5" path="res://Scripts/meteors.gd" id="1_bgiwl"]
+[ext_resource type="Script" uid="uid://rhwfexadree5" path="res://Scripts/meteor.gd" id="1_bgiwl"]
 [ext_resource type="PackedScene" uid="uid://ditwsydq4i21k" path="res://Models/Blend Format/meteorite.blend" id="2_aq33g"]
 [ext_resource type="Material" uid="uid://dgt85ocipcy31" path="res://Materials/Models/Meteorite/Meteor.tres" id="3_mekeu"]
 

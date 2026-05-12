@@ -1,6 +1,5 @@
 extends RigidBody3D
-
-class_name Meteors
+class_name Meteor
 
 @export var explosion_scene: PackedScene = preload("res://Scenes/explosion.tscn")
 @export var is_volcano_rock: bool = false

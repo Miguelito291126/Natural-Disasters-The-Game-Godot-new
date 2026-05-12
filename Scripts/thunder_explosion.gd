@@ -26,8 +26,6 @@ func _ready():
 func _on_finished():
 	self.queue_free()
 
-
-
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	# Aplicar fuerza de explosión a objetos RigidBody3D
 	if body is RigidBody3D:

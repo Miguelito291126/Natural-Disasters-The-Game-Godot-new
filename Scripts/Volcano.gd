@@ -6,6 +6,7 @@ var fireball_scene: PackedScene = preload("res://Scenes/meteor.tscn")
 var earthquake_scene: PackedScene = preload("res://Scenes/earthquake.tscn")
 
 @export var pressure: int = 0
+@export var pressure_speed: float = 5.0 
 @export var is_going_to_erupt: bool = false
 @export var is_pressure_leaking: bool = false
 @export var is_volcano_ash: bool = false
@@ -16,30 +17,38 @@ var earthquake_scene: PackedScene = preload("res://Scenes/earthquake.tscn")
 @onready var erupt_sound: AudioStreamPlayer3D = $"Erupt Sound"
 @onready var launch_marker: Marker3D = $launch_marker
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	increment_pressure(delta)
 	check_pressure()
+
+func increment_pressure(delta: float) -> void:
+	if not is_going_to_erupt:
+		if is_pressure_leaking:
+			# Si hay fuga, la presión baja
+			pressure -= (pressure_speed * 1.5) * delta
+			if pressure <= 0:
+				pressure = 0
+				is_pressure_leaking = false # La fuga se detiene al vaciarse
+		elif pressure < 100:
+			# Si no hay fuga y no ha llegado al tope, sube
+			pressure += pressure_speed * delta
 
 func check_pressure() -> void:
 	if pressure >= 100 and not is_going_to_erupt:
 		is_going_to_erupt = true
+		pressure = 100 # Lo fijamos en 100 para evitar que suba más durante el timer
 		
 		var earthquake_node: Node3D = null
 		if randi() % 3 == 0:
 			earthquake_node = earthquake_scene.instantiate()
 			get_parent().add_child(earthquake_node)
 			earthquake_node.global_position = global_position
-
-		await get_tree().create_timer(randf_range(10, 20)).timeout
 		
 		if is_instance_valid(self):
 			erupt()
-			pressure = 99
+			pressure = 99 # Al empezar a bajar con la fuga, ya no entrará aquí
 			is_going_to_erupt = false
 			is_pressure_leaking = true
-
-		await get_tree().create_timer(randf_range(10, 20)).timeout
-		if is_instance_valid(earthquake_node):
-			earthquake_node.queue_free()
 
 func erupt() -> void:
 	smoke.emitting = false
@@ -51,7 +60,9 @@ func erupt() -> void:
 	await get_tree().create_timer(10).timeout
 	is_volcano_ash = true
 	smoke.emitting = true
-	
+	erupt_sparks.emitting = false
+	erupt_smoke.emitting = false
+
 	if is_volcano_ash:
 		Globals.set_weather_and_disaster.rpc("Dust Storm", -1)
 

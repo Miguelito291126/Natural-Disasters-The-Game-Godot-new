@@ -224,4 +224,4 @@ text = "Back"
 [connection signal="value_changed" from="Panel/Settings/Volumen" to="." method="_on_volumen_value_changed"]
 [connection signal="value_changed" from="Panel/Settings/VolumenMusic" to="." method="_on_volumen_music_value_changed"]
 [connection signal="value_changed" from="Panel/Settings/Time" to="." method="_on_time_value_changed"]
-[connection signal="pressed" from="Panel/Settings/Back" to="." method="_OnBackPressed"]
+[connection signal="pressed" from="Panel/Settings/Back" to="." method="_on_back_pressed"]

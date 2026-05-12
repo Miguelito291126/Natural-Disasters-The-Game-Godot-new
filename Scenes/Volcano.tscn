@@ -85,92 +85,6 @@ albedo_color = Color(0, 0, 0, 0.43529412)
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_wqc32")
 
-[sub_resource type="Animation" id="Animation_v1e02"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:Pressure")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:IsGoingToErupt")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:IsPressureLeaking")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-
-[sub_resource type="Animation" id="Animation_coo4b"]
-resource_name = "Volcano"
-length = 300.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:Pressure")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 126.7, 300),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [0, 100, 0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:IsGoingToErupt")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 300),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".:IsPressureLeaking")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 300),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, false]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_4f0xq"]
-_data = {
-&"RESET": SubResource("Animation_v1e02"),
-&"Volcano": SubResource("Animation_coo4b")
-}
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_kspno"]
 properties/0/path = NodePath("Volcano/volcano:position")
 properties/0/spawn = true
@@ -268,7 +182,7 @@ draw_pass_1 = SubResource("SphereMesh_exwvd")
 
 [node name="Volcano" parent="." unique_id=1395059966 instance=ExtResource("3_t7vbc")]
 
-[node name="volcano2" parent="Volcano" index="0" unique_id=155792859]
+[node name="volcano2" parent="Volcano" index="0" unique_id=178545291]
 surface_material_override/0 = ExtResource("3_m887n")
 surface_material_override/1 = ExtResource("4_3fq1s")
 
@@ -277,10 +191,6 @@ transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 318.367, 0)
 stream = ExtResource("6_wqc32")
 volume_db = 80.0
 max_distance = 4096.0
-
-[node name="Volcano_Animation" type="AnimationPlayer" parent="." unique_id=1834543101]
-libraries/ = SubResource("AnimationLibrary_4f0xq")
-autoplay = &"Volcano"
 
 [node name="Lava loop" type="AudioStreamPlayer3D" parent="." unique_id=1409483434]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 180.253, 0)

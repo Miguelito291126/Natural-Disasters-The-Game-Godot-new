@@ -36,7 +36,7 @@ var multiplayer_peer: MultiplayerPeer
 			current_weather_and_disaster = value
 			current_weather_and_disaster_changed.emit(value)
 
-var _weather_names: PackedStringArray = ["Sun", "Cloud", "Raining", "Storm", "Thunderstorm", "Tsunami", "Meteors shower", "Volcano", "Tornado", "Acid rain", "Earthquake", "Sand Storm", "blizzard", "Dust Storm"]
+@export var disasters_names: PackedStringArray = ["Original", "Sun", "Cloud", "Raining", "Storm", "Thunderstorm", "Tsunami", "Meteors shower", "Volcano", "Tornado", "Acid rain", "Earthquake", "Sand Storm", "blizzard", "Dust Storm"]
 @export var is_raining: bool
 @export var is_cloudy: bool
 
@@ -797,14 +797,14 @@ func set_weather_and_disaster(name: String = "", index: int = -1) -> void:
 	# Caso A: Si recibimos un número (int)
 	if name == "" and index >= 0:
 		var idx: int = index
-		if idx >= 0 and idx < _weather_names.size():
-			current_weather_and_disaster = _weather_names[idx]
+		if idx >= 0 and idx < disasters_names.size():
+			current_weather_and_disaster = disasters_names[idx]
 			current_weather_and_disaster_id = idx
 			
 	# Caso B: Si recibimos un texto (string)
 	elif name != "" and index == -1:
 		# En GDScript usamos 'find' para buscar el índice en un array
-		var idx: int = Array(_weather_names).find(name)
+		var idx: int = Array(disasters_names).find(name)
 		
 		if idx != -1:
 			current_weather_and_disaster = name

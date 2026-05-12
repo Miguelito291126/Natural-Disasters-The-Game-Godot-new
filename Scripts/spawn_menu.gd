@@ -106,7 +106,7 @@ func on_press(i: Node3D) -> void:
 		Globals.map.add_child(new_i, true)
 
 		# Comprobación de clase (en GDScript se usa 'is')
-		if new_i is Meteors:
+		if new_i is Meteor:
 			new_i.global_position = collision_point + (collision_normal * 0.5) + Vector3(0, 1000, 0)
 		else:
 			new_i.global_position = collision_point + (collision_normal * 0.5)

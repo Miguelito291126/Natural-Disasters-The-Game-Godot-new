@@ -123,7 +123,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.34773, -7.43001)
 stream = ExtResource("2_51njh")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=937769020]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.282699, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.214738, 0)
 light_energy = 5.0
 shadow_enabled = true
 omni_range = 31.011

@@ -20,20 +20,20 @@ properties/2/replication_mode = 1
 [node name="earthquake" type="Node3D" unique_id=153023245 groups=["Earthquake"]]
 script = ExtResource("1_2v7mq")
 
-[node name="earquake_sound" type="AudioStreamPlayer" parent="." unique_id=2042646791]
+[node name="earthquake_sound" type="AudioStreamPlayer" parent="." unique_id=2042646791]
 stream = ExtResource("2_2v7mq")
 
-[node name="earquake_start_sound_weak" type="AudioStreamPlayer3D" parent="." unique_id=970739876]
+[node name="earthquake_start_sound_weak" type="AudioStreamPlayer3D" parent="." unique_id=970739876]
 stream = ExtResource("3_u5jqd")
 volume_db = 80.0
 max_distance = 1000.0
 
-[node name="earquake_start_sound_strong" type="AudioStreamPlayer3D" parent="." unique_id=2089035147]
+[node name="earthquake_start_sound_strong" type="AudioStreamPlayer3D" parent="." unique_id=2089035147]
 stream = ExtResource("4_t4mnf")
 volume_db = 80.0
 max_distance = 1000.0
 
-[node name="earqueake_aftershot" type="AudioStreamPlayer3D" parent="." unique_id=527893399]
+[node name="earthquake_aftershot" type="AudioStreamPlayer3D" parent="." unique_id=527893399]
 stream = ExtResource("5_2v7mq")
 volume_db = 80.0
 max_distance = 1000.0

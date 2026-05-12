@@ -1,21 +1,22 @@
 extends Node3D
 class_name Earthquake
 
-@export var magnitude: float = 7.0
+@export var magnitude: float
 @export var magnitude_modifier: float = 0.0
 var next_physics_time: int = Time.get_ticks_msec()
 var spawn_time: int = Time.get_ticks_msec()
 @export var life: Array[int] = [15, 20]
 
-@onready var start_weak_earthquake: AudioStreamPlayer3D = $earquake_start_sound_weak
-@onready var start_strong_earthquake: AudioStreamPlayer3D = $earquake_start_sound_strong
-@onready var earthquake_sound: AudioStreamPlayer = $earquake_sound
-@onready var earthquake_aftershot_sound: AudioStreamPlayer3D = $earqueake_aftershot
+@onready var start_weak_earthquake: AudioStreamPlayer3D = $earthquake_start_sound_weak
+@onready var start_strong_earthquake: AudioStreamPlayer3D = $earthquake_start_sound_strong
+@onready var earthquake_sound: AudioStreamPlayer = $earthquake_sound
+@onready var earthquake_aftershot_sound: AudioStreamPlayer3D = $earthquake_aftershot
 
 func _ready() -> void:
+	magnitude = randi_range(1,12)
+
 	play_initial_sounds()
 	destroy_all_houses()
-	
 	await get_tree().create_timer(randf_range(life[0], life[1])).timeout
 	earthquake_decay()
 
