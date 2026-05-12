@@ -31,7 +31,7 @@ func _get_local_player():
 
 	return null
 
-
+@rpc("any_peer", "call_local")
 func _run_command(cmd_text: String) -> void:
 	var parts = cmd_text.strip_edges().split(" ", false)
 	if parts.size() == 0: return
@@ -223,8 +223,35 @@ func _input(_event: InputEvent) -> void:
 			
 			get_viewport().set_input_as_handled() # Evita que el Tab cambie de nodo UI
 
+
+		elif Input.is_action_just_pressed("dev_console_up"):
+			if not history.is_empty():
+				history_index = clamp(history_index + 1, 0, history.size() - 1)
+				line_edit.text = "/" + history[history_index]
+				line_edit.caret_column = line_edit.text.length()
+				# Al navegar por el historial, limpiamos el autocompletado previo
+				autocomplete_matches.clear()
+				autocomplete_index = 0
+			get_viewport().set_input_as_handled()
+
+		# --- 3. HISTORIAL (Con Flecha Abajo / dev_console_down) ---
+		elif Input.is_action_just_pressed("dev_console_down"):
+			if not history.is_empty():
+				history_index = clamp(history_index - 1, 0, history.size() - 1)
+				line_edit.text = "/" + history[history_index]
+				line_edit.caret_column = line_edit.text.length()
+				
+				autocomplete_matches.clear()
+				autocomplete_index = 0
+			get_viewport().set_input_as_handled()
+
+		if _event is InputEventKey and _event.pressed:
+			if not _event.is_action("dev_console_autocomplete"):
+				autocomplete_matches.clear()
+				autocomplete_index = 0
+
 		# Ejecutar comando con Enter
-		if Input.is_action_just_pressed("ui_accept"): # "ui_accept" es el Enter por defecto
+		if Input.is_action_just_pressed("Enter"): # "ui_accept" es el Enter por defecto
 			if line_edit.text.strip_edges() != "":
 				var clean_text = line_edit.text
 				# Guardar en historial

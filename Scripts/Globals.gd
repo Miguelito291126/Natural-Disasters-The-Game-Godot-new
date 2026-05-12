@@ -617,8 +617,11 @@ func _process(_delta):
 
 
 func check_steam_state():
-	if Steam.loggedOn():
-		use_steam = true
+	if is_steam_running:
+		if Steam.loggedOn():
+			use_steam = true
+		else:
+			use_steam = false
 	else:
 		use_steam = false
 
