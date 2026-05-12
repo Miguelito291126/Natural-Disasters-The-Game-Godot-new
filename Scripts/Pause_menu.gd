@@ -214,8 +214,6 @@ func _on_volumen_value_changed(value:float):
 
 
 func _on_resolutions_item_selected(index:int):
-	
-	
 	var size = resolutions_dic.get(resolutions.get_item_text(index))
 	DisplayServer.window_set_size(size)
 	get_viewport().set_size(size)

@@ -124,7 +124,37 @@ func destroy_all_houses() -> void:
 			destroy_house(house)
 
 func magnitude_modulate_sound() -> void:
-	var vol_mod = pow(magnitude / 10.0, 3)
+	var volume: float = self.magnitude
+	# Mathf.pow en C# es simplemente pow() en GDScript
+	var vol_mod: float = pow(volume / 10.0, 3)
+	var distance_mod: float = 0.0
+
+	# Obtenemos la posición del jugador local desde el Singleton Globals
+	if Globals.local_player != null:
+		var local_player_pos: Vector3 = Globals.local_player.global_position
+		
+		# Configuración del Raycast 3D
+		# Nota: En C# usabas local_player_pos + Vector3(0,0,-3000), he mantenido esa lógica
+		var target_pos = local_player_pos + Vector3(0, 0, -3000)
+		var query = PhysicsRayQueryParameters3D.create(local_player_pos, target_pos)
+		
+		var space_state = get_world_3d().direct_space_state
+		var ray_result = space_state.intersect_ray(query)
+		
+		if not ray_result.is_empty():
+			var hit_position: Vector3 = ray_result["position"]
+			distance_mod = 1.0 - (hit_position.distance_to(local_player_pos) / 3000.0)
+	
+	# Aplicamos la atenuación por distancia
+	vol_mod *= distance_mod
+
+	# Control del sonido
+	if earthquake_sound != null:
+		if not earthquake_sound.playing:
+			earthquake_sound.play()
+		
+		# Ajustamos el volumen (VolumeDb)
+		earthquake_sound.volume_db = vol_mod
 
 # Incrementa gradualmente el modificador de magnitud basado en el tiempo delta
 func magnitude_modifier_increment(delta: float) -> void:

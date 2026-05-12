@@ -276,6 +276,7 @@ func _ready():
 	splash_node.emitting = false
 	dust_node.emitting = false
 	snow_node.emitting = false
+	spotLight3D.visible = false
 
 
 	Globals.print_role("player name: " + str(name.to_int()))

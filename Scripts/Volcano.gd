@@ -5,7 +5,7 @@ class_name Volcano
 var fireball_scene: PackedScene = preload("res://Scenes/meteor.tscn")
 var earthquake_scene: PackedScene = preload("res://Scenes/earthquake.tscn")
 
-@export var pressure: int = 0
+@export var pressure: float = 0
 @export var pressure_speed: float = 5.0 
 @export var is_going_to_erupt: bool = false
 @export var is_pressure_leaking: bool = false
@@ -16,6 +16,9 @@ var earthquake_scene: PackedScene = preload("res://Scenes/earthquake.tscn")
 @onready var erupt_smoke: GPUParticles3D = $"Erupt Smoke"
 @onready var erupt_sound: AudioStreamPlayer3D = $"Erupt Sound"
 @onready var launch_marker: Marker3D = $launch_marker
+
+func _ready() -> void:
+	randomize()
 
 func _process(delta: float) -> void:
 	increment_pressure(delta)
@@ -37,18 +40,19 @@ func check_pressure() -> void:
 	if pressure >= 100 and not is_going_to_erupt:
 		is_going_to_erupt = true
 		pressure = 100 # Lo fijamos en 100 para evitar que suba más durante el timer
+	
+		if multiplayer.is_server():
+			if randi() % 3 == 0: 
+				var earthquake_node = earthquake_scene.instantiate()
+				get_parent().add_child(earthquake_node, true)
+				earthquake_node.global_position = global_position
+				print("Terremoto spawneado")
 		
-		var earthquake_node: Node3D = null
-		if randi() % 3 == 0:
-			earthquake_node = earthquake_scene.instantiate()
-			get_parent().add_child(earthquake_node)
-			earthquake_node.global_position = global_position
-		
-		if is_instance_valid(self):
-			erupt()
-			pressure = 99 # Al empezar a bajar con la fuga, ya no entrará aquí
-			is_going_to_erupt = false
-			is_pressure_leaking = true
+		# Ejecutar la erupción
+		erupt()
+		pressure = 99 
+		is_going_to_erupt = false
+		is_pressure_leaking = true
 
 func erupt() -> void:
 	smoke.emitting = false
