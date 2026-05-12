@@ -73,7 +73,7 @@ func do_physics() -> void:
 
 	# Efectos a jugadores
 	for player in get_tree().get_nodes_in_group("player"):
-		if player.is_on_floor():
+		if player is Player and player.is_on_floor():
 			if mag >= 8:
 				var multiplier = 1.125
 				if mag >= 12: multiplier = 2.5
@@ -145,55 +145,56 @@ func create_earthquake_with_parent() -> void:
 
 # Ejemplo de una de las funciones de magnitud (debes crear del 1 al 12)
 func magnitude_one() -> void:
-	for p in get_tree().get_nodes_in_group("player"):
-		send_clientside_effects(p, 0.1)
+	for v in get_tree().get_nodes_in_group("player") :
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
+			send_clientside_effects(v, 0.1)
 	do_physics()
 
 func magnitude_two() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 0.2)
 	do_physics()
 
 func magnitude_three() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 0.45)
 	do_physics()
 
 func magnitude_four() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 1.2)
 	do_physics()
 
 func magnitude_five() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 2.5)
 	do_physics()
 
 func magnitude_six() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and v is Player and v.is_on_floor():
 			send_clientside_effects(v, 6.0)
 	do_physics()
 
 func magnitude_seven() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 11.0)
 	do_physics()
 
 func magnitude_eight() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 16.0)
 	do_physics()
 
 func magnitude_nine() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 24.0)
 	do_physics()
 
@@ -201,18 +202,18 @@ func magnitude_ten() -> void:
 	var percentage = clamp(magnitude / 10.99, 0, 1)
 	# Cálculos de vibración basados en el original
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 38.0)
 	do_physics()
 
 func magnitude_eleven() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 45.0) # Valor aproximado basado en progresión
 	do_physics()
 
 func magnitude_twelve() -> void:
 	for v in get_tree().get_nodes_in_group("player"):
-		if v.is_multiplayer_authority() and v.is_on_floor():
+		if v.is_multiplayer_authority() and  v is Player and v.is_on_floor():
 			send_clientside_effects(v, 60.0) # Máxima intensidad
 	do_physics()
