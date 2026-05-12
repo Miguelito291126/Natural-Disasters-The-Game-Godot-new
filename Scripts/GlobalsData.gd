@@ -14,6 +14,10 @@ static var path = "user://globals_data.tres"
 @export var fullscreen = false
 @export var resolution = 0
 @export var quality = 0
+@export var username = "Player"
+@export var port = 4444
+@export var ip = "localhost"
+@export var private_mode = false
 
 func save_file():
     ResourceSaver.save(self, path)

@@ -16,18 +16,17 @@ func _exit_tree() -> void:
 
 	if multiplayer.is_server():
 		Globals.set_weather_and_disaster.rpc("Original", -1)
-		Globals.Timer.stop()
+		Globals.timer.stop()
 		Globals.started = false
 
 func _ready() -> void:
-
 	Globals.map = self
 	
 	if !Globals.current_weather_and_disaster_changed.is_connected(_on_disaster_changed):
 		Globals.current_weather_and_disaster_changed.connect(_on_disaster_changed)
 
 	if multiplayer.is_server():
-		Globals.rpc("SetWeatherAndDisaster", "Original", -1)
+		Globals.set_weather_and_disaster.rpc("Original", -1)
 
 		if Globals.gamemode == "survival":
 			if !Globals.is_dedicated_server:
@@ -49,11 +48,10 @@ func _physics_process(_delta: float) -> void:
 	# Llama a la función wind para cada objeto en la escena
 	for child in get_children():
 		if child is Node3D:
-			Globals.Wind(child)
+			Globals.wind(child)
 
 func _process(_delta: float) -> void:
 	if multiplayer.is_server():
-		var args = OS.get_cmdline_user_args()
 		var is_server_feature = Globals.is_dedicated_server
 
 		if is_server_feature:
@@ -76,14 +74,14 @@ func _start_sun_original() -> void:
 	Globals.humidity_target = Globals.humidity_original
 	Globals.bradiation_target = Globals.bradiation_original
 	Globals.oxygen_target = Globals.oxygen_original
-	Globals.Pressure_target = Globals.Pressure_original
+	Globals.pressure_target = Globals.pressure_original
 	Globals.wind_direction_target = Globals.wind_direction_original
 	Globals.wind_speed_target = Globals.wind_speed_original
 
 	_update_environment()
 
 func _start_tsunami() -> void:
-	var tsunami = Globals.TsunamiScene.instantiate()
+	var tsunami = Globals.tsunami_scene.instantiate()
 	tsunami.position = Vector3(0, 0, 0)
 	add_child(tsunami, true)
 	active_disaster_nodes.append(tsunami)
@@ -92,7 +90,7 @@ func _start_tsunami() -> void:
 	Globals.humidity_target = randf_range(0.0, 20.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(10000.0, 10020.0)
+	Globals.pressure_target = randf_range(10000.0, 10020.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(0.0, 10.0)
 
@@ -103,7 +101,7 @@ func _start_thunderstorm() -> void:
 	Globals.humidity_target = randf_range(30.0, 40.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(8000.0, 9000.0)
+	Globals.pressure_target = randf_range(8000.0, 9000.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(0.0, 30.0)
 
@@ -113,7 +111,7 @@ func _start_thunderstorm() -> void:
 func _start_meteor_shower() -> void:
 	Globals.temperature_target = randf_range(20.0, 31.0)
 	Globals.humidity_target = randf_range(0.0, 20.0)
-	Globals.Pressure_target = randf_range(10000.0, 10020.0)
+	Globals.pressure_target = randf_range(10000.0, 10020.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
@@ -127,7 +125,7 @@ func _start_blizzard() -> void:
 	Globals.humidity_target = randf_range(20.0, 30.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(8000.0, 9020.0)
+	Globals.pressure_target = randf_range(8000.0, 9020.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(40.0, 50.0)
 
@@ -138,7 +136,7 @@ func _start_sandstorm() -> void:
 	Globals.humidity_target = randf_range(0.0, 5.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(10000.0, 10020.0)
+	Globals.pressure_target = randf_range(10000.0, 10020.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(30.0, 50.0)
 
@@ -149,7 +147,7 @@ func _start_volcano() -> void:
 	Globals.humidity_target = randf_range(0.0, 20.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(10000.0, 10020.0)
+	Globals.pressure_target = randf_range(10000.0, 10020.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(0.0, 10.0)
 
@@ -158,7 +156,7 @@ func _start_volcano() -> void:
 	var ray = PhysicsRayQueryParameters3D.create(rand_pos, rand_pos - Vector3(0, 10000, 0))
 	var result = space_state.intersect_ray(ray)
 
-	var volcano = Globals.VolcanoScene.instantiate()
+	var volcano = Globals.volcano_scene.instantiate()
 	if result.has("position"):
 		volcano.position = result["position"]
 	else:
@@ -174,7 +172,7 @@ func _start_tornado() -> void:
 	var ray = PhysicsRayQueryParameters3D.create(rand_pos, rand_pos - Vector3(0, 10000, 0))
 	var result = space_state.intersect_ray(ray)
 
-	var tornado = Globals.TornadoScene.instantiate()
+	var tornado = Globals.tornado_scene.instantiate()
 	if result.has("position"):
 		tornado.position = result["position"]
 	else:
@@ -187,7 +185,7 @@ func _start_tornado() -> void:
 	Globals.humidity_target = randf_range(30.0, 40.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(8000.0, 9000.0)
+	Globals.pressure_target = randf_range(8000.0, 9000.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(0.0, 30.0)
 
@@ -199,7 +197,7 @@ func _start_acid_rain() -> void:
 	Globals.humidity_target = randf_range(0.0, 20.0)
 	Globals.bradiation_target = 100.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(10000.0, 10020.0)
+	Globals.pressure_target = randf_range(10000.0, 10020.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(0.0, 10.0)
 	_update_environment()
@@ -209,11 +207,11 @@ func _start_earthquake() -> void:
 	Globals.humidity_target = randf_range(0.0, 20.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(10000.0, 10020.0)
+	Globals.pressure_target = randf_range(10000.0, 10020.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(0.0, 10.0)
 
-	var earthquake = Globals.EarthquakeScene.instantiate()
+	var earthquake = Globals.earthquake_scene.instantiate()
 	add_child(earthquake, true)
 	active_disaster_nodes.append(earthquake)
 	_update_environment()
@@ -223,7 +221,7 @@ func _start_sun() -> void:
 	Globals.humidity_target = randf_range(0.0, 20.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(10000.0, 10020.0)
+	Globals.pressure_target = randf_range(10000.0, 10020.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(0.0, 10.0)
 	_update_environment()
@@ -233,7 +231,7 @@ func _start_cloud() -> void:
 	Globals.humidity_target = randf_range(10.0, 30.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(9000, 10000)
+	Globals.pressure_target = randf_range(9000, 10000)
 	Globals.wind_direction_target = Vector3(randf_range(-1, 1), 0, randf_range(-1, 1))
 	Globals.wind_speed_target = randf_range(0, 10)
 	_update_environment()
@@ -243,7 +241,7 @@ func _start_raining() -> void:
 	Globals.humidity_target = randf_range(20.0, 40.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(9000.0, 9020.0)
+	Globals.pressure_target = randf_range(9000.0, 9020.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(0.0, 20.0)
 	_update_environment()
@@ -253,7 +251,7 @@ func _start_storm() -> void:
 	Globals.humidity_target = randf_range(30.0, 40.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 100.0
-	Globals.Pressure_target = randf_range(8000.0, 9000.0)
+	Globals.pressure_target = randf_range(8000.0, 9000.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(30.0, 60.0)
 
@@ -265,7 +263,7 @@ func _start_dust_storm() -> void:
 	Globals.humidity_target = randf_range(0.0, 10.0)
 	Globals.bradiation_target = 0.0
 	Globals.oxygen_target = 0.0
-	Globals.Pressure_target = randf_range(10000.0, 10020.0)
+	Globals.pressure_target = randf_range(10000.0, 10020.0)
 	Globals.wind_direction_target = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0))
 	Globals.wind_speed_target = randf_range(0.0, 50.0)
 	_update_environment()
@@ -346,8 +344,8 @@ func _spawn_decals_over_time(scene: PackedScene, total: int, delay: float) -> vo
 		await get_tree().create_timer(delay).timeout
 
 func _spawn_meteor_shower_timer() -> void:
-	while Globals.CurrentWeatherAndDisaster == "Meteors shower":
-		var meteor = Globals.MeteorScene.instantiate()
+	while Globals.current_weather_and_disaster == "Meteors shower":
+		var meteor = Globals.meteor_scene.instantiate()
 		var rand_pos = Vector3(randf_range(0, 4097), 1000, randf_range(0, 4097))
 		meteor.position = rand_pos
 		add_child(meteor, true)
@@ -359,47 +357,47 @@ func _update_environment() -> void:
 	if !is_instance_valid(self) || !is_instance_valid(map_environment):
 		return
 
-	var player = Globals.LocalPlayer
+	var player = Globals.local_player
 	if !is_instance_valid(player):
 		return
 
-	var is_outdoor = Globals.IsOutdoor(player)
+	var is_outdoor = Globals.is_outdoor(player)
 	var env = map_environment.environment
 	if env == null: return
 
 	# Ajustes por desastre
 	match current_disaster:
 		"blizzard":
-			player.SnowNode.emitting = is_outdoor
+			player.snow_node.emitting = is_outdoor
 			env.volumetric_fog_albedo = Color(1, 1, 1)
 		"Sand Storm":
-			player.SandNode.emitting = is_outdoor
+			player.sand_node.emitting = is_outdoor
 			env.volumetric_fog_albedo = Color(1, 0.647, 0)
 		"Acid rain":
-			player.RainNode.emitting = is_outdoor
+			player.rain_node.emitting = is_outdoor
 			env.volumetric_fog_albedo = Color(0, 1, 0)
 		"Dust Storm":
-			player.DustNode.emitting = is_outdoor
+			player.dust_node.emitting = is_outdoor
 			env.volumetric_fog_albedo = Color(0, 0, 0)
 		_:
-			player.SnowNode.emitting = false
-			player.SandNode.emitting = false
-			player.DustNode.emitting = false
+			player.snow_node.emitting = false
+			player.sand_node.emitting = false
+			player.dust_node.emitting = false
 			env.volumetric_fog_albedo = Color(1, 1, 1)
 
 	var foggy_disasters = ["Thunderstorm", "Raining", "Storm", "Tornado", "blizzard", "Sand Storm", "Cloud", "Acid rain", "Dust Storm"]
 	var rain_disasters = ["Thunderstorm", "Raining", "Storm", "Tornado", "Acid rain"]
 	
-	map_environment.IsCloudy = foggy_disasters.has(current_disaster)
-	map_environment.IsRaining = rain_disasters.has(current_disaster)
-	env.volumetric_fog_enabled = map_environment.IsCloudy && is_outdoor
-
-	player.RainNode.emitting = map_environment.IsRaining && is_outdoor
+	map_environment.is_cloudy = foggy_disasters.has(current_disaster)
+	map_environment.is_raining= rain_disasters.has(current_disaster)
+	env.volumetric_fog_enabled = map_environment.is_cloudy && is_outdoor
+	
+	player.rain_node.emitting = map_environment.is_raining && is_outdoor
 
 	# Ajuste de nubes
 	var sky_mat = env.sky.sky_material as ShaderMaterial
 	if sky_mat:
-		sky_mat.set_shader_parameter("clouds_fuzziness", 0.25 if map_environment.IsCloudy else 1.0)
+		sky_mat.set_shader_parameter("clouds_fuzziness", 0.25 if map_environment.is_cloudy else 1.0)
 
 func _spawn_lightning_timer() -> void:
 	if is_spawning_lightning:
@@ -407,12 +405,12 @@ func _spawn_lightning_timer() -> void:
 
 	is_spawning_lightning = true
 
-	while Globals.CurrentWeatherAndDisaster == "Thunderstorm" && is_spawning_lightning:
-		var player = Globals.LocalPlayer
+	while Globals.current_weather_and_disaster == "Thunderstorm" && is_spawning_lightning:
+		var player = Globals.local_player
 
-		if is_instance_valid(player) && Globals.IsOutdoor(player):
+		if is_instance_valid(player) && Globals.is_outdoor(player):
 			if randi_range(1, 25) == 25:
-				var lighting = Globals.ThunderstormScene.instantiate()
+				var lighting = Globals.thunderstorm_scene.instantiate()
 				var rand_pos = Vector3(randf_range(0, 4097), 1000, randf_range(0, 4097))
 				var space_state = get_world_3d().direct_space_state
 

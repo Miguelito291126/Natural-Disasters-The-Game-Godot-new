@@ -258,7 +258,7 @@ public partial class Globals : Node
 
 
 
-	public bool IsOutdoor(Node3D ply)
+	public bool is_outdoor(Node3D ply)
 	{
 		if (ply == null) return true;
 
@@ -293,11 +293,11 @@ public partial class Globals : Node
 		return false;
 	}
 
-	public bool IsInlava(Node ply)
+	public bool is_in_lava(Node ply)
 	{
 		if(ply.IsInGroup("player") && ply is Player player)
 		{
-			return player.IsInLava;
+			return player.is_in_lava;
 		}
 		return false;
 	}
@@ -441,7 +441,7 @@ public partial class Globals : Node
 		// Verificar si el objeto es un jugador
 		if(obj.IsInGroup("player") && obj is Player player)
 		{
-			bool outdoor = IsOutdoor(player);
+			bool outdoor = is_outdoor(player);
 			bool blocked = IsSomethingBlockingWind(player);
 
 			// LOG DE DEPURACIÓN: Si ves esto en consola sabrás por qué es 0
@@ -467,7 +467,7 @@ public partial class Globals : Node
 
 		else if(obj.IsInGroup("movable_objects") && obj is RigidBody3D body)
 		{
-			if(GodotObject.IsInstanceValid(body) && IsOutdoor(body) && !IsSomethingBlockingWind(body))
+			if(GodotObject.IsInstanceValid(body) && is_outdoor(body) && !IsSomethingBlockingWind(body))
 			{
 				var wind_vel = WindDirection * (float)WindSpeed;
 				var delta_velocity = wind_vel - body.LinearVelocity;
@@ -1146,7 +1146,7 @@ public partial class Globals : Node
 			Steam.SetLobbyData(lobbyId, "host_id", SteamId.ToString());
 			Steam.SetLobbyData(lobbyId, "name", Username);
 			Steam.SetLobbyData(lobbyId, "players", PlayersConected.Count.ToString());
-			º
+			
 			// Iniciar el peer de Steam
 			PlayMultiplayerServer(Port);
 			

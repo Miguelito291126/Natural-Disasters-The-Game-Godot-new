@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dg75ymjinjgeu"]
 
-[ext_resource type="Script" uid="uid://c5cwvkmqc6da8" path="res://Scripts/Pause_menu.gd" id="1_ipdme"]
+[ext_resource type="Script" uid="uid://bpb7kal7xb8sg" path="res://Scripts/death_menu.gd" id="1_ipdme"]
 [ext_resource type="Theme" uid="uid://ctfcvmj6op0i5" path="res://Resources/Death_Screen_theme.tres" id="2_bsx7a"]
 
 [node name="Death Menu" type="CanvasLayer" unique_id=1323871140]
@@ -53,5 +53,5 @@ theme = ExtResource("2_bsx7a")
 text = "Exit
 "
 
-[connection signal="pressed" from="Panel/Buttons/Continue" to="." method="_OnReturnPressed"]
-[connection signal="pressed" from="Panel/Buttons/Exit" to="." method="_OnExitPressed"]
+[connection signal="pressed" from="Panel/Buttons/Continue" to="." method="_on_return_pressed"]
+[connection signal="pressed" from="Panel/Buttons/Exit" to="." method="_on_exit_pressed"]

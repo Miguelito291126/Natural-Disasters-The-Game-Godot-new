@@ -84,8 +84,11 @@ func load_buttons() -> void:
 
 func on_press(i: Node3D) -> void:
 	var player = _get_local_player()
-	if player == null or not player.get("admin_mode"): return
-	if not is_multiplayer_authority(): return
+	if player == null or not player.get("admin_mode"):
+		return
+		
+	if not is_multiplayer_authority(): 
+		return
 
 	var raycast = get_parent().interactor
 

@@ -50,7 +50,7 @@ public partial class Player : CharacterBody3D
 
 	[Export] public bool Outdoor = false;
 	[Export] public bool IsInWater = false;
-	[Export] public bool IsInLava = false;
+	[Export] public bool is_in_lava = false;
 	[Export] public bool IsUnderWater = false;
 	[Export] public bool IsUnderLava = false;
 	[Export] public bool IsOnFire = false;
@@ -600,7 +600,7 @@ public partial class Player : CharacterBody3D
 			return ;
 		}
 
-		if(Globals.Instance.Oxygen <= 20 || Globals.Instance.IsInwater(this) || IsUnderWater || Globals.Instance.IsInlava(this) || IsUnderLava)
+		if(Globals.Instance.Oxygen <= 20 || Globals.Instance.IsInwater(this) || IsUnderWater || Globals.Instance.is_in_lava(this) || IsUnderLava)
 		{
 			BodyOxygen = (float)Mathf.Clamp(BodyOxygen - 5 * delta, MinOxygen, MaxOxygen);
 		}
@@ -626,7 +626,7 @@ public partial class Player : CharacterBody3D
 			return ;
 		}
 
-		if(Globals.Instance.Bradiation >= 80 && Globals.Instance.IsOutdoor(this))
+		if(Globals.Instance.Bradiation >= 80 && Globals.Instance.is_outdoor(this))
 		{
 			BodyBradiation = (float)Mathf.Clamp(BodyBradiation + 5 * delta, MinBdradiation, MaxBradiation);
 		}
@@ -717,7 +717,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		// --- LÓGICA PARA LAVA ---
-		if (IsInLava && currentLavaArea != null)
+		if (is_in_lava && currentLavaArea != null)
 		{
 			var collider = currentLavaArea.GetNodeOrNull<CollisionShape3D>("CollisionShape3D");
 			if (collider != null && collider.Shape is BoxShape3D box)
@@ -813,7 +813,7 @@ public partial class Player : CharacterBody3D
 	{
 		// 1. Verificamos si realmente debe sonar la lluvia
 		// Combinamos: ¿El emisor está activo? Y ¿El jugador está a la intemperie?
-		bool shouldPlay = RainNode.Emitting && Globals.Instance.IsOutdoor(this);
+		bool shouldPlay = RainNode.Emitting && Globals.Instance.is_outdoor(this);
 
 		// Actualizamos el estado global
 		Globals.Instance.IsRaining = shouldPlay;
@@ -944,7 +944,7 @@ public partial class Player : CharacterBody3D
 		{
 			if (!IsOnFloor())
 			{
-				if (IsInWater || IsInLava)
+				if (IsInWater || is_in_lava)
 				{
 					velocity.Y = (float)Globals.Instance.Gravity * (float)delta * SwimFactor;
 				}
@@ -956,7 +956,7 @@ public partial class Player : CharacterBody3D
 			}
 			else
 			{
-				if (!(IsInWater || IsInLava))
+				if (!(IsInWater || is_in_lava))
 				{
 					if (FallStrength < FallDamageThreshold)
 					{
@@ -985,7 +985,7 @@ public partial class Player : CharacterBody3D
 		
 		if(Input.IsActionPressed("Jump"))
 		{
-			if(IsInWater || IsInLava)
+			if(IsInWater || is_in_lava)
 			{
 				velocity.Y += JUMP_VELOCITY;
 			}
@@ -993,7 +993,7 @@ public partial class Player : CharacterBody3D
 
 		if(Input.IsActionPressed("down"))
 		{
-			if(IsInWater || IsInLava)
+			if(IsInWater || is_in_lava)
 			{
 				velocity.Y -= DOWN_VELOCITY;
 			}
@@ -1075,7 +1075,7 @@ public partial class Player : CharacterBody3D
 
 		if (AnimationTreeNode != null) AnimationTreeNode.Set("parameters/conditions/is_falling", !IsOnFloor() && velocity.Y < 0);
 		if (AnimationTreeNode != null) AnimationTreeNode.Set("parameters/conditions/is_jumping", velocity.Y > 0);
-		if (AnimationTreeNode != null) AnimationTreeNode.Set("parameters/conditions/is_swiming", IsInWater || IsInLava);
+		if (AnimationTreeNode != null) AnimationTreeNode.Set("parameters/conditions/is_swiming", IsInWater || is_in_lava);
 		if (AnimationTreeNode != null) AnimationTreeNode.Set("parameters/conditions/is_idle", IsOnFloor() && horizontal_velocity.Length() < 0.1);
 		if (AnimationTreeNode != null) AnimationTreeNode.Set("parameters/conditions/is_walking", IsOnFloor() && horizontal_velocity.Length() > 0.1);
 
@@ -1275,7 +1275,7 @@ public partial class Player : CharacterBody3D
 		}
 		else if(area.IsInGroup("Lava_Area"))
 		{
-			IsInLava = true;
+			is_in_lava = true;
 			currentLavaArea = area;
 		}
 
@@ -1290,7 +1290,7 @@ public partial class Player : CharacterBody3D
 	{
 		if(area.IsInGroup("Lava_Area"))
 		{
-			IsInLava = false;
+			is_in_lava = false;
 			IsUnderLava = false;
 			currentLavaArea = null;
 		}
@@ -1311,7 +1311,7 @@ public partial class Player : CharacterBody3D
 		BodyBradiation = MinBdradiation;
 		IsAlive = true;
 		IsInWater = false;
-		IsInLava = false;
+		is_in_lava = false;
 		IsOnFire = false;
 		FallStrength = 0f;
 

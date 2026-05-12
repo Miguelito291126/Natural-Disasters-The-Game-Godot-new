@@ -21,33 +21,33 @@ const bob_am = 0.08
 @export var mass: float = 0.5
 
 
-var Max_Hearth = 100
-var Max_temp = 44
-var Max_oxygen = 100
-var Max_bradiation = 100
+var max_health = 100
+var max_temp = 44
+var max_oxygen = 100
+var max_bradiation = 100
 
 @export var fall_strength = 0
 
 
-var min_Hearth = 0
+var min_health = 0
 var min_temp = 24
 var min_oxygen = 0
 var min_bdradiation = 0
 
 
-@export var hearth: float = Max_Hearth
+@export var health: float = max_health
 
 @export var body_temperature: float = 37
-@export var body_oxygen: float = Max_oxygen
+@export var body_oxygen: float = max_oxygen
 @export var body_bradiation: float = min_bdradiation
 @export var body_wind: float = 0
 
-@export var Outdoor: bool = false
-@export var IsInWater: bool = false
-@export var IsInLava: bool = false
-@export var IsUnderWater: bool = false
-@export var IsUnderLava: bool = false
-@export var IsOnFire: bool = false
+@export var outdoor: bool = false
+@export var is_in_water: bool = false
+@export var is_in_lava: bool = false
+@export var is_underwater: bool = false
+@export var is_underlava: bool = false
+@export var is_on_fire: bool = false
 @export var is_alive: bool = true
 
 @export var swim_factor: float = 0.25
@@ -66,8 +66,8 @@ var min_bdradiation = 0
 @onready var hand_node = $"head/hand"
 @onready var esqueleto_node = $"Esqueleto"
 @onready var label = $Name
-@onready var temp_effect = $Temp_Effect/ColorRect
-@onready var death_menu = $"Death Menu"
+@onready var temp_effect = $TempEffect/ColorRect
+@onready var death_menu = $"DeathMenu"
 @onready var fire_particles = $Fire
 
 @onready var sneeze_audio = $"head/Camera3D/sneeze audio"
@@ -76,14 +76,14 @@ var min_bdradiation = 0
 @onready var vomit_audio = $head/Camera3D/Vomit
 @onready var vomit = $head/Camera3D/Vomit
 
-@onready var underwatereffect = $Underwater
-@onready var underlavaeffect = $UnderLava
+@onready var underwater_effect = $UnderWater
+@onready var underlava_effect = $UnderLava
 
 
-@onready var Rain_sound = $"Rain sound"
-@onready var Wind_sound = $"Wind sound"
-@onready var Wind_moderate_sound = $"Wind Morerate sound"
-@onready var Wind_extreme_sound = $"Wind Extreme sound"
+@onready var rain_sound = $"RainSound"
+@onready var wind_sound = $"WindSound"
+@onready var wind_moderate_sound = $"WindModerateSound"
+@onready var wind_extreme_sound = $"WindExtremeSound"
 
 @onready var interactor: RayCast3D = $head/Camera3D/Interactor
 @onready var spotLight3D = $head/Camera3D/SpotLight3D
@@ -115,6 +115,10 @@ var camera_default_local_transform: Transform3D
 @export var character = "blue"
 var _last_applied_character := ""
 @export var player_materials = [preload("res://Materials/player blue.tres"), preload("res://Materials/player red.tres"), preload("res://Materials/player green.tres"), preload("res://Materials/player yellow.tres") ]
+@onready var chat_node: Chat = get_tree().root.find_child("chat", true, false)
+var current_water_area: Area3D
+var current_lava_area: Area3D
+var external_force: Vector3
 
 func _enter_tree() -> void:
 	player_id = name.to_int()
@@ -188,6 +192,8 @@ func _update_camera_follow_ragdoll():
 		camera_node.global_position = target_position2
 		camera_node.global_basis = camera_default_transform.basis
 
+func apply_disasters_push(force):
+	external_force = force
 
 @rpc("any_peer", "call_local")
 func damage(amount: float) -> void:
@@ -197,10 +203,10 @@ func damage(amount: float) -> void:
 	if not is_alive:
 		return
 
-	hearth = clamp(hearth - amount, min_Hearth, Max_Hearth)
-	Globals.print_role("damage applied:" + str(amount) + ", hearth now:" + str(hearth))
+	health = clamp(health - amount, min_health, max_health)
+	Globals.print_role("damage applied:" + str(amount) + ", health now:" + str(health))
 
-	if hearth <= 0:	
+	if health <= 0:	
 		is_alive = false
 
 		# Solo ejecutar die() y quitar puntos en la instancia local del jugador que murió
@@ -220,9 +226,9 @@ func die():
 		death_menu.show()
 
 func ignite(time):
-	IsOnFire = true
+	is_on_fire = true
 	await get_tree().create_timer(time).timeout
-	IsOnFire = false
+	is_on_fire = false
 
 func Sneeze():
 	sneeze_audio.play()
@@ -308,11 +314,12 @@ func _ready():
 			# Saltar el jugador actual
 			if player == self:
 				continue
-			
-			# Verificar si el nombre coincide (sin contar números añadidos)
-			var player_username = player.username
-			if player_username == nombre_base or player_username.begins_with(nombre_base):
-				contador += 1
+
+			if player is Player:
+				# Verificar si el nombre coincide (sin contar números añadidos)
+				var player_username = player.username
+				if player_username == nombre_base or player_username.begins_with(nombre_base):
+					contador += 1
 		
 		# Si hay duplicados, añadir número al nombre
 		if contador > 0:
@@ -323,7 +330,7 @@ func _ready():
 			admin_mode = true
 
 
-func body_temp(delta):
+func update_temp_effect(delta):
 	if god_mode:
 		return
 
@@ -338,12 +345,12 @@ func body_temp(delta):
 	var heatsource_equilibrium     =  clamp((fire_heat_emission * (heatscale ))*body_heat_genK, 0, body_heat_genMAX * 1.3)
 	var coldsource_equilibrium     =  clamp((fire_heat_emission * ( coolscale))*body_heat_genK,body_heat_genMAX * -1.3, 0) 
 
-	var ambient_equilibrium        = clamp(((Globals.Temperature - body_temperature)*body_heat_genK), -body_heat_genMAX*1.1, body_heat_genMAX * 1.1)
+	var ambient_equilibrium        = clamp(((Globals.temperature - body_temperature)*body_heat_genK), -body_heat_genMAX*1.1, body_heat_genMAX * 1.1)
 	
-	if Globals.Temperature >= 5 and Globals.Temperature <= 37:
+	if Globals.temperature >= 5 and Globals.temperature <= 37:
 		ambient_equilibrium	= 0
 	
-	body_temperature = clamp(body_temperature + core_equilibrium  + heatsource_equilibrium + coldsource_equilibrium + ambient_equilibrium, min_temp, Max_temp)
+	body_temperature = clamp(body_temperature + core_equilibrium  + heatsource_equilibrium + coldsource_equilibrium + ambient_equilibrium, min_temp, max_temp)
 	temp_effect.material.set_shader_parameter("temp", body_temperature)
 	temp_effect.material.set_shader_parameter("Temp", body_temperature)
 
@@ -363,28 +370,28 @@ func body_temp(delta):
 	if body_temperature < 35 and randi() % 400 == 0:
 		Sneeze()
 
-func body_oxy(delta):
+func update_oxy_effect(delta):
 	if god_mode:
 		return
 
-	if Globals.oxygen <= 20 or Globals.is_inwater(self) or IsUnderWater or Globals.is_inlava(self) or IsUnderLava:
-		body_oxygen = clamp(body_oxygen - 5 * delta, min_oxygen, Max_oxygen)
+	if Globals.oxygen <= 20 or Globals.is_in_water(self) or is_underwater or Globals.is_in_lava(self) or is_underlava:
+		body_oxygen = clamp(body_oxygen - 5 * delta, min_oxygen, max_oxygen)
 	else:
-		body_oxygen = clamp(body_oxygen + 5 * delta, min_oxygen, Max_oxygen)
+		body_oxygen = clamp(body_oxygen + 5 * delta, min_oxygen, max_oxygen)
 	
 	
 	if body_oxygen <= 0:
 		if randi_range(1,25) == 25:
 			damage.rpc(randi_range(1,30))
 
-func body_rad(delta):
+func update_rad_effect(delta):
 	if god_mode:
 		return
 
-	if Globals.bradiation >= 80 and Globals.is_outdoor(self) and Outdoor:
-		body_bradiation = clamp(body_bradiation + 5 * delta, min_bdradiation, Max_bradiation)
+	if Globals.bradiation >= 80 and Globals.is_outdoor(self) and outdoor:
+		body_bradiation = clamp(body_bradiation + 5 * delta, min_bdradiation, max_bradiation)
 	else:
-		body_bradiation = clamp(body_bradiation - 5 * delta, min_bdradiation, Max_bradiation)
+		body_bradiation = clamp(body_bradiation - 5 * delta, min_bdradiation, max_bradiation)
 
 	if body_bradiation >= 100:
 		if randi_range(1,25) == 25:
@@ -423,96 +430,146 @@ func update_material(index):
 	mesh.set_surface_override_material(1, player_materials[index])
 	mesh.set_surface_override_material(2, player_materials[index])
 
-func Underwater_or_Underlava_effects():
-	underwatereffect.visible = IsUnderWater
-	underlavaeffect.visible = IsUnderLava	
+func update_underwater_or_underlava_effect():
+# --- LÓGICA PARA AGUA ---
+	if is_in_water and current_water_area != null:
+		var collider = current_water_area.get_node_or_null("CollisionShape3D")
+		if collider != null and collider.shape is BoxShape3D:
+			var box = collider.shape
+			# Calculamos la superficie real en el mundo
+			# En GDScript se usa .size en lugar de .Size
+			var water_surface_y = current_water_area.global_position.y + (box.size.y / 2.0)
+			is_underwater = camera_node.global_position.y < water_surface_y
 
-	if IsInLava:
-		ignite(10)
-	
-	if IsInWater:
-		if IsOnFire:
-			IsOnFire = false	
+	# --- LÓGICA PARA LAVA ---
+	if is_in_lava and current_lava_area != null:
+		var collider = current_lava_area.get_node_or_null("CollisionShape3D")
+		if collider != null and collider.shape is BoxShape3D:
+			var box = collider.shape
+			# Calculamos la superficie real en el mundo
+			var lava_surface_y = current_lava_area.global_position.y + (box.size.y / 2.0)
+			is_underlava = camera_node.global_position.y < lava_surface_y
+			
+		elif collider != null and collider.shape is SphereShape3D:
+			var sphere = collider.shape
+			# En GDScript obtenemos la escala global directamente de global_transform.basis.get_scale()
+			var escala_y = current_lava_area.global_transform.basis.get_scale().y
+			
+			# El punto más alto de la esfera en el mundo
+			var sphere_radius_world = sphere.radius * escala_y
+			var lava_surface_y = current_lava_area.global_position.y + sphere_radius_world
 
-func IsOnFire_effects():
-	fire_particles.emitting = IsOnFire
-	if IsOnFire:
-		if randi_range(1,5) == 5:
+			# Detectar si la cámara está por debajo de la parte superior de la esfera
+			is_underlava = camera_node.global_position.y < lava_surface_y
+		
+		ignite(10) # Aplicar fuego si estás en contacto con lava
+
+	# --- APLICAR VISIBILIDAD DE UI ---
+	if underwater_effect != null:
+		underwater_effect.visible = is_underwater
+	if underlava_effect != null:
+		underlava_effect.visible = is_underlava
+
+	# Apagar fuego si entras al agua
+	if is_in_water and is_on_fire:
+		is_on_fire = false
+
+func update_fire_effect() -> void:
+	if fire_particles != null:
+		fire_particles.emitting = is_on_fire
+
+	if is_on_fire:
+		# randi_range(1, 5) es inclusivo, devolviendo un entero entre 1 y 5
+		if randi_range(1, 5) == 5:
 			damage.rpc(5)
 
+
 func _input(event: InputEvent) -> void:
+	# 1. Validaciones iniciales (Cláusulas de guarda)
 	if not is_multiplayer_authority():
 		return
-
-	# Bloquear input cuando el chat está abierto
-	# Verificar tanto la variable global como si algún LineEdit tiene foco
-	# Buscar el nodo Chat en la escena
-	var chat_node = get_tree().get_root().find_child("Chat", true, false)
-	if chat_node != null:
-		var line_edit = chat_node.get_node_or_null("Panel/Panel2/LineEdit")
-		if line_edit != null and line_edit.has_focus():
-			return
 	
+	# Bloquear si el chat está abierto o enfocado
 	if Globals.is_chat_open:
 		return
+		
+	# Comprobación segura del chat_node y su LineEdit
+	if chat_node and chat_node.line_edit and chat_node.line_edit.has_focus():
+		return
 
-	if event is InputEventKey and event.pressed and not event.echo:
-		if not admin_mode:
+	# 2. Procesar entrada de teclado
+	if event is InputEventKey and event.pressed and not event.is_echo():
+		# Solo si es admin y modo sandbox
+		if not admin_mode or Globals.gamemode != "sandbox":
 			return
 
-		if Globals.gamemode != "sandbox":
-			return
+		var disaster_id: int = -1
+		var total_desastres: int = 13 
 
+		# Estructura match (equivalente al switch de C#)
 		match event.keycode:
-			KEY_1:
-				Globals.set_weather_and_disaster.rpc(1)
-			KEY_2:
-				Globals.set_weather_and_disaster.rpc(2)
-			KEY_3:
-				Globals.set_weather_and_disaster.rpc(3)
-			KEY_4:
-				Globals.set_weather_and_disaster.rpc(4)
-			KEY_5:
-				Globals.set_weather_and_disaster.rpc(5)
-			KEY_6:
-				Globals.set_weather_and_disaster.rpc(6)
-			KEY_7:
-				Globals.set_weather_and_disaster.rpc(7)
-			KEY_8:
-				Globals.set_weather_and_disaster.rpc(8)
-			KEY_9:
-				Globals.set_weather_and_disaster.rpc(9)
-			KEY_0:
-				Globals.set_weather_and_disaster.rpc(0)
+			KEY_RIGHT: # SIGUIENTE
+				var siguiente = Globals.current_weather_and_disaster_id + 1
+				if siguiente > total_desastres:
+					siguiente = 0 # Reinicia al primero si pasa del máximo
+				disaster_id = siguiente
 
-func rain_sound():
-	Globals.is_raining = rain_node.emitting and Globals.is_outdoor(self) and Outdoor
-	if Globals.is_raining:
-		if not Rain_sound.playing:
-			Rain_sound.play()
-	else:
-		Rain_sound.stop()
+			KEY_LEFT: # ANTERIOR
+				var anterior = Globals.current_weather_and_disaster_id - 1
+				if anterior < 0:
+					anterior = total_desastres # Va al último si baja de 0
+				disaster_id = anterior
 
-func wind_sound():
-	if body_wind > 0 and body_wind <= 50:
-		if not Wind_sound.playing:
-			Wind_sound.play()
-			Wind_moderate_sound.stop()
-			Wind_moderate_sound.stop()
-	elif body_wind > 50 and body_wind <= 100:
-		if not Wind_moderate_sound.playing:
-			Wind_sound.stop()
-			Wind_moderate_sound.play()
-			Wind_extreme_sound.stop()
-	elif body_wind > 100:
-		if not Wind_extreme_sound.playing:
-			Wind_sound.stop()
-			Wind_moderate_sound.stop()
-			Wind_extreme_sound.play()
+			_: # Caso por defecto (default)
+				return
+
+		# Si disaster_id cambió, enviamos el RPC
+		if disaster_id != -1:
+			Globals.set_weather_and_disaster.rpc("", disaster_id)
+
+func update_rain_sound() -> void:
+	# 1. Verificamos si realmente debe sonar la lluvia
+	# Combinamos: ¿El emisor de partículas está activo? Y ¿El jugador está a la intemperie?
+	var should_play: bool = rain_node.emitting and Globals.is_outdoor(self)
+
+	# Actualizamos el estado global (Asegúrate de que 'is_raining' exista en Globals.gd)
+	Globals.is_raining = should_play
+
+	if rain_sound == null:
+		return # Seguridad
+
+	if should_play:
+		if not rain_sound.playing:
+			rain_sound.play()
 	else:
-		Wind_sound.stop()
-		Wind_moderate_sound.stop()
-		Wind_extreme_sound.stop()
+		if rain_sound.playing:
+			rain_sound.stop()
+
+
+func update_wind_sound() -> void:
+	if wind_sound == null or wind_moderate_sound == null or wind_extreme_sound == null:
+		return
+
+	var target_sound: AudioStreamPlayer = null
+
+	# Selección de sonido basado en la intensidad
+	if body_wind > 100:
+		target_sound = wind_extreme_sound
+	elif body_wind > 50:
+		target_sound = wind_moderate_sound
+	elif body_wind > 0:
+		target_sound = wind_sound
+	
+	# Creamos un array con todos los sonidos de viento para iterar
+	var all_winds: Array[AudioStreamPlayer] = [wind_sound, wind_moderate_sound, wind_extreme_sound]
+
+	for v in all_winds:
+		if v == target_sound:
+			if not v.playing:
+				v.play()
+		else:
+			if v.playing:
+				v.stop()
 
 
 func _process(delta):
@@ -521,13 +578,13 @@ func _process(delta):
 	if not is_multiplayer_authority():
 		return
 
-	body_temp(delta)
-	body_oxy(delta)
-	body_rad(delta)
-	Underwater_or_Underlava_effects()
-	IsOnFire_effects()
-	rain_sound()
-	wind_sound()
+	update_temp_effect(delta)
+	update_oxy_effect(delta)
+	update_rad_effect(delta)
+	update_underwater_or_underlava_effect()
+	update_fire_effect()
+	update_rain_sound()
+	update_wind_sound()
 	update_labels()
 
 func update_labels():
@@ -556,7 +613,7 @@ func _physics_process(delta):
 	# Add the gravity.
 	if not noclip:
 		if not is_on_floor():
-			if IsInWater or IsInLava:
+			if is_in_water or is_in_lava:
 				velocity.y = Globals.gravity * delta * swim_factor
 			else:
 				# Si está cayendo, aplica más gravedad
@@ -567,7 +624,7 @@ func _physics_process(delta):
 
 				fall_strength = velocity.y
 		else:
-			if not (IsInWater or IsInLava):
+			if not (is_in_water or is_in_lava):
 				if fall_strength <= -90:
 					damage.rpc(50)
 	else:
@@ -579,7 +636,7 @@ func _physics_process(delta):
 		if is_on_floor():
 			velocity.y = JUMP_VELOCITY
 
-		if IsInWater or IsInLava:
+		if is_in_water or is_in_lava:
 			velocity.y += JUMP_VELOCITY
 			
 	
@@ -635,7 +692,7 @@ func _physics_process(delta):
 
 	animation_tree_node.set("parameters/conditions/is_falling", !is_on_floor() and velocity.y < 0)
 	animation_tree_node.set("parameters/conditions/is_jumping", velocity.y > 0 )
-	animation_tree_node.set("parameters/conditions/is_swiming", IsInWater or IsInLava)
+	animation_tree_node.set("parameters/conditions/is_swiming", is_in_water or is_in_lava)
 	animation_tree_node.set("parameters/conditions/is_idle", is_on_floor() and horizontal_velocity.length() < 0.1)
 	animation_tree_node.set("parameters/conditions/is_walking", is_on_floor() and horizontal_velocity.length() > 0.1)
 
@@ -659,8 +716,10 @@ func _physics_process(delta):
 		else:
 			Globals.print_role("You dont have perms")
 
-		
+	velocity = velocity + external_force
 	move_and_slide()
+	
+	external_force = Vector3.ZERO
 
 @rpc("any_peer", "call_local")
 func _noclip():
@@ -712,132 +771,46 @@ func _unhandled_input(event):
 
 func _on_area_3d_body_entered(body:Node3D):
 	if body.is_in_group("Meteor"):
-		damage.rpc(100)
+		damage.rpc(100) # Llamada RPC a la función damage
 
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
 	if body.is_in_group("Water_Area"):
-		IsInWater = false
-		IsUnderWater = false
-
-
-
+		is_in_water = false
+		is_underwater = false
+		current_water_area = null
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
-	if area.is_in_group("Explosion"):
-		var area_parent = area.get_parent()
-		var distance = (area.global_position - global_position).length()
-		var direction = (area.global_position - global_position).normalized()
-		
-		# Comprobaciones seguras
-		if not area_parent.has_meta("explosion_force") and not "explosion_force" in area_parent:
-			return
-		
-		var force = area_parent.explosion_force * (1 - distance / area_parent.explosion_radius)
-		velocity = direction * force
-		
-		# Daño seguro (si no existe, asigna 0)
-		var damag = 0
-		if "explosion_damage" in area_parent:
-			damag = area_parent.explosion_damage
-		
-		if damag > 0:
-			damage.rpc(damag)
-
-	elif area.is_in_group("Lava_Area"):
-		IsInLava = true
-
-		# Obtener la altura de la lava desde el collider del volcán
-		var collider = area.get_node_or_null("CollisionShape3D")
-		if collider and collider.shape:
-			var shape = collider.shape
-			# Si es una caja (BoxShape3D)
-			if shape is BoxShape3D:
-				var lava_surface = area.global_position.y + (shape.size.y / 2)
-				if camera_node and camera_node.global_position.y < lava_surface:
-					IsUnderLava = true
-				else:
-					IsUnderLava = false
-			# Si es un cilindro (CylinderShape3D)
-			elif shape is CylinderShape3D:
-				var lava_surface = area.global_position.y + (shape.height / 2)
-				if camera_node and camera_node.global_position.y < lava_surface:
-					IsUnderLava = true
-				else:
-					IsUnderLava = false
-			# Si es una esfera (SphereShape3D)
-			elif shape is SphereShape3D:
-				var lava_surface = area.global_position.y + shape.radius
-				if camera_node and camera_node.global_position.y < lava_surface:
-					IsUnderLava = true
-				else:
-					IsUnderLava = false
-			else:
-				# Fallback para otras formas
-				if camera_node:
-					IsUnderLava = true
-		else:
-			# Sin collider, asumir que estás bajo la lava
-			if camera_node:
-				IsUnderLava = true
+	if area.is_in_group("Lava_Area"):
+		is_in_lava = true
+		current_lava_area = area
 
 	elif area.is_in_group("Water_Area"):
-		IsInWater = true
-		
-		# Obtener la altura del agua desde el collider del tsunami
-		var collider = area.get_node_or_null("CollisionShape3D")
-		if collider and collider.shape:
-			var shape = collider.shape
-			# Si es una caja (BoxShape3D)
-			if shape is BoxShape3D:
-				var water_surface = area.global_position.y + (shape.size.y / 2)
-				if camera_node and camera_node.global_position.y < water_surface:
-					IsUnderWater = true
-				else:
-					IsUnderWater = false
-			# Si es un cilindro (CylinderShape3D)
-			elif shape is CylinderShape3D:
-				var water_surface = area.global_position.y + (shape.height / 2)
-				if camera_node and camera_node.global_position.y < water_surface:
-					IsUnderWater = true
-				else:
-					IsUnderWater = false
-			# Si es una esfera (SphereShape3D)
-			elif shape is SphereShape3D:
-				var water_surface = area.global_position.y + shape.radius
-				if camera_node and camera_node.global_position.y < water_surface:
-					IsUnderWater = true
-				else:
-					IsUnderWater = false
-			else:
-				# Fallback para otras formas
-				if camera_node:
-					IsUnderWater = true
-		else:
-			# Sin collider, asumir que estás bajo el agua
-			if camera_node:
-				IsUnderWater = true
+		is_in_water = true
+		current_water_area = area
 
 func _on_area_3d_area_exited(area: Area3D) -> void:
 	if area.is_in_group("Lava_Area"):
-		IsInLava = false
-		IsUnderLava = false
-			
+		is_in_lava = false
+		is_underlava = false
+		current_lava_area = null
+
 	elif area.is_in_group("Water_Area"):
-		IsInWater = false
-		IsUnderWater = false
+		is_in_water = false
+		is_underwater = false
+		current_water_area = null
 
 
 @rpc("any_peer", "call_local")
 func _reset_player():
-	hearth = Max_Hearth
+	health = max_health
 	body_temperature = 37
-	body_oxygen = Max_oxygen
+	body_oxygen = max_oxygen
 	body_bradiation = min_bdradiation
 	is_alive = true
-	IsInWater = false
-	IsInLava = false
-	IsOnFire = false
+	is_in_water = false
+	is_in_lava = false
+	is_on_fire = false
 	fall_strength = 0
 
 

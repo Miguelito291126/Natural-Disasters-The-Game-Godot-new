@@ -230,6 +230,7 @@ down={
 [physics]
 
 3d/default_gravity=98.0
+3d/app_id=480
 
 [rendering]
 
@@ -247,6 +248,6 @@ textures/positional_shadow/soft_shadow_filter_quality=3
 [steam]
 
 multiplayer_peer/max_channels=4
-initialization/app_id=480
 initialization/initialize_on_startup=false
 initialization/embed_callbacks=false
+initialization/app_id=0

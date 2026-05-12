@@ -30,13 +30,15 @@ var multiplayer_peer: MultiplayerPeer
 @export var humidity: float = 25.0
 @export var wind_direction: Vector3 = Vector3(1.0, 0.0, 0.0)
 @export var wind_speed: float = 0.0
-@export var current_weather_and_disaster: String = "_original":
+@export var current_weather_and_disaster: String = "Original":
 	set(value):
 		if current_weather_and_disaster != value:
 			current_weather_and_disaster = value
 			current_weather_and_disaster_changed.emit(value)
 
-var _weather_names: PackedStringArray = ["Meteor", "Tornado", "Volcano", "Tsunami", "Earthquake", "Thunder"]
+var _weather_names: PackedStringArray = ["Sun", "Cloud", "Raining", "Storm", "Thunderstorm", "Tsunami", "Meteors shower", "Volcano", "Tornado", "Acid rain", "Earthquake", "Sand Storm", "blizzard", "Dust Storm"]
+@export var is_raining: bool
+@export var is_cloudy: bool
 
 #Globals Time
 @export var time: float = 0.0
@@ -72,6 +74,7 @@ var _weather_names: PackedStringArray = ["Meteor", "Tornado", "Volcano", "Tsunam
 
 @export var started: bool = false
 @export var gamemode = "survival"
+@export var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 var map: Map 
 var local_player: Player # Asignar el nodo del jugador local aquí
@@ -184,25 +187,25 @@ func is_outdoor(ply):
 
 	if ply.is_in_group("player"):
 		if hit_sky:
-			ply.Outdoor = true
+			ply.outdoor = true
 		else:
-			ply.Outdoor = false
+			ply.outdoor = false
 		
 		return hit_sky
 	else:
 		return hit_sky
 
-func is_inwater(ply):
+func is_in_water(ply):
 	if ply.is_in_group("player"):
-		return ply.IsInWater
+		return ply.is_in_water
 
 func is_underwater(ply):
 	if ply.is_in_group("player"):
 		return ply.IsUnderWater
 	
-func is_inlava(ply):
+func is_in_lava(ply):
 	if ply.is_in_group("player"):
-		return ply.IsInLava
+		return ply.is_in_lava
 
 func is_underlava(ply):
 	if ply.is_in_group("player"):
@@ -407,22 +410,27 @@ func contar_jugadores_con_mismo_nombre(nombre_a_verificar: String, excluir_jugad
 	return contador
 
 
-func print_role(msg: String):
-	var peer = multiplayer.multiplayer_peer
-	
-	if peer == null \
-	or peer is OfflineMultiplayerPeer \
-	or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-		print(msg)
-		return
+func print_role(msg: String, error: bool = false ):
 
-	var is_server = multiplayer.is_server()	
-	if is_server:
-		# Azul
-		print_rich("[color=blue][Server] " + msg + "[/color]")
+	if error:
+		printerr(msg)
 	else:
-		# Amarillo
-		print_rich("[color=yellow][Client] " + msg + "[/color]")
+		var peer = multiplayer.multiplayer_peer
+	
+		if peer == null \
+		or peer is OfflineMultiplayerPeer \
+		or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+			print(msg)
+			return
+
+		var is_server = multiplayer.is_server()	
+		if is_server:
+			# Azul
+			print_rich("[color=blue][Server] " + msg + "[/color]")
+		else:
+			# Amarillo
+			print_rich("[color=yellow][Client] " + msg + "[/color]")
+		
 
 		
 
@@ -430,6 +438,17 @@ func print_role(msg: String):
 
 func Play_MultiplayerServer(port: int):
 	if use_steam:
+		if not is_steam_running:
+			print_role("[STEAM] Steam no está iniciado. No se puede crear el lobby.", true)
+			return
+
+		print_role("[STEAM] Creando lobby...")
+		
+		if private_mode:
+			Steam.createLobby(Steam.LOBBY_TYPE_PRIVATE, 4) 
+		else:
+			Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, 4)
+	else:
 		multiplayer_peer = ENetMultiplayerPeer.new()
 		var error = multiplayer_peer.create_server(port)
 		if error == OK:
@@ -446,17 +465,7 @@ func Play_MultiplayerServer(port: int):
 					print_role("Server init")
 					LoadScene.load_scene(main_menu, "map")
 		else:
-			print_role("Fatal Error in server")
-
-	else:
-		if not is_steam_running:
-			printerr("[STEAM] Steam no está iniciado. No se puede crear el lobby.")
-			return
-
-		print("[STEAM] Creando lobby...")
-		# Tipos de lobby: 0 = Private, 1 = Friends Only, 2 = Public, 3 = Invisible
-		Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, 4) # Máximo 4 jugadores
-
+			print_role("Fatal Error in server", true)
 
 
 @rpc("any_peer")
@@ -602,6 +611,17 @@ func _process(_delta):
 	wind_direction = lerp(wind_direction, wind_direction_target, 0.005)
 	wind_speed = lerp(wind_speed, wind_speed_target, 0.005)
 
+	check_steam_state()
+	Steam.run_callbacks()
+	
+
+
+func check_steam_state():
+	if Steam.loggedOn():
+		use_steam = true
+	else:
+		use_steam = false
+
 
 func _ready():
 	multiplayer.peer_connected.connect(MultiplayerPlayerSpawner)
@@ -618,42 +638,37 @@ func _ready():
 	fetch_public_ip()
 	
 func steam_init():
-	var steam_init = Steam.steamInit()
-	if steam_init:
+	is_steam_running = Steam.steamInit()
+	if is_steam_running:
 		print_role("[STEAM] Steam inicializado correctamente.")
-		is_steam_running = true
-		use_steam = true
+		check_steam_state()
 		steam_id = Steam.getSteamID()
 		username = Steam.getPersonaName()
-		username = username # Usar el nombre de Steam por defecto
 
 		Steam.lobby_created.connect(_on_lobby_created)
 		Steam.lobby_joined.connect(_on_lobby_joined)
 	else:
-		print_role("[STEAM] Error al inicializar Steam")
-		is_steam_running = false
+		print_role("[STEAM] Error al inicializar Steam", true)
 		use_steam = false
 
 # Esta función se llama cuando Steam confirma que entramos al lobby
 func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, response: int) -> void:
 	if response == 1: # 1 = Success
-		lobby_id = lobby_id
+		print_role("Lobby de Steam unido con éxito. ID: " + str(lobby_id))
+		self.lobby_id = lobby_id
 		var owner_id = Steam.getLobbyOwner(lobby_id)
+
+		await get_tree().process_frame
+		if owner_id != Steam.getSteamID():
+			multiplayer_peer = SteamMultiplayerPeer.new()
+			var error = multiplayer_peer.create_client(lobby_id, port)
 		
-		# En una arquitectura P2P con Steam, aquí obtendrías la IP del dueño
-		# o usarías el ID de Steam para conectar via SteamNetworking.
-		# Si usas IP directa (como en tu C# original):
-		var target_ip = Steam.getLobbyData(lobby_id, "ip")
-		
-		multiplayer_peer = SteamMultiplayerPeer.new()
-		var error = multiplayer_peer.create_client(target_ip, port)
-		
-		if error != OK:
-			printerr("[NETWORK] Error al conectar el cliente: %s" % error)
-			return
-			
-		multiplayer.multiplayer_peer = multiplayer_peer
-		print("[NETWORK] Conectando a %s..." % target_ip)
+			if error != OK:
+				print_role("[NETWORK] Error al conectar el cliente: %s" % error, true)
+				return
+				
+			multiplayer.multiplayer_peer = multiplayer_peer
+			print_role("[NETWORK] Conectando a %s..." % lobby_id)
 
 func MultiplayerPlayerSpawner(peer_id: int = 1):
 	if not multiplayer.is_server():
@@ -677,9 +692,9 @@ func MultiplayerPlayerSpawner(peer_id: int = 1):
 			sync_assigned_character(assigned_character)  
 			sync_player_list.rpc()
 			sync_destrolled_nodes.rpc_id(peer_id, destrolled_node) # envia al cliente
-			set_weather_and_disaster.rpc_id(peer_id, current_weather_and_disaster_id)
+			set_weather_and_disaster.rpc_id(peer_id, "", current_weather_and_disaster_id)
 		else:
-			print_role("No se pudo asignar personaje al jugador con id: " + str(peer_id))
+			print_role("No se pudo asignar personaje al jugador con id: " + str(peer_id), true)
 		
 	else:
 		sync_assigned_character.rpc(assigned_character)  
@@ -696,41 +711,44 @@ func Play_MultiplayerClient(ip: String, port: int):
 		if not multiplayer.is_server():
 			print_role("Client Init")
 	else:
-		print_role("Fatal Error in client")
+		print_role("Fatal Error in client", true)
 
 
 func Play_MultiplayerClientSteam(target_lobby_id: int) -> void:
-	if not is_steam_running: return
+	if not is_steam_running: 
+		return
 	
-	print("[STEAM] Intentando unirse al lobby: %s" % str(target_lobby_id))
+	print_role("[STEAM] Intentando unirse al lobby: %s" % str(target_lobby_id))
 	Steam.joinLobby(target_lobby_id)
 
 
 func _on_lobby_created(connect_id: int, lobby_id: int) -> void:
-	if connect_id == 1:
-		lobby_id = lobby_id
-		print("[STEAM] Lobby creado exitosamente. ID: %s" % str(lobby_id))
+	if connect_id != 1:
+		print_role("[STEAM] Error crítico al crear lobby. Código de error: %d" % connect_id, true)
+		return
+
+	print_role("[STEAM] Lobby creado exitosamente. ID: %s" % str(lobby_id))
+	
+	# Configurar datos del lobby para que aparezca en el Browser
+	Steam.setLobbyData(lobby_id, "name", str(username))
+	Steam.setLobbyData(lobby_id, "game_id", "natural_disaster_game")
+	Steam.setLobbyData(lobby_id, "players_count", str(players_conected.size()))
+	Steam.setLobbyData(lobby_id, "host_id", str(steam_id))
+	Steam.setLobbyData(lobby_id, "port", str(port))
+	
+	# Crear el servidor de Godot
+	multiplayer_peer = SteamMultiplayerPeer.new()
+	var error = multiplayer_peer.create_host(port)
+	
+	if error != OK:
+		print_role("[NETWORK] Error al crear el servidor ENet: %s" % error, true)
+		return
 		
-		# Configurar datos del lobby para que aparezca en el Browser
-		Steam.setLobbyData(lobby_id, "name", str(username))
-		Steam.setLobbyData(lobby_id, "game_id", "natural_disaster_game")
-		Steam.setLobbyData(lobby_id, "players_count", "1")
-		Steam.setLobbyData(lobby_id, "host_id", str(steam_id))
-		Steam.setLobbyData(lobby_id, "port", str(port))
-		
-		# Crear el servidor de Godot
-		multiplayer_peer = SteamMultiplayerPeer.new()
-		var error = multiplayer_peer.create_host(port)
-		
-		if error != OK:
-			printerr("[NETWORK] Error al crear el servidor ENet: %s" % error)
-			return
-			
-		multiplayer.multiplayer_peer = multiplayer_peer
-		print("[NETWORK] Servidor iniciado en el puerto: %d" % port)
-		
-		# Cambiar a la escena del mapa
-		LoadScene.load_scene(main_menu, "map")
+	multiplayer.multiplayer_peer = multiplayer_peer
+	print_role("[NETWORK] Servidor iniciado en el puerto: %d" % port)
+	
+	# Cambiar a la escena del mapa
+	LoadScene.load_scene(main_menu, "map")
 		
 
 
@@ -768,7 +786,7 @@ func MultiplayerPlayerRemover(peer_id: int = 1):
 func sync_weather_and_disaster():
 	if multiplayer.is_server():
 		var random_weather_and_disaster = randi_range(0,12)
-		set_weather_and_disaster.rpc(random_weather_and_disaster)
+		set_weather_and_disaster.rpc("", random_weather_and_disaster)
 
 @rpc("authority", "call_local")
 func set_weather_and_disaster(name: String = "", index: int = -1) -> void:
@@ -798,7 +816,7 @@ func set_weather_and_disaster(name: String = "", index: int = -1) -> void:
 		current_weather_and_disaster_id = index
 	
 	# Opcional: Emitir una señal o imprimir el cambio
-	print("Clima cambiado a: ", current_weather_and_disaster, " (ID: ", current_weather_and_disaster_id, ")")
+	print_role("Clima cambiado a: " + current_weather_and_disaster + " (ID: " + str(current_weather_and_disaster_id) + ")")
 
 
 @rpc("any_peer", "call_local")
@@ -886,7 +904,7 @@ func fetch_local_ip() -> void:
 		# Filtramos para IPs de red local comunes
 		if ip.begins_with("192.168.") or ip.begins_with("10."):
 			local_ip = ip
-			print("IP Local detectada: ", local_ip)
+			print_role("IP privada detectada: " + local_ip)
 			break
 
 func fetch_public_ip() -> void:
@@ -900,3 +918,5 @@ func fetch_public_ip() -> void:
 
 	if upnp.get_gateway() and upnp.get_gateway().is_valid_gateway():
 		public_ip = upnp.query_external_address()
+		print_role("IP publica detectada: " + public_ip)
+		

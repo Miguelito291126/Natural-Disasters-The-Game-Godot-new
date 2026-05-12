@@ -561,7 +561,7 @@ public partial class Map : Node3D
 			return;
 		}
 
-		var is_outdoor = Globals.Instance.IsOutdoor(player);
+		var is_outdoor = Globals.Instance.is_outdoor(player);
 
 		// Usar una variable local para el environment para evitar múltiples llamadas al getter nativo
 		var env = Worldenvironment.Environment;
@@ -630,7 +630,7 @@ public partial class Map : Node3D
 		{
 			var player = Globals.Instance.LocalPlayer;
 
-			if(GodotObject.IsInstanceValid(player) && Globals.Instance.IsOutdoor(player))
+			if(GodotObject.IsInstanceValid(player) && Globals.Instance.is_outdoor(player))
 			{
 				if((float)GD.RandRange(1, 25) == 25)
 				{

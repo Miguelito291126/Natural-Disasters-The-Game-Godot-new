@@ -7,7 +7,7 @@ var mouse_action_state = false
 @onready var light = map_env.get_node("Sun")
 @onready var light2 = map_env.get_node("Moon")
 
-@onready var main_menu = $Panel/Pause_Menu
+@onready var pause_menu = $Panel/Pause_Menu
 @onready var Settings = $Panel/Settings
 @onready var fullscreen = $Panel/Settings/Fullscreen
 @onready var vsync = $Panel/Settings/Vsync
@@ -102,12 +102,12 @@ func _on_port_text_changed(new_text:String):
 
 
 func _on_play_pressed():
-	main_menu.hide()
+	pause_menu.hide()
 	Settings.hide()
 
 
 func _on_settings_pressed():
-	main_menu.hide()
+	pause_menu.hide()
 	Settings.show()
 
 
@@ -116,13 +116,13 @@ func _on_exit_pressed():
 	Globals.close_conection()
 		
 func _exit_tree() -> void:
-	Globals.Temperature_target = Globals.temperature_original
+	Globals.temperature_target = Globals.temperature_original
 	Globals.humidity_target = Globals.humidity_original
 	Globals.pressure_target = Globals.pressure_original
-	Globals.Wind_Direction_target = Globals.Wind_Direction_original
-	Globals.Wind_speed_target = Globals.Wind_speed_original
+	Globals.wind_direction_target = Globals.wind_direction_original
+	Globals.wind_speed_target = Globals.wind_speed_original
 
-func _on_fps_toggled(toggled_on:bool):
+func _on_fps_toggled(toggled_on: bool):
 	Globals.globals_data.FPS = toggled_on
 	Globals.globals_data.save_file()
 
@@ -140,7 +140,7 @@ func _on_vsycn_toggled(toggled_on: bool):
 		Globals.globals_data.save_file()
 
 func _on_back_pressed():
-	main_menu.show()
+	pause_menu.show()
 	Settings.hide()
 
 

@@ -26,4 +26,4 @@ text = "0 / "
 layout_mode = 2
 text = "Join"
 
-[connection signal="pressed" from="Button" to="." method="_OnButtonPressed"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

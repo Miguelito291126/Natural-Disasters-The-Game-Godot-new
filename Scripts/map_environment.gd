@@ -1,67 +1,70 @@
 extends WorldEnvironment
 class_name MapEnvironment
 
-@onready var Sun = $Sun
-@onready var Moon = $Moon
+@export var sun: DirectionalLight3D
+@export var moon: DirectionalLight3D
 
-var minutes_per_day = 1440
-var minutes_per_hour = 60
-var ingame_to_real_minute_duration = (2 * PI) / minutes_per_day
-var sun_node # Referencia al nodo del sol
-var celestial_speed_per_hour = 15  # Velocidad a la que el sol se mueve en grados por hora
-var sun_angle = -90 # Ángulo inicial del sol
-var moon_angle = 90
-var interpolation_speed = 1.0
+@export var ingame_speed: int = 60 # 1 = Tiempo real, 60 = 1 hora por minuto real
+@export var initial_hour: float = 12.0
+@export var sun_base_energy: float = 2.0 # Energía normal del sol
+@export var moon_base_energy: float = 0.2 # Energía normal de la luna
 
-var globals_data: DataResource = DataResource.load_file()
+var is_cloudy: bool = false # El Map cambiará esto
+var is_raining: bool = false # El Map cambiará esto
 
+func _ready() -> void:
+	# Si no se asignaron en el inspector, buscarlos
+	if sun == null: 
+		sun = get_node_or_null("Sun")
+	if moon == null: 
+		moon = get_node_or_null("Moon")
 
-@export var ingame_speed = 1
-@export var initial_hour = 12:
-    set(h):
-        initial_hour = h
-        Globals.time = ingame_to_real_minute_duration * initial_hour * minutes_per_hour
+	# Inicializar el tiempo en segundos totales
+	# Globals debe ser un Autoload
+	Globals.seconds = initial_hour * 3600.0
 
-var past_minute = -1.0
+func _process(delta: float) -> void:
+	# Avanzar tiempo en segundos
+	Globals.seconds += delta * ingame_speed
 
-func _ready():
-    if multiplayer.is_server():
-        Globals.time = ingame_to_real_minute_duration * initial_hour * minutes_per_hour
+	_recalculate_time()
+	_update_lamps()
 
+func _recalculate_time() -> void:
+	var seconds_in_day = fmod(Globals.seconds, 86400.0) # Segundos en un día (24*3600)
+	
+	Globals.day = int(Globals.seconds / 86400.0)
+	Globals.hour = int(seconds_in_day / 3600.0)
+	Globals.minute = int(fmod(seconds_in_day, 3600.0) / 60.0)
+	
+	# Nota: En tu C# original, sobreescribías Globals.Day al final. 
+	# He mantenido la lógica funcional para calcular el día correctamente.
 
-func _process(delta):
-    if multiplayer.is_server():
-        Globals.time += delta * ingame_to_real_minute_duration * ingame_speed
-        _recalculate_time(delta)
+func _update_lamps() -> void:
+	var day_progress = fmod(Globals.seconds, 86400.0) / 86400.0
+	# 0.0 a 360.0. 0 es medianoche, 180 es mediodía.
+	var angle = day_progress * 360.0 
 
-func _recalculate_time(delta):
-    var total_minutes = int(Globals.time / ingame_to_real_minute_duration)
-    Globals.Day = int(total_minutes / minutes_per_day)
+	if sun != null:
+		# Rotación: el Sol gira sobre el eje X
+		sun.rotation_degrees = Vector3(-angle + 90.0, 0, 0)
+		
+		# Intensidad basada en la altura (seno del ángulo)
+		var sun_factors = clamp(sin(deg_to_rad(angle - 90.0)), 0.0, 1.0)
+		
+		# Si está nublado, reducimos la energía
+		var cloud_multiplier = 0.2 if is_cloudy else 1.0
+		
+		sun.light_energy = sun_factors * sun_base_energy * cloud_multiplier
 
-    var current_day_minutes = total_minutes % minutes_per_day
-    Globals.Hour = int(current_day_minutes / minutes_per_hour)
-    Globals.Minute = int(current_day_minutes % minutes_per_hour)
+	if moon != null:
+		# La luna está a 180 grados de diferencia
+		moon.rotation_degrees = Vector3(-angle - 90.0, 0, 0)
+		
+		# La intensidad de la luna usa el seno invertido
+		var moon_factors = clamp(sin(deg_to_rad(angle + 90.0)), 0.0, 1.0)
+		
+		# La luna también se ve afectada por nubes
+		var cloud_multiplier = 0.1 if is_cloudy else 1.0
 
-    if past_minute != Globals.Minute:
-        past_minute = Globals.Minute
-
-    # Hora en formato decimal
-    var time_of_day = Globals.Hour + Globals.Minute / 60.0
-
-    # Ángulo objetivo en grados
-    sun_angle = 90.0 + (time_of_day * celestial_speed_per_hour)
-    moon_angle = -90.0 + (time_of_day * celestial_speed_per_hour)
-
-    # Normalizar a [0, 360)
-    sun_angle = fmod(sun_angle, 360.0)
-    if sun_angle < 0.0:
-        sun_angle += 360.0
-
-    moon_angle = fmod(moon_angle, 360.0)
-    if moon_angle < 0.0:
-        moon_angle += 360.0
-
-    # Interpolar usando la función que hace la rotación por la ruta más corta
-    var t = clamp(interpolation_speed * delta, 0.0, 1.0)
-    Sun.rotation_degrees.x = rad_to_deg(lerp_angle(deg_to_rad(Sun.rotation_degrees.x), deg_to_rad(sun_angle), t))
-    Moon.rotation_degrees.x = rad_to_deg(lerp_angle(deg_to_rad(Moon.rotation_degrees.x), deg_to_rad(moon_angle), t))
+		moon.light_energy = moon_factors * moon_base_energy * cloud_multiplier

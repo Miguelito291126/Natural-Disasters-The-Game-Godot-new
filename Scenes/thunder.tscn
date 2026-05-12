@@ -122,6 +122,6 @@ draw_pass_1 = SubResource("QuadMesh_8jrdf")
 root_path = NodePath("../spark")
 replication_config = SubResource("SceneReplicationConfig_go6sb")
 
-[connection signal="finished" from="star" to="." method="_OnSparkFinished"]
-[connection signal="finished" from="light" to="." method="_OnSparkFinished"]
-[connection signal="finished" from="spark" to="." method="_OnSparkFinished"]
+[connection signal="finished" from="star" to="." method="_on_spark_finished"]
+[connection signal="finished" from="light" to="." method="_on_spark_finished"]
+[connection signal="finished" from="spark" to="." method="_on_spark_finished"]

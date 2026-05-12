@@ -53,7 +53,7 @@ func erupt() -> void:
 	smoke.emitting = true
 	
 	if is_volcano_ash:
-		Globals.rpc("set_weather_and_disaster", "Dust Storm", -1)
+		Globals.set_weather_and_disaster.rpc("Dust Storm", -1)
 
 func launch_fireballs(amount: int) -> void:
 	for i in range(amount):

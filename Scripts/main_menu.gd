@@ -26,8 +26,10 @@ class_name MainMenu
 @onready var resolutions: OptionButton = $Panel/Settings/Resolutions
 @onready var version: Label = $Panel/Version
 @onready var credits: Label = $Panel/Credits
-@onready var time = $Panel/Play/Time
-@onready var music = $Music
+@onready var time: Slider = $Panel/Play/Time
+@onready var music: AudioStreamPlayer = $Music
+@onready var private_check: CheckButton = $Panel/multiplayer_menu/PrivateCheck
+@onready var private_check2: CheckButton = $Panel/multiplayer_menu_list/PrivateCheck
 var multiplayer_mode: bool = false
 
 var resolutions_dic: Dictionary = {
@@ -63,8 +65,7 @@ func addresolutions():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if Globals.main_menu:
-		Globals.main_menu = self
+	Globals.main_menu = self
 
 	_on_back_pressed()
 
@@ -104,8 +105,13 @@ func _ready():
 func LoadGameScene():
 	addresolutions()
 
-	ip_text.text = Globals.ip
-	port_text.text = str(Globals.port)
+	ip_text.text = Globals.globals_data.ip
+	username.text = Globals.globals_data.username
+	username2.text = Globals.globals_data.username
+	port_text.text = str(Globals.globals_data.port)
+	port_text2.text = str(Globals.globals_data.port)
+
+	
 
 	_on_antialiasing_item_selected(Globals.globals_data.antialiasing)
 	_on_antitropic_item_selected(Globals.globals_data.antitropic)
@@ -115,7 +121,7 @@ func LoadGameScene():
 	_on_resolutions_item_selected(Globals.globals_data.resolution)
 	_on_fullscreen_toggled(Globals.globals_data.fullscreen)
 	_on_fps_toggled(Globals.globals_data.FPS)
-	_on_username_text_changed(Globals.username)
+	_on_username_text_changed(Globals.globals_data.username)
 	_on_time_value_changed(Globals.globals_data.timer_disasters)
 	_on_quality_item_selected(Globals.globals_data.quality)
 
@@ -129,10 +135,9 @@ func LoadGameScene():
 	anti_aliasing.selected = Globals.globals_data.antialiasing
 	resolutions.selected = Globals.globals_data.resolution
 	anti_tropic.selected = Globals.globals_data.antitropic
-	username.text = Globals.username
-	username2.text = Globals.username
-	port_text.text = str(Globals.port)
-	port_text2.text = str(Globals.port)
+	private_check.button_pressed= Globals.globals_data.private_mode
+	private_check2.button_pressed = Globals.globals_data.private_mode
+
 
 
 
@@ -150,15 +155,25 @@ func _process(_delta):
 
 func _on_ip_text_changed(new_text:String):
 	Globals.ip = new_text
+	if Globals.globals_data:
+		Globals.globals_data.ip = new_text
+		Globals.globals_data.save_file()
 
 
 func _on_port_text_changed(new_text:String):
 	Globals.port = int(new_text)
+	if Globals.globals_data:
+		Globals.globals_data.port = new_text.to_int()
+		Globals.globals_data.save_file()
+
 
 
 func _on_join_pressed():
 	if Globals.username.length() >= 1:
-		Globals.Play_MultiplayerClient(Globals.ip, Globals.port)
+		if Globals.use_steam:
+			Globals.Play_MultiplayerClientSteam(Globals.lobby_id)
+		else:
+			Globals.Play_MultiplayerClient(Globals.ip, Globals.port)
 	else:
 		error_text.visible = true
 		await get_tree().create_timer(2).timeout
@@ -246,7 +261,9 @@ func _on_username_text_changed(new_text:String):
 	Globals.username = new_text
 
 	if Globals.globals_data:
+		Globals.globals_data.username = new_text
 		Globals.globals_data.save_file()
+
 
 
 func _on_time_value_changed(value):
@@ -342,3 +359,6 @@ func _on_antitropic_item_selected(index: int) -> void:
 
 func _on_private_check_toggled(toggled_on: bool) -> void:
 	Globals.private_mode = toggled_on
+	if Globals.globals_data:
+		Globals.globals_data.private_mode = toggled_on
+		Globals.globals_data.save_file()

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://yrq2iuii7a14"]
 
-[ext_resource type="Script" uid="uid://v57w2n30luys" path="res://Scripts/CHat.gd" id="1_eifiy"]
+[ext_resource type="Script" uid="uid://v57w2n30luys" path="res://Scripts/Chat.gd" id="1_eifiy"]
 [ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="2_cxjgb"]
 
 [node name="Chat" type="CanvasLayer" unique_id=972501856]
@@ -40,6 +40,6 @@ theme = ExtResource("2_cxjgb")
 text = "Enter"
 metadata/_edit_use_anchors_ = true
 
-[connection signal="focus_entered" from="Panel/Panel2/LineEdit" to="." method="_OnLineEditFocusEntered"]
-[connection signal="focus_exited" from="Panel/Panel2/LineEdit" to="." method="_OnLineEditFocusExited"]
-[connection signal="pressed" from="Panel/Panel2/Button" to="." method="_OnButtonPressed"]
+[connection signal="focus_entered" from="Panel/Panel2/LineEdit" to="." method="_on_line_edit_focus_entered"]
+[connection signal="focus_exited" from="Panel/Panel2/LineEdit" to="." method="_on_line_edit_focus_exited"]
+[connection signal="pressed" from="Panel/Panel2/Button" to="." method="_on_button_pressed"]
