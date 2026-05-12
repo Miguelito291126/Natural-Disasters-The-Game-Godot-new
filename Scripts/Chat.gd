@@ -1,76 +1,27 @@
 extends CanvasLayer
 class_name Chat
 
-@onready var text_edit = $Panel/TextEdit
-
-@onready var line_edit = $Panel/Panel2/LineEdit
-@onready var button = $Panel/Panel2/Button
-
+@onready var text_edit: TextEdit = $Panel/TextEdit
+@onready var line_edit: LineEdit = $Panel/Panel2/LineEdit
+@onready var button: Button = $Panel/Panel2/Button
 
 var autocomplete_matches: Array[String] = []
 var autocomplete_index: int = 0
-var autocomplete_methods: Array = []
 var history: Array[String] = []
 var history_index: int = -1
 var user_is_scrolling: bool = false
 var scroll_retries := 0
+var autocomplete_methods: Array = [] #
 const MAX_SCROLL_RETRIES := 5
 
-
-
 var dev_commands := {
-	"god_mode": {
-		"desc": "Muestra todos los comandos.",
-		"method": "_cmd_god_mode_player",
-		"args": 0
-	},
-	"ungod_mode": {
-		"desc": "Muestra todos los comandos.",
-		"method": "_cmd_ungod_mode_player",
-		"args": 0
-	},
-	"kill_player": {
-		"desc": "Cambia la velocidad del jugador. Uso: /set_speed 10",
-		"method": "_cmd_kill_player",
-		"args": 1
-	},
-	"teleport_player": {
-		"desc": "Teletransporta al jugador a otro jugador. Uso: /teleport_player PlayerName",
-		"method": "_cmd_teleport_player",
-		"args": 1
-	},
-	"teleport_position": {
-		"desc": "Teletransporta al jugador a una posición. Uso: /teleport_position Vector3(x,y,z)",
-		"method": "_cmd_teleport_position",
-		"args": 1
-	},
-	"kick_player": {
-		"desc": "Expulsa a un jugador del servidor. Uso: /kick_player PlayerName",
-		"method": "_cmd_kick_player",
-		"args": 1
-	},
-	"damage_player": {
-		"desc": "Inflige daño a un jugador. Uso: /damage_player PlayerName damage_amount",
-		"method": "_cmd_damage_player",
-		"args": 2
-	},
-	"spawn_disaster": {
-		"desc": "Genera un desastre o clima. Uso: /spawn_disaster disaster_name",
-		"method": "_cmd_spawn_disaster_weather",
-		"args": 1
-	},
-	"admin": {
-		"desc": "Genera un desastre o clima. Uso: /spawn_disaster disaster_name",
-		"method": "_cmd_admin_mode_player",
-		"args": 1
-	},
-
-	"unadmin": {
-		"desc": "Genera un desastre o clima. Uso: /spawn_disaster disaster_name",
-		"method": "_cmd_unadmin_mode_player",
-		"args": 1
-	},
-	
+	"god_mode": {"desc": "Activa modo Dios.", "method": "_cmd_god_mode_player", "args": 0},
+	"ungod_mode": {"desc": "Desactiva modo Dios.", "method": "_cmd_ungod_mode_player", "args": 0},
+	"kill_player": {"desc": "Mata a un jugador. /kill_player Nombre", "method": "_cmd_kill_player", "args": 1},
+	"damage_player": {"desc": "Daña a un jugador. /damage_player Nombre Cantidad", "method": "_cmd_damage_player", "args": 2},
+	"spawn_disaster": {"desc": "Genera desastre. /spawn_disaster Nombre", "method": "_cmd_spawn_disaster_weather", "args": 1},
+	"admin": {"desc": "Da admin. /admin Nombre", "method": "_cmd_admin_mode_player", "args": 1},
+	"unadmin": {"desc": "Quita admin. /unadmin Nombre", "method": "_cmd_unadmin_mode_player", "args": 1}
 }
 
 func _get_local_player():
@@ -79,6 +30,29 @@ func _get_local_player():
 			return p
 
 	return null
+
+
+func _run_command(cmd_text: String) -> void:
+	var parts = cmd_text.strip_edges().split(" ", false)
+	if parts.size() == 0: return
+
+	var command_name = parts[0].to_lower()
+	if not dev_commands.has(command_name):
+		_console_print("Comando desconocido: " + command_name)
+		return
+
+	var cmd_info = dev_commands[command_name]
+	var args = parts.slice(1)
+
+	if args.size() < cmd_info["args"]:
+		_console_print("Uso: /%s %s" % [command_name, cmd_info["desc"]])
+		return
+
+	if has_method(cmd_info["method"]):
+		# callv pasa el array de argumentos directamente a la función
+		var result = callv(cmd_info["method"], args)
+		if result != null:
+			_console_print(str(result))
 
 
 func _cmd_god_mode_player():
@@ -279,160 +253,65 @@ func _input(_event: InputEvent) -> void:
 
 
 	
-func _is_at_bottom() -> bool:
-	var scroll_bar = text_edit.get_v_scroll_bar()
-	if scroll_bar == null:
-		return true
-	# Considerar que está al final si está dentro de 20 píxeles del máximo
-	# Esto permite un pequeño margen para detectar si el usuario está scrolleando
-	if scroll_bar.max_value <= 0:
-		return true
-	
-	return scroll_bar.value >= (scroll_bar.max_value - 20)
-
-func _scroll_to_bottom():
-	scroll_retries = 0
-	call_deferred("_do_scroll_to_bottom")
-
-func _do_scroll_to_bottom():
-	# Si el nodo ya no existe, parar
-	if not is_instance_valid(self) or not is_inside_tree():
-		return
-
-	if not is_instance_valid(text_edit):
-		return
-
-	var scroll_bar = text_edit.get_v_scroll_bar()
-
-	if scroll_bar == null:
-		scroll_retries += 1
-		if scroll_retries < MAX_SCROLL_RETRIES:
-			call_deferred("_do_scroll_to_bottom")
-		return
-
-	var max_val = scroll_bar.max_value
-	if max_val <= 0:
-		scroll_retries += 1
-		if scroll_retries < MAX_SCROLL_RETRIES:
-			call_deferred("_do_scroll_to_bottom")
-		return
-
-	# Scroll final
-	text_edit.scroll_vertical = max_val
-	scroll_bar.value = max_val
-
-
-func _console_print(text: String):
-	# Verificar si estaba al final ANTES de añadir el texto
+@rpc("any_peer", "call_local")
+func msg_rpc(username: String, data: String) -> void:
 	var was_at_bottom = _is_at_bottom()
-	text_edit.text += text + "\n"
-	# Solo hacer scroll si estaba al final antes de añadir el texto
+	text_edit.text += "%s: %s\n" % [username, data]
+	
 	if was_at_bottom:
 		_scroll_to_bottom()
 
-@rpc("any_peer", "call_local")
-func _run_command(cmd: String) -> void:
-	if not is_multiplayer_authority():
-		return
-		
-	var parts = cmd.strip_edges().split(" ")
-	var command_name = parts[0]
-	var args = parts.slice(1, parts.size())
+	# Solo el servidor ejecuta la lógica de comandos por seguridad
+	if data.begins_with("/") and multiplayer.is_server():
+		var cmd_raw = data.substr(1)
+		# Verificar si el que envió el mensaje es admin
+		for p in get_tree().get_nodes_in_group("player"):
+			if p.username == username and p.admin_mode:
+				_run_command.rpc_id(multiplayer.get_remote_sender_id(), cmd_raw)
+				break
 
-	if dev_commands.has(command_name):
-		var cmd_info = dev_commands[command_name]
-
-		if args.size() < cmd_info["args"]:
-			_console_print("Faltan argumentos. Uso: /%s" % command_name)
-			return
-
-		var method_name = cmd_info["method"]
-		if has_method(method_name):
-			var result = callv(method_name, args)
-			if result != null:
-				_console_print(str(result))
-			return
-		else:
-			_console_print("Error interno: método no encontrado.")
-			return
-
-
-	_console_print("Comando desconocido: %s" % command_name)
-
-
-@rpc("any_peer", "call_local")
-func msg_rpc(username, data):
-	# Esta función se ejecuta en todos los clientes (call_local)
-	# Asegurar que el scroll funcione incluso si este chat no tiene autoridad
+func _handle_autocomplete():
+	var current = line_edit.text.to_lower()
+	var search = current.substr(1) if current.begins_with("/") else current
 	
-	if data.begins_with("/"):
-		# Buscar el jugador que envió el comando
-		var jugador_encontrado = null
-		for player in get_tree().get_nodes_in_group("player"):	
-			if is_instance_valid(player) and player is CharacterBody3D:	
-				var player_username = player.username
-				if player_username == username:
-					jugador_encontrado = player
-					break
-		
-		# Si no se encuentra el jugador, bloquear el comando
-		if jugador_encontrado == null:
-			_console_print("Error: Jugador no encontrado")
-			return
-		
-		# Verificar si el jugador es admin
-		if not jugador_encontrado.admin_mode:
-			_console_print("No tienes permisos para ejecutar comandos")
-			return
-
-		# Validar que el comando no esté vacío
-		var comando_limpio = data.strip_edges()
-		if comando_limpio.length() <= 1:  # Solo tiene "/" o está vacío
-			return
-		
-		# Verificar si estaba al final ANTES de añadir el texto
-		var was_at_bottom = _is_at_bottom()
-		# Mostrar el comando en el chat
-		text_edit.text += str(username, ": ", data, "\n")
-		# Solo hacer scroll si estaba al final antes de añadir el texto
-		if was_at_bottom:
-			_scroll_to_bottom()
-		
-		# Ejecutar el comando solo si este chat tiene autoridad
-		if is_multiplayer_authority():
-			# Ejecutar el comando (quitar el "/" del inicio)
-			data = data.erase(0, 1)
-			Globals.print_role(data)
-			_run_command(data)
-	else:
-		# Mensaje normal (no comando)
-		var mensaje_limpio = data.strip_edges()
-		if mensaje_limpio.length() > 0:
-			# Verificar si estaba al final ANTES de añadir el texto
-			var was_at_bottom = _is_at_bottom()
-			text_edit.text += str(username, ": ", data, "\n")
-			# Solo hacer scroll si estaba al final antes de añadir el texto
-			if was_at_bottom:
-				_scroll_to_bottom()
-
-
+	if autocomplete_matches.is_empty():
+		for key in dev_commands.keys():
+			if key.begins_with(search):
+				autocomplete_matches.append(key)
 	
+	if not autocomplete_matches.is_empty():
+		line_edit.text = "/" + autocomplete_matches[autocomplete_index]
+		line_edit.caret_column = line_edit.text.length()
+		autocomplete_index = (autocomplete_index + 1) % autocomplete_matches.size()
+
+func _handle_history(dir: int):
+	if history.is_empty(): return
+	history_index = clamp(history_index + dir, 0, history.size() - 1)
+	line_edit.text = history[history_index]
+	line_edit.caret_column = line_edit.text.length()
 
 func _on_button_pressed():
-	if not is_multiplayer_authority():
-		return
-
+	if line_edit.text.strip_edges() == "": return
 	msg_rpc.rpc(Globals.username, line_edit.text)
-
+	history.push_front(line_edit.text)
 	line_edit.text = ""
 	line_edit.release_focus()
-	button.release_focus()
-	# Asegurar que is_chat_open se establece en false cuando se cierra el chat
-	Globals.is_chat_open = false
 
+func _is_at_bottom() -> bool:
+	var v_scroll = text_edit.get_v_scroll_bar()
+	return v_scroll.value >= (v_scroll.max_value - v_scroll.page - 10)
 
-func _on_line_edit_focus_entered() -> void:
+func _scroll_to_bottom():
+	_do_scroll_to_bottom.call_deferred()
+
+func _do_scroll_to_bottom():
+	text_edit.scroll_vertical = text_edit.get_v_scroll_bar().max_value
+
+func _console_print(text: String):
+	text_edit.text += "[SISTEMA]: %s\n" % text
+	_scroll_to_bottom()
+
+func _on_line_edit_focus_entered(): 
 	Globals.is_chat_open = true
-
-func _on_line_edit_focus_exited():
+func _on_line_edit_focus_exited(): 
 	Globals.is_chat_open = false
