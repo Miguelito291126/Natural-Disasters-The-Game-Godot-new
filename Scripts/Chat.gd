@@ -195,17 +195,24 @@ func _ready() -> void:
 	autocomplete_methods = dev_commands.keys()
 
 func _input(_event: InputEvent) -> void:
-	# Solo procesar input si este chat tiene autoridad
 	if not is_multiplayer_authority():
 		return
-	
+
+	# Seleccionar el LineEdit al presionar T
+	if Input.is_action_just_pressed("Chat") and not line_edit.has_focus():
+		line_edit.grab_focus()
+		Globals.is_chat_open = true
+		get_viewport().set_input_as_handled() 
+		return
+
 	if line_edit.has_focus():
 		# Autocompletado con Tab
 		if Input.is_action_just_pressed("dev_console_autocomplete"):
-			var current = line_edit.text.erase(0,1)
+			# Usar slice o substr es más seguro que erase para no modificar el original por error
+			var current = line_edit.text.substr(1) if line_edit.text.begins_with("/") else line_edit.text
 			
 			if autocomplete_matches.is_empty():
-				for cmd in autocomplete_methods:
+				for cmd in dev_commands.keys(): # Usamos directamente las llaves del diccionario
 					if cmd.begins_with(current):
 						autocomplete_matches.append(cmd)
 
@@ -213,43 +220,24 @@ func _input(_event: InputEvent) -> void:
 				line_edit.text = "/" + autocomplete_matches[autocomplete_index]
 				line_edit.caret_column = line_edit.text.length()
 				autocomplete_index = (autocomplete_index + 1) % autocomplete_matches.size()
-
-		# Reset autocompletado si se escribe algo distinto
-		if Input.is_action_just_pressed("ui_text_indent"):
-			autocomplete_matches.clear()
-			autocomplete_index = 0
-
-		# Recorrer historial con flechas
-		if Input.is_action_just_pressed("dev_console_up"):
-			if history.size() > 0:
-				history_index = clamp(history_index + 1, 0, history.size() - 1)
-				line_edit.text = "/" + history[history_index]
-				line_edit.caret_column = line_edit.text.length()
-
-		elif Input.is_action_just_pressed("dev_console_down"):
-			if history.size() > 0:
-				history_index = clamp(history_index - 1, 0, history.size() - 1)
-				line_edit.text = "/" + history[history_index]
-				line_edit.caret_column = line_edit.text.length()
+			
+			get_viewport().set_input_as_handled() # Evita que el Tab cambie de nodo UI
 
 		# Ejecutar comando con Enter
-		if Input.is_action_just_pressed('Enter'):
-			history.push_front(line_edit.text.erase(0, 1))
+		if Input.is_action_just_pressed("ui_accept"): # "ui_accept" es el Enter por defecto
+			if line_edit.text.strip_edges() != "":
+				var clean_text = line_edit.text
+				# Guardar en historial
+				var history_text = clean_text.substr(1) if clean_text.begins_with("/") else clean_text
+				history.push_front(history_text)
 				
-			msg_rpc.rpc(Globals.username, line_edit.text)
+				msg_rpc.rpc(Globals.username, clean_text)
 
-			history_index = -1
-			line_edit.text = ""
-			line_edit.release_focus()
-			button.release_focus()
-			# Asegurar que is_chat_open se establece en false cuando se cierra el chat
-			Globals.is_chat_open = false
-
-	# Seleccionar el LineEdit al presionar T
-	if Input.is_action_just_pressed("Chat"):
-		line_edit.grab_focus()
-		# Asegurar que is_chat_open se establece cuando se abre el chat
-		Globals.is_chat_open = true
+				history_index = -1
+				line_edit.text = ""
+				line_edit.release_focus()
+				Globals.is_chat_open = false
+				get_viewport().set_input_as_handled()
 
 
 	
