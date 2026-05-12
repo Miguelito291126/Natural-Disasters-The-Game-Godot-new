@@ -38,10 +38,10 @@ func earthquake_decay() -> void:
 		create_earthquake_with_parent()
 	queue_free()
 
-func send_clientside_effects(ply: Node3D, amplitude: float) -> void:
+func send_clientside_effects(ply: Player, amplitude: float) -> void:
 	if randi() % 8 == 0:
-		if ply.has_node("CameraNode"): # Ajusta según tu estructura de Player
-			ply.get_node("CameraNode").start_screen_shake(0.6, amplitude * 2, 25)
+		if ply.camera_node: # Ajusta según tu estructura de Player
+			ply.camera_node.start_screen_shake(0.6, amplitude * 2, 25)
 
 func process_magnitude() -> void:
 	var mag = magnitude * magnitude_modifier
@@ -80,7 +80,7 @@ func do_physics() -> void:
 				elif mag >= 11: multiplier = 2.125
 				elif mag >= 10: multiplier = 2.0
 				elif mag >= 9: multiplier = 1.5
-				player.velocity = vec * multiplier
+				player.apply_disasters_push(vec * multiplier)
 
 	# Efectos a objetos
 	for obj in get_tree().get_nodes_in_group("movable_objects"):
