@@ -7,18 +7,18 @@ var mouse_action_state = false
 @onready var light = map_env.get_node("Sun")
 @onready var light2 = map_env.get_node("Moon")
 
-@onready var pause_menu = $Panel/Pause_Menu
-@onready var Settings = $Panel/Settings
-@onready var fullscreen = $Panel/Settings/Fullscreen
-@onready var vsync = $Panel/Settings/Vsync
-@onready var fps = $Panel/Settings/Fps
-@onready var anti_aliasing = $Panel/Settings/Antialiasing
-@onready var anti_tropic = $Panel/Settings/Antitropic
-@onready var volumen = $Panel/Settings/Volumen
-@onready var volumen_music = $Panel/Settings/VolumenMusic
-@onready var time = $Panel/Settings/Time
-@onready var quality = $Panel/Settings/Quality
-@onready var resolutions = $Panel/Settings/Resolutions
+@onready var pause_menu = $Panel/MarginContainer/Pause_Menu
+@onready var Settings = $Panel/MarginContainer/Settings
+@onready var fullscreen = $Panel/MarginContainer/Settings/Fullscreen
+@onready var vsync = $Panel/MarginContainer/Settings/Vsync
+@onready var fps = $Panel/MarginContainer/Settings/Fps
+@onready var anti_aliasing = $Panel/MarginContainer/Settings/Antialiasing
+@onready var anti_tropic = $Panel/MarginContainer/Settings/Antitropic
+@onready var volumen = $Panel/MarginContainer/Settings/Volumen
+@onready var volumen_music = $Panel/MarginContainer/Settings/VolumenMusic
+@onready var time = $Panel/MarginContainer/Settings/Time
+@onready var quality = $Panel/MarginContainer/Settings/Quality
+@onready var resolutions = $Panel/MarginContainer/Settings/Resolutions
 
 
 var resolutions_dic = {

@@ -28,28 +28,35 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_8ye2w")
-metadata/_edit_use_anchors_ = true
 
-[node name="Main_Menu" type="VBoxContainer" parent="Panel" unique_id=2104998793]
-process_mode = 3
-visible = false
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1185805167]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.1234375
-anchor_top = 0.17546296
-anchor_right = 0.8765625
-anchor_bottom = 0.82453704
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -728.5
+offset_top = -534.0
+offset_right = 728.5
+offset_bottom = 541.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_8ye2w")
+
+[node name="Main_Menu" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=2104998793]
+process_mode = 3
+visible = false
+layout_mode = 2
 theme = ExtResource("2_8ye2w")
 alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Main_Menu" unique_id=2070414317]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/Main_Menu" unique_id=2070414317]
 layout_mode = 2
 alignment = 1
 
-[node name="Title" type="Label" parent="Panel/Main_Menu/HBoxContainer" unique_id=1269044769]
+[node name="Title" type="Label" parent="Panel/MarginContainer/Main_Menu/HBoxContainer" unique_id=1269044769]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 1
@@ -59,117 +66,109 @@ text = "Natural Disaster The Game"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Disasters" type="TextureRect" parent="Panel/Main_Menu/HBoxContainer" unique_id=938591097]
+[node name="Disasters" type="TextureRect" parent="Panel/MarginContainer/Main_Menu/HBoxContainer" unique_id=938591097]
 process_mode = 3
 texture_filter = 1
 layout_mode = 2
 texture = ExtResource("3_wgml2")
 expand_mode = 2
 
-[node name="Singleplayer" type="Button" parent="Panel/Main_Menu" unique_id=509701694]
+[node name="Singleplayer" type="Button" parent="Panel/MarginContainer/Main_Menu" unique_id=509701694]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Singleplayer"
 
-[node name="Multiplayer" type="Button" parent="Panel/Main_Menu" unique_id=1746260900]
+[node name="Multiplayer" type="Button" parent="Panel/MarginContainer/Main_Menu" unique_id=1746260900]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Multiplayer"
 
-[node name="Settings" type="Button" parent="Panel/Main_Menu" unique_id=702472410]
+[node name="Settings" type="Button" parent="Panel/MarginContainer/Main_Menu" unique_id=702472410]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Settings"
 
-[node name="Exit" type="Button" parent="Panel/Main_Menu" unique_id=1064161701]
+[node name="Exit" type="Button" parent="Panel/MarginContainer/Main_Menu" unique_id=1064161701]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Exit"
 
-[node name="multiplayer_menu" type="VBoxContainer" parent="Panel" unique_id=1343375395]
+[node name="multiplayer_menu" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1343375395]
 process_mode = 3
 visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.2625
-anchor_top = 0.19259259
-anchor_right = 0.7375
-anchor_bottom = 1.0
-offset_left = 3.0517578e-05
-grow_horizontal = 2
-grow_vertical = 0
+layout_mode = 2
 theme = ExtResource("2_8ye2w")
 alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="UsernameLabel" type="Label" parent="Panel/multiplayer_menu" unique_id=1765938561]
+[node name="UsernameLabel" type="Label" parent="Panel/MarginContainer/multiplayer_menu" unique_id=1765938561]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Username:"
 
-[node name="error" type="Label" parent="Panel/multiplayer_menu" unique_id=1402334237]
+[node name="error" type="Label" parent="Panel/MarginContainer/multiplayer_menu" unique_id=1402334237]
 visible = false
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Your Username is Invalid"
 
-[node name="Username" type="LineEdit" parent="Panel/multiplayer_menu" unique_id=752924526]
+[node name="Username" type="LineEdit" parent="Panel/MarginContainer/multiplayer_menu" unique_id=752924526]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 placeholder_text = "Your Username"
 
-[node name="IpLabel" type="Label" parent="Panel/multiplayer_menu" unique_id=774817262]
+[node name="IpLabel" type="Label" parent="Panel/MarginContainer/multiplayer_menu" unique_id=774817262]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "IP:"
 
-[node name="Ip" type="LineEdit" parent="Panel/multiplayer_menu" unique_id=456130138]
+[node name="Ip" type="LineEdit" parent="Panel/MarginContainer/multiplayer_menu" unique_id=456130138]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 placeholder_text = "Example: localhost"
 
-[node name="PortLabel" type="Label" parent="Panel/multiplayer_menu" unique_id=1775436854]
+[node name="PortLabel" type="Label" parent="Panel/MarginContainer/multiplayer_menu" unique_id=1775436854]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Port:"
 
-[node name="Port" type="LineEdit" parent="Panel/multiplayer_menu" unique_id=624102114]
+[node name="Port" type="LineEdit" parent="Panel/MarginContainer/multiplayer_menu" unique_id=624102114]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 placeholder_text = "Example: 5555"
 
-[node name="PrivateCheck" type="CheckButton" parent="Panel/multiplayer_menu" unique_id=1786622450]
+[node name="PrivateCheck" type="CheckButton" parent="Panel/MarginContainer/multiplayer_menu" unique_id=1786622450]
 layout_mode = 2
 text = "Private"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/multiplayer_menu" unique_id=2080795022]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/multiplayer_menu" unique_id=2080795022]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 alignment = 1
 
-[node name="Join" type="Button" parent="Panel/multiplayer_menu/HBoxContainer" unique_id=1031911312]
+[node name="Join" type="Button" parent="Panel/MarginContainer/multiplayer_menu/HBoxContainer" unique_id=1031911312]
 process_mode = 3
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_8ye2w")
 text = "Join"
 
-[node name="Host" type="Button" parent="Panel/multiplayer_menu/HBoxContainer" unique_id=83274559]
+[node name="Host" type="Button" parent="Panel/MarginContainer/multiplayer_menu/HBoxContainer" unique_id=83274559]
 process_mode = 3
 layout_mode = 2
 size_flags_horizontal = 3
@@ -177,78 +176,73 @@ theme = ExtResource("2_8ye2w")
 text = "host
 "
 
-[node name="Back" type="Button" parent="Panel/multiplayer_menu" unique_id=418979842]
+[node name="Back" type="Button" parent="Panel/MarginContainer/multiplayer_menu" unique_id=418979842]
 layout_mode = 2
 text = "Back"
 
-[node name="multiplayer_menu_list" type="VBoxContainer" parent="Panel" unique_id=331300036]
+[node name="multiplayer_menu_list" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=331300036]
 process_mode = 3
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.2625
-anchor_right = 0.7375
-anchor_bottom = 1.0
-offset_left = 3.0517578e-05
-grow_horizontal = 2
-grow_vertical = 0
+visible = false
+layout_mode = 2
 theme = ExtResource("2_8ye2w")
 alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Info" type="Label" parent="Panel/multiplayer_menu_list" unique_id=1121789553]
+[node name="Info" type="Label" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=1121789553]
+visible = false
 layout_mode = 2
 text = "Name - PlayersCount"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panel" type="ScrollContainer" parent="Panel/multiplayer_menu_list" unique_id=190968530]
+[node name="Panel" type="ScrollContainer" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=190968530]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_cp0ys")
 script = ExtResource("4_opfnp")
 
-[node name="List" type="VBoxContainer" parent="Panel/multiplayer_menu_list/Panel" unique_id=1977867886]
+[node name="List" type="VBoxContainer" parent="Panel/MarginContainer/multiplayer_menu_list/Panel" unique_id=1977867886]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/multiplayer_menu_list" unique_id=1172515489]
+[node name="Label" type="Label" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=1172515489]
 visible = false
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Your Username is Invalid"
 
-[node name="error" type="Label" parent="Panel/multiplayer_menu_list" unique_id=910310990]
+[node name="error" type="Label" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=910310990]
 visible = false
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Your Username is Invalid"
 
-[node name="Username" type="LineEdit" parent="Panel/multiplayer_menu_list" unique_id=794275007]
+[node name="Username" type="LineEdit" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=794275007]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 placeholder_text = "Your Username"
 
-[node name="PortLabel" type="Label" parent="Panel/multiplayer_menu_list" unique_id=2126638720]
+[node name="PortLabel" type="Label" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=2126638720]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Port:"
 
-[node name="Port" type="LineEdit" parent="Panel/multiplayer_menu_list" unique_id=1720589600]
+[node name="Port" type="LineEdit" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=1720589600]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
 placeholder_text = "Example: 5555"
 
-[node name="PrivateCheck" type="CheckButton" parent="Panel/multiplayer_menu_list" unique_id=784561423]
+[node name="PrivateCheck" type="CheckButton" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=784561423]
 layout_mode = 2
 text = "Private"
 
-[node name="Host" type="Button" parent="Panel/multiplayer_menu_list" unique_id=461532804]
+[node name="Host" type="Button" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=461532804]
 process_mode = 3
 layout_mode = 2
 size_flags_horizontal = 3
@@ -256,109 +250,91 @@ theme = ExtResource("2_8ye2w")
 text = "host
 "
 
-[node name="Back" type="Button" parent="Panel/multiplayer_menu_list" unique_id=1455997698]
+[node name="Back" type="Button" parent="Panel/MarginContainer/multiplayer_menu_list" unique_id=1455997698]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Back"
 
-[node name="Play" type="VBoxContainer" parent="Panel" unique_id=918116165]
+[node name="Play" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=918116165]
 visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.35442707
-anchor_top = 0.26296297
-anchor_right = 0.6455729
-anchor_bottom = 0.73703706
-offset_left = 0.5
-offset_top = 141.0
-offset_right = -0.5
-offset_bottom = -141.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
+theme = ExtResource("2_8ye2w")
 alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Time Label" type="Label" parent="Panel/Play" unique_id=167904608]
+[node name="Time Label" type="Label" parent="Panel/MarginContainer/Play" unique_id=167904608]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
 text = "Time disaster/weather:"
 
-[node name="Time" type="HSlider" parent="Panel/Play" unique_id=1319390205]
+[node name="Time" type="HSlider" parent="Panel/MarginContainer/Play" unique_id=1319390205]
 process_mode = 3
 layout_mode = 2
-size_flags_vertical = 2
 theme = ExtResource("2_8ye2w")
 min_value = 1.0
 max_value = 1000.0
 value = 100.0
 
-[node name="Sandbox" type="Button" parent="Panel/Play" unique_id=1193224366]
+[node name="Sandbox" type="Button" parent="Panel/MarginContainer/Play" unique_id=1193224366]
 layout_mode = 2
 text = "Sandbox"
 
-[node name="Survival" type="Button" parent="Panel/Play" unique_id=2054198526]
+[node name="Survival" type="Button" parent="Panel/MarginContainer/Play" unique_id=2054198526]
 layout_mode = 2
 text = "Survival"
 
-[node name="Back" type="Button" parent="Panel/Play" unique_id=1688365823]
+[node name="Back" type="Button" parent="Panel/MarginContainer/Play" unique_id=1688365823]
 layout_mode = 2
 text = "Back"
 
-[node name="Settings" type="VBoxContainer" parent="Panel" unique_id=484223956]
+[node name="Settings" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=484223956]
 process_mode = 3
 visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.3546875
-anchor_top = 0.0027777778
-anchor_right = 0.6453125
-anchor_bottom = 1.0
-offset_top = 126.0
-grow_horizontal = 2
-grow_vertical = 0
+layout_mode = 2
 theme = ExtResource("2_8ye2w")
+theme_override_constants/separation = 4
 alignment = 1
-metadata/_edit_use_anchors_ = true
 
-[node name="Fps" type="CheckButton" parent="Panel/Settings" unique_id=529948202]
+[node name="Fps" type="CheckButton" parent="Panel/MarginContainer/Settings" unique_id=529948202]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "FPS:"
 
-[node name="Vsync" type="CheckButton" parent="Panel/Settings" unique_id=1405695910]
+[node name="Vsync" type="CheckButton" parent="Panel/MarginContainer/Settings" unique_id=1405695910]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Vsync:"
 
-[node name="Fullscreen" type="CheckButton" parent="Panel/Settings" unique_id=662194578]
+[node name="Fullscreen" type="CheckButton" parent="Panel/MarginContainer/Settings" unique_id=662194578]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Fullscreen:"
 
-[node name="Resolutions Label" type="Label" parent="Panel/Settings" unique_id=229238879]
+[node name="Resolutions Label" type="Label" parent="Panel/MarginContainer/Settings" unique_id=229238879]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 1
 theme = ExtResource("2_8ye2w")
 text = "Resolution:"
 
-[node name="Resolutions" type="OptionButton" parent="Panel/Settings" unique_id=1351100339]
+[node name="Resolutions" type="OptionButton" parent="Panel/MarginContainer/Settings" unique_id=1351100339]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 
-[node name="AntialiasingLabel" type="Label" parent="Panel/Settings" unique_id=1632793892]
+[node name="AntialiasingLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=1632793892]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 1
 theme = ExtResource("2_8ye2w")
 text = "Antialiasing:"
 
-[node name="Antialiasing" type="OptionButton" parent="Panel/Settings" unique_id=1179138765]
+[node name="Antialiasing" type="OptionButton" parent="Panel/MarginContainer/Settings" unique_id=1179138765]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
@@ -372,13 +348,14 @@ popup/item_2/id = 2
 popup/item_3/text = "x8"
 popup/item_3/id = 3
 
-[node name="AntitropicLabel" type="Label" parent="Panel/Settings" unique_id=1950059086]
+[node name="AntitropicLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=1950059086]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 1
 theme = ExtResource("2_8ye2w")
 text = "Antitropic:"
 
-[node name="Antitropic" type="OptionButton" parent="Panel/Settings" unique_id=294347275]
+[node name="Antitropic" type="OptionButton" parent="Panel/MarginContainer/Settings" unique_id=294347275]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
@@ -394,13 +371,14 @@ popup/item_3/id = 3
 popup/item_4/text = "x16"
 popup/item_4/id = 4
 
-[node name="QualityLabel" type="Label" parent="Panel/Settings" unique_id=338276561]
+[node name="QualityLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=338276561]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 1
 theme = ExtResource("2_8ye2w")
-text = "quality:"
+text = "Quality:"
 
-[node name="Quality" type="OptionButton" parent="Panel/Settings" unique_id=1298951855]
+[node name="Quality" type="OptionButton" parent="Panel/MarginContainer/Settings" unique_id=1298951855]
 layout_mode = 2
 selected = 2
 item_count = 3
@@ -411,60 +389,69 @@ popup/item_1/id = 1
 popup/item_2/text = "High"
 popup/item_2/id = 2
 
-[node name="VolumenLabel" type="Label" parent="Panel/Settings" unique_id=36024082]
+[node name="VolumenLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=36024082]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 1
 theme = ExtResource("2_8ye2w")
 text = "Volumen:"
 
-[node name="Volumen" type="HSlider" parent="Panel/Settings" unique_id=1333867158]
+[node name="Volumen" type="HSlider" parent="Panel/MarginContainer/Settings" unique_id=1333867158]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 1
 theme = ExtResource("2_8ye2w")
 max_value = 6.0
 step = 0.01
 
-[node name="VolumenMusicLabel" type="Label" parent="Panel/Settings" unique_id=840014500]
+[node name="VolumenMusicLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=840014500]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 1
 theme = ExtResource("2_8ye2w")
 text = "Music Volumen:"
 
-[node name="VolumenMusic" type="HSlider" parent="Panel/Settings" unique_id=955326645]
+[node name="VolumenMusic" type="HSlider" parent="Panel/MarginContainer/Settings" unique_id=955326645]
 process_mode = 3
 layout_mode = 2
+size_flags_vertical = 1
 theme = ExtResource("2_8ye2w")
 max_value = 6.0
 step = 0.01
 
-[node name="Back" type="Button" parent="Panel/Settings" unique_id=129426586]
+[node name="steam_mode" type="CheckButton" parent="Panel/MarginContainer/Settings" unique_id=1287981590]
+process_mode = 3
+layout_mode = 2
+theme = ExtResource("2_8ye2w")
+text = "Steam mode:"
+
+[node name="Back" type="Button" parent="Panel/MarginContainer/Settings" unique_id=129426586]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Back"
 
-[node name="Version" type="Label" parent="Panel" unique_id=1210985967]
+[node name="MarginContainer2" type="MarginContainer" parent="Panel" unique_id=98552792]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.90520835
-anchor_top = 0.9361111
-anchor_right = 1.0
+anchors_preset = 2
+anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 142.0
-grow_horizontal = 0
+offset_top = -69.0
+offset_right = 182.0
 grow_vertical = 0
+
+[node name="HBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer2" unique_id=2027989072]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Version" type="Label" parent="Panel/MarginContainer2/HBoxContainer" unique_id=1210985967]
+layout_mode = 2
 text = "Version"
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Credits" type="Label" parent="Panel" unique_id=2139515474]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.9361111
-anchor_right = 0.0890625
-anchor_bottom = 1.0
-offset_right = -31.0
-grow_vertical = 0
+[node name="Credits" type="Label" parent="Panel/MarginContainer2/HBoxContainer" unique_id=2139515474]
+layout_mode = 2
 text = "Credits"
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
@@ -475,33 +462,34 @@ stream = ExtResource("5_n45e2")
 autoplay = true
 bus = &"Music"
 
-[connection signal="pressed" from="Panel/Main_Menu/Singleplayer" to="." method="_on_singleplayer_pressed"]
-[connection signal="pressed" from="Panel/Main_Menu/Multiplayer" to="." method="_on_multiplayer_pressed"]
-[connection signal="pressed" from="Panel/Main_Menu/Settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="Panel/Main_Menu/Exit" to="." method="_on_exit_pressed"]
-[connection signal="text_changed" from="Panel/multiplayer_menu/Username" to="." method="_on_username_text_changed"]
-[connection signal="text_changed" from="Panel/multiplayer_menu/Ip" to="." method="_on_ip_text_changed"]
-[connection signal="text_changed" from="Panel/multiplayer_menu/Port" to="." method="_on_port_text_changed"]
-[connection signal="toggled" from="Panel/multiplayer_menu/PrivateCheck" to="." method="_on_private_check_toggled"]
-[connection signal="pressed" from="Panel/multiplayer_menu/HBoxContainer/Join" to="." method="_on_join_pressed"]
-[connection signal="pressed" from="Panel/multiplayer_menu/HBoxContainer/Host" to="." method="_on_host_pressed"]
-[connection signal="pressed" from="Panel/multiplayer_menu/Back" to="." method="_on_back_pressed"]
-[connection signal="text_changed" from="Panel/multiplayer_menu_list/Username" to="." method="_on_username_text_changed"]
-[connection signal="text_changed" from="Panel/multiplayer_menu_list/Port" to="." method="_on_port_text_changed"]
-[connection signal="toggled" from="Panel/multiplayer_menu_list/PrivateCheck" to="." method="_on_private_check_toggled"]
-[connection signal="pressed" from="Panel/multiplayer_menu_list/Host" to="." method="_on_host_pressed"]
-[connection signal="pressed" from="Panel/multiplayer_menu_list/Back" to="." method="_on_back_pressed"]
-[connection signal="value_changed" from="Panel/Play/Time" to="." method="_on_time_value_changed"]
-[connection signal="pressed" from="Panel/Play/Sandbox" to="." method="_on_sandbox_pressed"]
-[connection signal="pressed" from="Panel/Play/Survival" to="." method="_on_sandbox_pressed"]
-[connection signal="pressed" from="Panel/Play/Back" to="." method="_on_back_pressed"]
-[connection signal="toggled" from="Panel/Settings/Fps" to="." method="_on_fps_toggled"]
-[connection signal="toggled" from="Panel/Settings/Vsync" to="." method="_on_vsycn_toggled"]
-[connection signal="toggled" from="Panel/Settings/Fullscreen" to="." method="_on_fullscreen_toggled"]
-[connection signal="item_selected" from="Panel/Settings/Resolutions" to="." method="_on_resolutions_item_selected"]
-[connection signal="item_selected" from="Panel/Settings/Antialiasing" to="." method="_on_antialiasing_item_selected"]
-[connection signal="item_selected" from="Panel/Settings/Antitropic" to="." method="_on_antitropic_item_selected"]
-[connection signal="item_selected" from="Panel/Settings/Quality" to="." method="_on_quality_item_selected"]
-[connection signal="value_changed" from="Panel/Settings/Volumen" to="." method="_on_volumen_value_changed"]
-[connection signal="value_changed" from="Panel/Settings/VolumenMusic" to="." method="_on_volumen_music_value_changed"]
-[connection signal="pressed" from="Panel/Settings/Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Main_Menu/Singleplayer" to="." method="_on_singleplayer_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Main_Menu/Multiplayer" to="." method="_on_multiplayer_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Main_Menu/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Main_Menu/Exit" to="." method="_on_exit_pressed"]
+[connection signal="text_changed" from="Panel/MarginContainer/multiplayer_menu/Username" to="." method="_on_username_text_changed"]
+[connection signal="text_changed" from="Panel/MarginContainer/multiplayer_menu/Ip" to="." method="_on_ip_text_changed"]
+[connection signal="text_changed" from="Panel/MarginContainer/multiplayer_menu/Port" to="." method="_on_port_text_changed"]
+[connection signal="toggled" from="Panel/MarginContainer/multiplayer_menu/PrivateCheck" to="." method="_on_private_check_toggled"]
+[connection signal="pressed" from="Panel/MarginContainer/multiplayer_menu/HBoxContainer/Join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/multiplayer_menu/HBoxContainer/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/multiplayer_menu/Back" to="." method="_on_back_pressed"]
+[connection signal="text_changed" from="Panel/MarginContainer/multiplayer_menu_list/Username" to="." method="_on_username_text_changed"]
+[connection signal="text_changed" from="Panel/MarginContainer/multiplayer_menu_list/Port" to="." method="_on_port_text_changed"]
+[connection signal="toggled" from="Panel/MarginContainer/multiplayer_menu_list/PrivateCheck" to="." method="_on_private_check_toggled"]
+[connection signal="pressed" from="Panel/MarginContainer/multiplayer_menu_list/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/multiplayer_menu_list/Back" to="." method="_on_back_pressed"]
+[connection signal="value_changed" from="Panel/MarginContainer/Play/Time" to="." method="_on_time_value_changed"]
+[connection signal="pressed" from="Panel/MarginContainer/Play/Sandbox" to="." method="_on_sandbox_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Play/Survival" to="." method="_on_sandbox_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Play/Back" to="." method="_on_back_pressed"]
+[connection signal="toggled" from="Panel/MarginContainer/Settings/Fps" to="." method="_on_fps_toggled"]
+[connection signal="toggled" from="Panel/MarginContainer/Settings/Vsync" to="." method="_on_vsycn_toggled"]
+[connection signal="toggled" from="Panel/MarginContainer/Settings/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="item_selected" from="Panel/MarginContainer/Settings/Resolutions" to="." method="_on_resolutions_item_selected"]
+[connection signal="item_selected" from="Panel/MarginContainer/Settings/Antialiasing" to="." method="_on_antialiasing_item_selected"]
+[connection signal="item_selected" from="Panel/MarginContainer/Settings/Antitropic" to="." method="_on_antitropic_item_selected"]
+[connection signal="item_selected" from="Panel/MarginContainer/Settings/Quality" to="." method="_on_quality_item_selected"]
+[connection signal="value_changed" from="Panel/MarginContainer/Settings/Volumen" to="." method="_on_volumen_value_changed"]
+[connection signal="value_changed" from="Panel/MarginContainer/Settings/VolumenMusic" to="." method="_on_volumen_music_value_changed"]
+[connection signal="toggled" from="Panel/MarginContainer/Settings/steam_mode" to="." method="_on_steam_mode_toggled"]
+[connection signal="pressed" from="Panel/MarginContainer/Settings/Back" to="." method="_on_back_pressed"]

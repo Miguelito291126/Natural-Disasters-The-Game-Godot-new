@@ -611,19 +611,11 @@ func _process(_delta):
 	wind_direction = lerp(wind_direction, wind_direction_target, 0.005)
 	wind_speed = lerp(wind_speed, wind_speed_target, 0.005)
 
-	check_steam_state()
+
 	Steam.run_callbacks()
 	
 
 
-func check_steam_state():
-	if is_steam_running:
-		if Steam.loggedOn():
-			use_steam = true
-		else:
-			use_steam = false
-	else:
-		use_steam = false
 
 
 func _ready():
@@ -644,7 +636,6 @@ func steam_init():
 	is_steam_running = Steam.steamInit()
 	if is_steam_running:
 		print_role("[STEAM] Steam inicializado correctamente.")
-		check_steam_state()
 		steam_id = Steam.getSteamID()
 		username = Steam.getPersonaName()
 

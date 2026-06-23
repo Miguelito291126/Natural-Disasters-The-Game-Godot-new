@@ -18,6 +18,7 @@ static var path = "user://globals_data.tres"
 @export var port = 4444
 @export var ip = "localhost"
 @export var private_mode = false
+@export var use_steam = false
 
 func save_file():
     ResourceSaver.save(self, path)

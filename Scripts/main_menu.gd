@@ -2,34 +2,36 @@ extends Control
 class_name MainMenu
 
 # Nodos de la UI
-@onready var main_menu: Control = $"Panel/Main_Menu"
-@onready var tittle: Label = $Panel/Main_Menu/HBoxContainer/Title
-@onready var multiplayer_menu: Control = $Panel/multiplayer_menu
-@onready var multiplayer_menu_list: Control = $Panel/multiplayer_menu_list
-@onready var settings: Control = $Panel/Settings
-@onready var play_menu: Control = $Panel/Play
-@onready var username: LineEdit = $Panel/multiplayer_menu/Username
-@onready var username2: LineEdit = $Panel/multiplayer_menu_list/Username
-@onready var ip_text: LineEdit = $Panel/multiplayer_menu/Ip
-@onready var port_text: LineEdit = $Panel/multiplayer_menu/Port
-@onready var port_text2: LineEdit = $Panel/multiplayer_menu_list/Port
-@onready var fullscreen: CheckButton = $Panel/Settings/Fullscreen
-@onready var vsync: CheckButton = $Panel/Settings/Vsync
-@onready var fps: CheckButton = $Panel/Settings/Fps
-@onready var anti_aliasing: OptionButton = $Panel/Settings/Antialiasing
-@onready var anti_tropic: OptionButton = $Panel/Settings/Antitropic
-@onready var volumen: HSlider = $Panel/Settings/Volumen
-@onready var volumen_music: HSlider = $Panel/Settings/VolumenMusic
-@onready var quality: OptionButton = $Panel/Settings/Quality
-@onready var error_text: Label = $Panel/multiplayer_menu/error
-@onready var error_text2: Label = $Panel/multiplayer_menu_list/error
-@onready var resolutions: OptionButton = $Panel/Settings/Resolutions
-@onready var version: Label = $Panel/Version
-@onready var credits: Label = $Panel/Credits
-@onready var time: Slider = $Panel/Play/Time
+@onready var main_menu: Control = $"Panel/MarginContainer/Main_Menu"
+@onready var tittle: Label = $Panel/MarginContainer/Main_Menu/HBoxContainer/Title
+@onready var multiplayer_menu: Control = $Panel/MarginContainer/multiplayer_menu
+@onready var multiplayer_menu_list: Control = $Panel/MarginContainer/multiplayer_menu_list
+@onready var settings: Control = $Panel/MarginContainer/Settings
+@onready var play_menu: Control = $Panel/MarginContainer/Play
+@onready var username: LineEdit = $Panel/MarginContainer/multiplayer_menu/Username
+@onready var username2: LineEdit = $Panel/MarginContainer/multiplayer_menu_list/Username
+@onready var ip_text: LineEdit = $Panel/MarginContainer/multiplayer_menu/Ip
+@onready var port_text: LineEdit = $Panel/MarginContainer/multiplayer_menu/Port
+@onready var port_text2: LineEdit = $Panel/MarginContainer/multiplayer_menu_list/Port
+@onready var fullscreen: CheckButton = $Panel/MarginContainer/Settings/Fullscreen
+@onready var vsync: CheckButton = $Panel/MarginContainer/Settings/Vsync
+@onready var fps: CheckButton = $Panel/MarginContainer/Settings/Fps
+@onready var anti_aliasing: OptionButton = $Panel/MarginContainer/Settings/Antialiasing
+@onready var anti_tropic: OptionButton = $Panel/MarginContainer/Settings/Antitropic
+@onready var volumen: HSlider = $Panel/MarginContainer/Settings/Volumen
+@onready var volumen_music: HSlider = $Panel/MarginContainer/Settings/VolumenMusic
+@onready var quality: OptionButton = $Panel/MarginContainer/Settings/Quality
+@onready var error_text: Label = $Panel/MarginContainer/multiplayer_menu/error
+@onready var error_text2: Label = $Panel/MarginContainer/multiplayer_menu_list/error
+@onready var resolutions: OptionButton = $Panel/MarginContainer/Settings/Resolutions
+@onready var version: Label = $Panel/MarginContainer2/HBoxContainer/Version
+@onready var credits: Label = $Panel/MarginContainer2/HBoxContainer/Credits
+@onready var time: Slider = $Panel/MarginContainer/Play/Time
 @onready var music: AudioStreamPlayer = $Music
-@onready var private_check: CheckButton = $Panel/multiplayer_menu/PrivateCheck
-@onready var private_check2: CheckButton = $Panel/multiplayer_menu_list/PrivateCheck
+@onready var private_check: CheckButton = $Panel/MarginContainer/multiplayer_menu/PrivateCheck
+@onready var private_check2: CheckButton = $Panel/MarginContainer/multiplayer_menu_list/PrivateCheck
+@onready var steam_mode: CheckButton = $Panel/MarginContainer/Settings/steam_mode
+
 var multiplayer_mode: bool = false
 
 var resolutions_dic: Dictionary = {
@@ -124,6 +126,7 @@ func LoadGameScene():
 	_on_username_text_changed(Globals.globals_data.username)
 	_on_time_value_changed(Globals.globals_data.timer_disasters)
 	_on_quality_item_selected(Globals.globals_data.quality)
+	_on_steam_mode_toggled(Globals.globals_data.use_steam)
 
 	fullscreen.button_pressed = Globals.globals_data.fullscreen
 	fps.button_pressed = Globals.globals_data.FPS
@@ -137,7 +140,9 @@ func LoadGameScene():
 	anti_tropic.selected = Globals.globals_data.antitropic
 	private_check.button_pressed= Globals.globals_data.private_mode
 	private_check2.button_pressed = Globals.globals_data.private_mode
+	steam_mode.button_pressed = Globals.globals_data.use_steam
 
+	
 
 
 
@@ -361,4 +366,11 @@ func _on_private_check_toggled(toggled_on: bool) -> void:
 	Globals.private_mode = toggled_on
 	if Globals.globals_data:
 		Globals.globals_data.private_mode = toggled_on
+		Globals.globals_data.save_file()
+
+
+func _on_steam_mode_toggled(toggled_on: bool) -> void:
+	Globals.use_steam = toggled_on
+	if Globals.globals_data:
+		Globals.globals_data.use_steam = toggled_on
 		Globals.globals_data.save_file()

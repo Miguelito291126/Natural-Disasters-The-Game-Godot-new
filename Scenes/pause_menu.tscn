@@ -18,20 +18,29 @@ grow_vertical = 2
 theme = ExtResource("2_1och7")
 metadata/_edit_use_anchors_ = true
 
-[node name="Pause_Menu" type="VBoxContainer" parent="Panel" unique_id=1945670196]
-process_mode = 3
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1611691609]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.19765624
-anchor_top = 0.17546296
-anchor_right = 0.8023437
-anchor_bottom = 0.82453704
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -472.0
+offset_top = -278.25
+offset_right = 472.0
+offset_bottom = 278.25
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_1och7")
+
+[node name="Pause_Menu" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=1945670196]
+process_mode = 3
+layout_mode = 2
+theme = ExtResource("2_1och7")
+alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="Panel/Pause_Menu" unique_id=463943313]
+[node name="Label" type="Label" parent="Panel/MarginContainer/Pause_Menu" unique_id=463943313]
 layout_mode = 2
 theme = ExtResource("2_1och7")
 theme_override_font_sizes/font_size = 100
@@ -39,78 +48,72 @@ text = "Pause"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Return" type="Button" parent="Panel/Pause_Menu" unique_id=6948450]
+[node name="Return" type="Button" parent="Panel/MarginContainer/Pause_Menu" unique_id=6948450]
 layout_mode = 2
 theme = ExtResource("2_1och7")
 text = "Return"
 
-[node name="Settings" type="Button" parent="Panel/Pause_Menu" unique_id=1492032167]
+[node name="Settings" type="Button" parent="Panel/MarginContainer/Pause_Menu" unique_id=1492032167]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_1och7")
 text = "Settings"
 
-[node name="Reset Player" type="Button" parent="Panel/Pause_Menu" unique_id=1843001462]
+[node name="Reset Player" type="Button" parent="Panel/MarginContainer/Pause_Menu" unique_id=1843001462]
 layout_mode = 2
 theme = ExtResource("2_1och7")
 text = "Reset Player"
 
-[node name="Exit" type="Button" parent="Panel/Pause_Menu" unique_id=426038544]
+[node name="Exit" type="Button" parent="Panel/MarginContainer/Pause_Menu" unique_id=426038544]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_1och7")
 text = "Exit"
 
-[node name="Settings" type="VBoxContainer" parent="Panel" unique_id=627602816]
+[node name="Settings" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=627602816]
 process_mode = 3
 visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.12552084
-anchor_top = -0.010185185
-anchor_right = 0.8354167
-anchor_bottom = 0.99722224
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 theme = ExtResource("2_1och7")
+theme_override_constants/separation = 4
 alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Fps" type="CheckButton" parent="Panel/Settings" unique_id=1317274352]
+[node name="Fps" type="CheckButton" parent="Panel/MarginContainer/Settings" unique_id=1317274352]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_1och7")
 text = "FPS:"
 
-[node name="Vsync" type="CheckButton" parent="Panel/Settings" unique_id=1338570578]
+[node name="Vsync" type="CheckButton" parent="Panel/MarginContainer/Settings" unique_id=1338570578]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_1och7")
 text = "Vsync:"
 
-[node name="Fullscreen" type="CheckButton" parent="Panel/Settings" unique_id=669924201]
+[node name="Fullscreen" type="CheckButton" parent="Panel/MarginContainer/Settings" unique_id=669924201]
 layout_mode = 2
 theme = ExtResource("2_1och7")
 text = "Fullscreen:"
 
-[node name="ResolutionsLabel" type="Label" parent="Panel/Settings" unique_id=261014241]
+[node name="ResolutionsLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=261014241]
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Resolution:"
 
-[node name="Resolutions" type="OptionButton" parent="Panel/Settings" unique_id=1047698082]
+[node name="Resolutions" type="OptionButton" parent="Panel/MarginContainer/Settings" unique_id=1047698082]
 layout_mode = 2
 theme = ExtResource("2_1och7")
 
-[node name="AntialiasingLabel" type="Label" parent="Panel/Settings" unique_id=767444434]
+[node name="AntialiasingLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=767444434]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Antialiasing:"
 
-[node name="Antialiasing" type="OptionButton" parent="Panel/Settings" unique_id=958514184]
+[node name="Antialiasing" type="OptionButton" parent="Panel/MarginContainer/Settings" unique_id=958514184]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_1och7")
@@ -124,14 +127,14 @@ popup/item_2/id = 2
 popup/item_3/text = "x8"
 popup/item_3/id = 3
 
-[node name="AntitropicLabel" type="Label" parent="Panel/Settings" unique_id=1149537644]
+[node name="AntitropicLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=1149537644]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Antitropic:"
 
-[node name="Antitropic" type="OptionButton" parent="Panel/Settings" unique_id=1619545701]
+[node name="Antitropic" type="OptionButton" parent="Panel/MarginContainer/Settings" unique_id=1619545701]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_1och7")
@@ -147,14 +150,14 @@ popup/item_3/id = 3
 popup/item_4/text = "x16"
 popup/item_4/id = 4
 
-[node name="QualityLabel" type="Label" parent="Panel/Settings" unique_id=1274673928]
+[node name="QualityLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=1274673928]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "quality:"
 
-[node name="Quality" type="OptionButton" parent="Panel/Settings" unique_id=80871999]
+[node name="Quality" type="OptionButton" parent="Panel/MarginContainer/Settings" unique_id=80871999]
 layout_mode = 2
 selected = 2
 item_count = 3
@@ -165,37 +168,37 @@ popup/item_1/id = 1
 popup/item_2/text = "High"
 popup/item_2/id = 2
 
-[node name="VolumenLabel" type="Label" parent="Panel/Settings" unique_id=214059815]
+[node name="VolumenLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=214059815]
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Volumen:"
 
-[node name="Volumen" type="HSlider" parent="Panel/Settings" unique_id=39246278]
+[node name="Volumen" type="HSlider" parent="Panel/MarginContainer/Settings" unique_id=39246278]
 layout_mode = 2
 theme = ExtResource("2_1och7")
 max_value = 6.0
 step = 0.01
 
-[node name="VolumenMusicLabel" type="Label" parent="Panel/Settings" unique_id=1512523303]
+[node name="VolumenMusicLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=1512523303]
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Music Volumen:"
 
-[node name="VolumenMusic" type="HSlider" parent="Panel/Settings" unique_id=1762926464]
+[node name="VolumenMusic" type="HSlider" parent="Panel/MarginContainer/Settings" unique_id=1762926464]
 layout_mode = 2
 theme = ExtResource("2_1och7")
 max_value = 6.0
 step = 0.01
 
-[node name="TimeLabel" type="Label" parent="Panel/Settings" unique_id=1534191919]
+[node name="TimeLabel" type="Label" parent="Panel/MarginContainer/Settings" unique_id=1534191919]
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("2_1och7")
 text = "Time disaster/weather:"
 
-[node name="Time" type="HSlider" parent="Panel/Settings" unique_id=1291062064]
+[node name="Time" type="HSlider" parent="Panel/MarginContainer/Settings" unique_id=1291062064]
 layout_mode = 2
 size_flags_vertical = 1
 theme = ExtResource("2_1och7")
@@ -203,25 +206,24 @@ min_value = 1.0
 max_value = 1000.0
 value = 100.0
 
-[node name="Back" type="Button" parent="Panel/Settings" unique_id=128683691]
+[node name="Back" type="Button" parent="Panel/MarginContainer/Settings" unique_id=128683691]
 process_mode = 3
 layout_mode = 2
 theme = ExtResource("2_1och7")
-theme_override_font_sizes/font_size = 45
 text = "Back"
 
-[connection signal="pressed" from="Panel/Pause_Menu/Return" to="." method="_on_return_pressed"]
-[connection signal="pressed" from="Panel/Pause_Menu/Settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="Panel/Pause_Menu/Reset Player" to="." method="_on_reset_player_pressed"]
-[connection signal="pressed" from="Panel/Pause_Menu/Exit" to="." method="_on_exit_pressed"]
-[connection signal="toggled" from="Panel/Settings/Fps" to="." method="_on_fps_toggled"]
-[connection signal="toggled" from="Panel/Settings/Vsync" to="." method="_on_vsycn_toggled"]
-[connection signal="toggled" from="Panel/Settings/Fullscreen" to="." method="_on_fullscreen_toggled"]
-[connection signal="item_selected" from="Panel/Settings/Resolutions" to="." method="_on_resolutions_item_selected"]
-[connection signal="item_selected" from="Panel/Settings/Antialiasing" to="." method="_on_antialiasing_item_selected"]
-[connection signal="item_selected" from="Panel/Settings/Antitropic" to="." method="_on_antitropic_item_selected"]
-[connection signal="item_selected" from="Panel/Settings/Quality" to="." method="_on_quality_item_selected"]
-[connection signal="value_changed" from="Panel/Settings/Volumen" to="." method="_on_volumen_value_changed"]
-[connection signal="value_changed" from="Panel/Settings/VolumenMusic" to="." method="_on_volumen_music_value_changed"]
-[connection signal="value_changed" from="Panel/Settings/Time" to="." method="_on_time_value_changed"]
-[connection signal="pressed" from="Panel/Settings/Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Pause_Menu/Return" to="." method="_on_return_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Pause_Menu/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Pause_Menu/Reset Player" to="." method="_on_reset_player_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Pause_Menu/Exit" to="." method="_on_exit_pressed"]
+[connection signal="toggled" from="Panel/MarginContainer/Settings/Fps" to="." method="_on_fps_toggled"]
+[connection signal="toggled" from="Panel/MarginContainer/Settings/Vsync" to="." method="_on_vsycn_toggled"]
+[connection signal="toggled" from="Panel/MarginContainer/Settings/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="item_selected" from="Panel/MarginContainer/Settings/Resolutions" to="." method="_on_resolutions_item_selected"]
+[connection signal="item_selected" from="Panel/MarginContainer/Settings/Antialiasing" to="." method="_on_antialiasing_item_selected"]
+[connection signal="item_selected" from="Panel/MarginContainer/Settings/Antitropic" to="." method="_on_antitropic_item_selected"]
+[connection signal="item_selected" from="Panel/MarginContainer/Settings/Quality" to="." method="_on_quality_item_selected"]
+[connection signal="value_changed" from="Panel/MarginContainer/Settings/Volumen" to="." method="_on_volumen_value_changed"]
+[connection signal="value_changed" from="Panel/MarginContainer/Settings/VolumenMusic" to="." method="_on_volumen_music_value_changed"]
+[connection signal="value_changed" from="Panel/MarginContainer/Settings/Time" to="." method="_on_time_value_changed"]
+[connection signal="pressed" from="Panel/MarginContainer/Settings/Back" to="." method="_on_back_pressed"]
